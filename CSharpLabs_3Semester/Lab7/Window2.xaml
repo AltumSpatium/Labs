@@ -1,0 +1,201 @@
+﻿<Window x:Class="Lab7.Window2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Window2" Height="340" Width="781" ResizeMode="NoResize" Background="#FFF9F3B0">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="NormalBackgroundButtonAdd" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF80F49B" Offset="0"/>
+            <GradientStop Color="#FF80F49B" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="HighLightBackgroundButtonAdd" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="LimeGreen" Offset="0"/>
+            <GradientStop Color="LimeGreen" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="NormalBackgroundButtonClose" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="IndianRed" Offset="0"/>
+            <GradientStop Color="IndianRed" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="HighLightBackgroundButtonClose" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Red" Offset="0"/>
+            <GradientStop Color="Red" Offset="1"/>
+        </LinearGradientBrush>
+        <Style x:Key="Add" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition To="MouseOver" GeneratedDuration="0:0:0.4"/>
+                                        <VisualTransition To="Normal" GeneratedDuration="0:0:0.3"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation To="1" Storyboard.TargetName="bg_highlight" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <DoubleAnimation To="0" Storyboard.TargetName="bg_highlight" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0:0:0" To="1" Storyboard.TargetName="bg_disabled" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="bg" Background="{StaticResource NormalBackgroundButtonAdd}" BorderThickness="3" BorderBrush="#FF80F49B"/>
+                            <Border x:Name="bg_highlight" Opacity="0" Background="{StaticResource HighLightBackgroundButtonAdd}" BorderThickness="3" BorderBrush="LimeGreen"/>
+                            <Border x:Name="bg_disabled" Opacity="0" Background="#666" BorderThickness="3" BorderBrush="#888"/>
+                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Close" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition To="MouseOver" GeneratedDuration="0:0:0.4"/>
+                                        <VisualTransition To="Normal" GeneratedDuration="0:0:0.3"/>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation To="1" Storyboard.TargetName="bg_highlight" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <DoubleAnimation To="0" Storyboard.TargetName="bg_highlight" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0:0:0" To="1" Storyboard.TargetName="bg_disabled" Storyboard.TargetProperty="Opacity"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="bg" Background="{StaticResource NormalBackgroundButtonClose}" BorderThickness="3" BorderBrush="IndianRed"/>
+                            <Border x:Name="bg_highlight" Opacity="0" Background="{StaticResource HighLightBackgroundButtonClose}" BorderThickness="3" BorderBrush="Red"/>
+                            <Border x:Name="bg_disabled" Opacity="0" Background="#666" BorderThickness="3" BorderBrush="#888"/>
+                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FFFEFFDE"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                   Color="Salmon" />
+        <Style x:Key="normal" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="LightSteelBlue" />
+            <Setter Property="Margin" Value="3" />
+            <Setter Property="Padding" Value="3" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0,0,2,0">
+        <ListBox x:Name="listbox1" FontSize="10" ItemContainerStyle="{StaticResource normal}" HorizontalAlignment="Left" Height="257" Margin="10,10,0,0" VerticalAlignment="Top" Width="209">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Title}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                        <Label Content="{Binding Performer}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1"/>
+                        <Label Content="{Binding Genre}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="2"/>
+                        <Label Content="{Binding Length}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="3"/>
+                        <Label Content="{Binding Rating}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="4"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="buttonAddComposition" Style="{StaticResource Add}" Content="Add " HorizontalAlignment="Left" Margin="224,44,0,0" VerticalAlignment="Top" Width="58" Click="buttonAddComposition_Click"/>
+        <Button x:Name="buttonRemoveComposition" Style="{StaticResource Close}" Content="Remove" HorizontalAlignment="Left" Margin="480,44,0,0" VerticalAlignment="Top" Width="60" Click="buttonRemoveComposition_Click"/>
+        <ListBox x:Name="listbox2" FontSize="10" ItemContainerStyle="{StaticResource normal}" HorizontalAlignment="Left" Height="197" Margin="287,10,0,0" VerticalAlignment="Top" Width="188" SelectionChanged="listbox2_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Title}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                        <Label Content="{Binding Length}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1"/>
+                        <Label Content="{Binding Rating}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="buttonAddPlaylist" Style="{StaticResource Add}" Content="Add" HorizontalAlignment="Left" Margin="287,212,0,0" VerticalAlignment="Top" Width="75" Click="buttonAddPlaylist_Click" Height="31"/>
+        <Button x:Name="buttonRemovePlaylist" Content="Remove" Style="{StaticResource Close}" HorizontalAlignment="Left" Margin="400,212,0,0" VerticalAlignment="Top" Width="75" Click="buttonRemovePlaylist_Click" Height="31"/>
+        <Label Content="Title:" HorizontalAlignment="Left" Margin="287,248,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textboxTitle" HorizontalAlignment="Left" Height="23" Margin="327,251,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Available compositions" HorizontalAlignment="Left" Margin="43,272,0,0" VerticalAlignment="Top" Width="146"/>
+        <ListBox x:Name="listbox3" FontSize="10" ItemContainerStyle="{StaticResource normal}" HorizontalAlignment="Left" Height="257" Margin="545,10,0,0" VerticalAlignment="Top" Width="209">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Title}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                        <Label Content="{Binding Performer}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1"/>
+                        <Label Content="{Binding Genre}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="2"/>
+                        <Label Content="{Binding Length}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="3"/>
+                        <Label Content="{Binding Rating}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="4"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

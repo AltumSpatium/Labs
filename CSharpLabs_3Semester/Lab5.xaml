@@ -1,0 +1,83 @@
+﻿<Window x:Class="Lab5.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Faculty collection" Height="351" Width="716">
+    <Grid Height="321" VerticalAlignment="Bottom">
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF1597B4" Offset="0"/>
+                <GradientStop Color="#FF1FC2E6" Offset="0.433"/>
+                <GradientStop Color="#FF14CDF5" Offset="0.79"/>
+                <GradientStop Color="White" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Label Content="FCSaN:"  Height="25" FontSize="13" Margin="275,6,370,290"/>
+        <Button x:Name="button1" Content="Add group" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="105" Click="button1_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                    <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                    <GradientStop Color="#FFCDCDCD" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button x:Name="button2" Content="Add student" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top" Width="105" Click="button2_Click"/>
+        <Button x:Name="button3" Content="Expell student" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top" Width="105" Click="button3_Click"/>
+        <Button x:Name="button4" Content="Remove group" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Width="105" Click="button4_Click"/>
+        <Button x:Name="button5" Content="Search for student" HorizontalAlignment="Left" VerticalAlignment="Top" Width="105" Margin="10,232,0,0" Click="button5_Click"/>
+        <Button x:Name="button6" Content="Transfer student" HorizontalAlignment="Left" Margin="10,259,0,0" VerticalAlignment="Top" Width="105" Click="button6_Click"/>
+        <Button x:Name="button7" Content="Merge groups" HorizontalAlignment="Left" Margin="10,286,0,0" VerticalAlignment="Top" Width="105" Click="button7_Click"/>
+        <Button x:Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="181,286,0,0" VerticalAlignment="Top" Width="75" Click="buttonCancel_Click"/>
+        <TextBlock x:Name="textblock1" HorizontalAlignment="Left" Margin="136,11,0,0" TextWrapping="Wrap" Text="Name:" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock2" HorizontalAlignment="Left" Margin="136,60,0,0" TextWrapping="Wrap" Text="Surname:" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock3" HorizontalAlignment="Left" Margin="136,109,0,0" TextWrapping="Wrap" Text="Number:" VerticalAlignment="Top"/>
+        <TextBox x:Name="textbox1" HorizontalAlignment="Left" Height="23" Margin="136,32,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textbox2" HorizontalAlignment="Left" Height="23" Margin="136,81,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textbox3" HorizontalAlignment="Left" Height="23" Margin="136,130,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="324" Margin="268,-4,0,0" VerticalAlignment="Top" Width="2" RenderTransformOrigin="0.5,0.5">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="-1"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Border.RenderTransform>
+        </Border>
+        <ListBox x:Name="listbox1" FontSize="15" HorizontalAlignment="Left" Height="250" Margin="275,32,0,0" VerticalAlignment="Top" Width="76" Background="#FFFFFCFC" SelectionChanged="listbox1_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox x:Name="listbox2" HorizontalAlignment="Left" Height="250" Margin="366,32,0,0" VerticalAlignment="Top" Width="229">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                        <Label Content="{Binding Surname}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="buttonChoose" Content="Choose" HorizontalAlignment="Left" Margin="120,286,0,0" VerticalAlignment="Top" Width="49" Click="buttonChoose_Click"/>
+        <Button x:Name="buttonSaveToFile" Content="Save to file" HorizontalAlignment="Left" Margin="609,82,0,0" VerticalAlignment="Top" Width="80" Click="buttonSaveToFile_Click"/>
+        <RadioButton x:Name="radiobutton1" Content="Text" HorizontalAlignment="Left" Margin="602,39,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="radiobutton2" Content="Binary" HorizontalAlignment="Left" Margin="602,60,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="buttonClearFaculty" Content="Clear faculty" HorizontalAlignment="Left" Margin="276,286,0,0" VerticalAlignment="Top" Width="75" Click="buttonClearFaculty_Click"/>
+        <Button x:Name="buttonReadFromFile" Content="Read from file" HorizontalAlignment="Left" Margin="609,114,0,0" VerticalAlignment="Top" Width="80" Click="buttonReadFromFile_Click"/>
+        <Button x:Name="buttonSerialize" Content="Serialize" HorizontalAlignment="Left" Margin="609,216,0,0" VerticalAlignment="Top" Width="80" Click="buttonSerialize_Click"/>
+        <Button x:Name="buttonDeserialize" Content="Deserialize" HorizontalAlignment="Left" Margin="609,243,0,0" VerticalAlignment="Top" Width="80" Click="buttonDeserialize_Click"/>
+    </Grid>
+</Window>

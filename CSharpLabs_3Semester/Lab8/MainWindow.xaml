@@ -1,0 +1,133 @@
+﻿<Window x:Class="Lab8.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Lab8"
+        Title="{DynamicResource m_Title}" Height="351" Width="363" Closing="Window_Closing" MaxWidth="363" MinWidth="363" MinHeight="351" MaxHeight="351">
+    <Window.Resources>
+        <Image x:Key="new" Source="Resources/new.ico"/>
+        <Image x:Key="open" Source="Resources/open.ico"/>
+        <Image x:Key="save" Source="Resources/save.ico"/>
+        <Image x:Key="saveas" Source="Resources/saveas.ico"/>
+        <Image x:Key="exit" Source="Resources/exit.ico"/>
+        <Image x:Key="addgroup" Source="Resources/addgroup.ico"/>
+        <Image x:Key="removegroup" Source="Resources/removegroup.ico"/>
+        <Image x:Key="addstudent" Source="Resources/addstudent.ico"/>
+        <Image x:Key="expellstudent" Source="Resources/expellstudent.ico"/>
+        <Image x:Key="mergegroups" Source="Resources/mergegroups.ico"/>
+        <Image x:Key="transferstudent" Source="Resources/transferstudent.ico"/>
+        <Image x:Key="cancel" Source="Resources/cancel.ico"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="New" Executed="menuItemNew_Click"/>
+        <CommandBinding Command="Open" Executed="menuItemOpen_Click"/>
+        <CommandBinding Command="Save" Executed="menuItemSave_Click"/>
+        <CommandBinding Command="local:MyCommands.AddGroup" Executed="menuItemAddGroup_Click"/>
+        <CommandBinding Command="local:MyCommands.RemoveGroup" Executed="menuItemRemoveGroup_Click"/>
+        <CommandBinding Command="local:MyCommands.AddStudent" Executed="menuItemAddStudent_Click"/>
+        <CommandBinding Command="local:MyCommands.ExpellStudent" Executed="menuItemExpellStudent_Click"/>
+        <CommandBinding Command="local:MyCommands.ChooseMerge" Executed="menuItemChooseMerge_Click" />
+        <CommandBinding Command="local:MyCommands.Merge" Executed="menuItemMerge_Click"/>
+        <CommandBinding Command="local:MyCommands.ChooseTransfer" Executed="menuItemChooseTransfer_Click"/>
+        <CommandBinding Command="local:MyCommands.Transfer" Executed="menuItemTransfer_Click"/>
+        <CommandBinding Command="local:MyCommands.Cancel" Executed="menuItemCancel_Click" />
+    </Window.CommandBindings>
+    <Grid Height="321" VerticalAlignment="Bottom">
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF1597B4" Offset="0"/>
+                <GradientStop Color="#FF1FC2E6" Offset="0.433"/>
+                <GradientStop Color="#FF14CDF5" Offset="0.79"/>
+                <GradientStop Color="White" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Button x:Name="button1" Content="{DynamicResource m_button_Add}" HorizontalAlignment="Left" Margin="390,257,-120,0" VerticalAlignment="Top" Width="85" Click="button1_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="#FFF3F3F3" Offset="0"/>
+                    <GradientStop Color="#FFEBEBEB" Offset="0.5"/>
+                    <GradientStop Color="#FFDDDDDD" Offset="0.5"/>
+                    <GradientStop Color="#FFCDCDCD" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Button x:Name="button2" Content="{DynamicResource m_button_Add}" HorizontalAlignment="Left" Margin="390,257,-120,0" VerticalAlignment="Top" Width="85" Click="button2_Click"/>
+        <Button x:Name="button3" ToolTip="Search!" Content="{DynamicResource m_button_Search}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="85" Margin="390,257,-120,0" Click="button3_Click"/>
+        <TextBlock x:Name="textblock1" HorizontalAlignment="Left" Margin="372,60,-58,0" TextWrapping="Wrap" Text="{DynamicResource m_textblock_Name}" VerticalAlignment="Top" Height="16" Width="41"/>
+        <TextBlock x:Name="textblock2" HorizontalAlignment="Left" Margin="372,109,-75,0" TextWrapping="Wrap" Text="{DynamicResource m_textblock_Surname}" VerticalAlignment="Top" Width="58"/>
+        <TextBlock x:Name="textblock3" HorizontalAlignment="Left" Margin="372,158,-70,0" TextWrapping="Wrap" Text="{DynamicResource m_textblock_Number}" VerticalAlignment="Top" Width="53"/>
+        <TextBox x:Name="textbox1" HorizontalAlignment="Left" Height="23" Margin="372,81,-137,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textbox2" HorizontalAlignment="Left" Height="23" Margin="372,130,-137,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textbox3" HorizontalAlignment="Left" Height="23" Margin="372,179,-137,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <ListBox x:Name="listbox1" FontSize="15" HorizontalAlignment="Left" Height="243" Margin="10,54,0,0" VerticalAlignment="Top" Width="76" Background="#FFFFFCFC" SelectionChanged="listbox1_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ListBox x:Name="listbox2" HorizontalAlignment="Left" Height="243" Margin="107,54,0,0" VerticalAlignment="Top" Width="229">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0"/>
+                        <Label Content="{Binding Surname}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="1"/>
+                        <Label Content="{Binding Age}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock x:Name="textblock4" HorizontalAlignment="Left" Margin="372,207,-88,0" TextWrapping="Wrap" Text="{DynamicResource m_textblock_Age}" VerticalAlignment="Top" Width="71"/>
+        <TextBox x:Name="textbox4" HorizontalAlignment="Left" Height="23" Margin="372,228,-137,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <Menu Height="20" Margin="0,8,-152,293">
+            <MenuItem x:Name="menuItemFile" Header="{DynamicResource m_File}">
+                <MenuItem x:Name="menuItemNew" Header="{DynamicResource m_New}" ToolTip="{DynamicResource m_tooltip_new}" Command="ApplicationCommands.New" Click="menuItemNew_Click" Height="24" Icon="{StaticResource new}" Margin="0,0,-3,0"></MenuItem>
+                <MenuItem x:Name="menuItemOpen" Header="{DynamicResource m_Open}" ToolTip="{DynamicResource m_tooltip_open}" Command="ApplicationCommands.Open" Click="menuItemOpen_Click" Icon="{StaticResource open}" Height="25" Margin="0,0,-3,0"></MenuItem>
+                <MenuItem x:Name="menuItemSave" Header="{DynamicResource m_Save}" ToolTip="{DynamicResource m_tooltip_save}" Command="ApplicationCommands.Save" Click="menuItemSave_Click" Icon="{StaticResource save}" Height="23" Margin="0,0,-3,0"></MenuItem>
+                <MenuItem x:Name="menuItemSaveAs" Header="{DynamicResource m_SaveAs}" Click="menuItemSaveAs_Click" ToolTip="{DynamicResource m_tooltip_saveas}" Icon="{StaticResource saveas}" Height="26" Margin="0,0,-3,0"></MenuItem>
+                <Separator></Separator>
+                <MenuItem x:Name="menuItemExit" Header="{DynamicResource m_Exit}" Click="menuItemExit_Click" Icon="{StaticResource exit}" Margin="0,0,-3,0" Height="25"></MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="menuItemFaculty" Header="{DynamicResource m_Faculty}">
+                <MenuItem x:Name="menuItemAddGroup" ToolTip="{DynamicResource m_tooltip_addgroup}" Command="local:MyCommands.AddGroup" Header="{DynamicResource m_AddGroup}" Click="menuItemAddGroup_Click" Icon="{StaticResource addgroup}" Margin="0,0,-3,0"></MenuItem>
+                <MenuItem x:Name="menuItemRemoveGroup" ToolTip="{DynamicResource m_tooltip_removegroup}" Command="local:MyCommands.RemoveGroup" Header="{DynamicResource m_RemoveGroup}" Click="menuItemRemoveGroup_Click" Icon="{StaticResource removegroup}" Height="25" Margin="0,0,-3,0"/>
+                <Separator></Separator>
+                <MenuItem x:Name="menuItemAddStudent" Header="{DynamicResource m_AddStudent}" ToolTip="{DynamicResource m_tooltip_addstudent}" Command="local:MyCommands.AddStudent" Click="menuItemAddStudent_Click" Icon="{StaticResource addstudent}" Height="27" Margin="0,0,-3,0"></MenuItem>
+                <MenuItem x:Name="menuItemExpellStudent" Header="{DynamicResource m_ExpellStudent}" Command="local:MyCommands.ExpellStudent" ToolTip="{DynamicResource m_tooltip_expellstudent}" Click="menuItemExpellStudent_Click" Icon="{StaticResource expellstudent}" Margin="0,0,-3,0"></MenuItem>
+                <Separator></Separator>
+                <MenuItem x:Name="menuItemMergeGroups" Header="{DynamicResource m_MergeGroups}" ToolTip="{DynamicResource m_tooltip_mergegroups}" Icon="{StaticResource mergegroups}">
+                    <MenuItem x:Name="menuItemChooseMerge" Header="{DynamicResource m_Choose}" Command="local:MyCommands.ChooseMerge" ToolTip="{DynamicResource m_tooltip_choosemerge}" Click="menuItemChooseMerge_Click"/>
+                    <MenuItem x:Name="menuItemMerge" Header="{DynamicResource m_Merge}" Command="local:MyCommands.Merge" IsEnabled="False" ToolTip="{DynamicResource m_tooltip_merge}" Click="menuItemMerge_Click"/>
+                </MenuItem>
+                <MenuItem x:Name="menuItemTransferStudent" Header="{DynamicResource m_TransferStudent}" ToolTip="{DynamicResource m_tooltip_transferstudent}" Icon="{StaticResource transferstudent}" Height="26" Margin="0,0,-3,0">
+                    <MenuItem x:Name="menuItemChooseTransfer" Header="{DynamicResource m_Choose}" Command="local:MyCommands.ChooseTransfer" ToolTip="{DynamicResource m_tooltip_choosetransfer}" Click="menuItemChooseTransfer_Click"/>
+                    <MenuItem x:Name="menuItemTransfer" Header="{DynamicResource m_Transfer}" Command="local:MyCommands.Transfer" ToolTip="{DynamicResource m_tooltip_transfer}" IsEnabled="False" Click="menuItemTransfer_Click"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="menuItemSearch" Header="{DynamicResource m_Search}" ToolTip="{DynamicResource m_tooltip_search}" Click="menuItemSearch_Click"/>
+            <MenuItem x:Name="menuItemOptions" Header="{DynamicResource m_Options}">
+                <MenuItem x:Name="menuItemRandomAge" Header="{DynamicResource m_RandomAge}" IsCheckable="True" IsChecked="False"/>
+                <MenuItem x:Name="menuItemLinq" Header="{DynamicResource m_Linq}" ToolTip="{DynamicResource m_tooltip_linq}" Click="menuItemLinq_Click"/>
+                <MenuItem x:Name="menuItemLanguage" Header="{DynamicResource m_Language}"/>
+                <Separator></Separator>
+                <MenuItem x:Name="menuItemCancel" Header="{DynamicResource m_Cancel}" ToolTip="{DynamicResource m_tooltip_cancel}" Command="local:MyCommands.Cancel" Icon="{StaticResource cancel}" Click="menuItemCancel_Click" Height="23" Margin="0,0,-3,0"/>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="labelMB" Content="{DynamicResource m_messagebox}" HorizontalAlignment="Left" Height="6" Margin="64,331,0,-16" VerticalAlignment="Top" Visibility="Collapsed"/>
+        <Viewbox HorizontalAlignment="Left" Height="19" Margin="11,35,0,0" VerticalAlignment="Top" Width="49">
+            <Image x:Name="imgeng" Source="Resources/fscaneng.png" Visibility="Visible" Height="20" Width="49"/>
+        </Viewbox>
+        <Viewbox HorizontalAlignment="Left" Height="19" Margin="11,35,0,0" VerticalAlignment="Top" Width="49">
+            <Image x:Name="imgrus" Source="Resources/fscanrus.png" Visibility="Hidden" Width="49"/>
+        </Viewbox>
+    </Grid>
+</Window>

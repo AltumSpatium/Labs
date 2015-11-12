@@ -1,0 +1,18 @@
+	How to add icons to Visual Studio project
+
+To add icons to your project, you should add them to project resources:
+	
+	'projectname' -> right mouse button click -> Properties -> Resources -> Icons -> Add resources.
+	
+Icons should be in a specified folder. They will appear in solution explorer, with the other source files.
+Click each of them and in properties window in field 'Build Action' choose 'Resource'.
+Then you have to add it, for example, to window resources, that way:
+
+        <Window.Resources>
+          <Image x:Key="imagineyourownkey" Source="Resources/*.ico"/>
+          .......
+        </Window.Resources>
+        
+After this stuff is done, choose, for example, MenuItem component, and place {StaticResource yourkey} in its' 'Icon' property.
+Click 'Rebuild solution'.
+Well done!
