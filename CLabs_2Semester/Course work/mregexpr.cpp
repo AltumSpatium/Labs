@@ -8,41 +8,41 @@
 #include <windows.h>
 
 //*************************************************************************************************
-// Реализация MRegExpr.
+// Р РµР°Р»РёР·Р°С†РёСЏ MRegExpr.
 
-// Определение идентификаторов элементов шаблона.
-#define MREGEXPR_CHAR ((unsigned char) 0x01) // Заданный символ (может быть задан как (\xDD), где DD - шестнадцатеричный код символа)
-#define MREGEXPR_CDIG ((unsigned char) 0x02) // Цифра (\d)
-#define MREGEXPR_CSYM ((unsigned char) 0x03) // Алфавитный символ (\s)
-#define MREGEXPR_CASC ((unsigned char) 0x04) // Цифра | Алфавитный символ | Символ подчеркивания (\w)
-#define MREGEXPR_CSPC ((unsigned char) 0x05) // Пробельные символы (\t)
-#define MREGEXPR_CLAT ((unsigned char) 0x06) // Латинский символ (\a)
-#define MREGEXPR_CCYR ((unsigned char) 0x07) // Кириллический символ (\c)
-#define MREGEXPR_CMRK ((unsigned char) 0x08) // Знак препинания (\m)
-#define MREGEXPR_CHEX ((unsigned char) 0x09) // Шестнадцатеричный символ (\h)
-#define MREGEXPR_CEOL ((unsigned char) 0x0A) // Символ конца строки (\$)
-#define MREGEXPR_CDOT ((unsigned char) 0x10) // Любой символ ( . )
-#define MREGEXPR_CCLS ((unsigned char) 0x20) // Класс символов ( [] )
-#define MREGEXPR_VRNT ((unsigned char) 0x30) // Вариант выбора ( | )
-#define MREGEXPR_SBRK ((unsigned char) 0x40) // Начало блока выбора ( ( )
-#define MREGEXPR_EBRK ((unsigned char) 0x50) // Конец блока выбора ( ) )
-#define MREGEXPR_RNGE ((unsigned char) 0x80) // Квантификатор повторений ( ? + * {} )
+// РћРїСЂРµРґРµР»РµРЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ СЌР»РµРјРµРЅС‚РѕРІ С€Р°Р±Р»РѕРЅР°.
+#define MREGEXPR_CHAR ((unsigned char) 0x01) // Р—Р°РґР°РЅРЅС‹Р№ СЃРёРјРІРѕР» (РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РґР°РЅ РєР°Рє (\xDD), РіРґРµ DD - С€РµСЃС‚РЅР°РґС†Р°С‚РµСЂРёС‡РЅС‹Р№ РєРѕРґ СЃРёРјРІРѕР»Р°)
+#define MREGEXPR_CDIG ((unsigned char) 0x02) // Р¦РёС„СЂР° (\d)
+#define MREGEXPR_CSYM ((unsigned char) 0x03) // РђР»С„Р°РІРёС‚РЅС‹Р№ СЃРёРјРІРѕР» (\s)
+#define MREGEXPR_CASC ((unsigned char) 0x04) // Р¦РёС„СЂР° | РђР»С„Р°РІРёС‚РЅС‹Р№ СЃРёРјРІРѕР» | РЎРёРјРІРѕР» РїРѕРґС‡РµСЂРєРёРІР°РЅРёСЏ (\w)
+#define MREGEXPR_CSPC ((unsigned char) 0x05) // РџСЂРѕР±РµР»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹ (\t)
+#define MREGEXPR_CLAT ((unsigned char) 0x06) // Р›Р°С‚РёРЅСЃРєРёР№ СЃРёРјРІРѕР» (\a)
+#define MREGEXPR_CCYR ((unsigned char) 0x07) // РљРёСЂРёР»Р»РёС‡РµСЃРєРёР№ СЃРёРјРІРѕР» (\c)
+#define MREGEXPR_CMRK ((unsigned char) 0x08) // Р—РЅР°Рє РїСЂРµРїРёРЅР°РЅРёСЏ (\m)
+#define MREGEXPR_CHEX ((unsigned char) 0x09) // РЁРµСЃС‚РЅР°РґС†Р°С‚РµСЂРёС‡РЅС‹Р№ СЃРёРјРІРѕР» (\h)
+#define MREGEXPR_CEOL ((unsigned char) 0x0A) // РЎРёРјРІРѕР» РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (\$)
+#define MREGEXPR_CDOT ((unsigned char) 0x10) // Р›СЋР±РѕР№ СЃРёРјРІРѕР» ( . )
+#define MREGEXPR_CCLS ((unsigned char) 0x20) // РљР»Р°СЃСЃ СЃРёРјРІРѕР»РѕРІ ( [] )
+#define MREGEXPR_VRNT ((unsigned char) 0x30) // Р’Р°СЂРёР°РЅС‚ РІС‹Р±РѕСЂР° ( | )
+#define MREGEXPR_SBRK ((unsigned char) 0x40) // РќР°С‡Р°Р»Рѕ Р±Р»РѕРєР° РІС‹Р±РѕСЂР° ( ( )
+#define MREGEXPR_EBRK ((unsigned char) 0x50) // РљРѕРЅРµС† Р±Р»РѕРєР° РІС‹Р±РѕСЂР° ( ) )
+#define MREGEXPR_RNGE ((unsigned char) 0x80) // РљРІР°РЅС‚РёС„РёРєР°С‚РѕСЂ РїРѕРІС‚РѕСЂРµРЅРёР№ ( ? + * {} )
 
-// Набор алфавитных символов.
+// РќР°Р±РѕСЂ Р°Р»С„Р°РІРёС‚РЅС‹С… СЃРёРјРІРѕР»РѕРІ.
 unsigned char RegExprSymbols[] =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-  "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЇЎабвгдеёжзийклмнопрстуфхцчшщъыьэюяїў";
+  "РђР‘Р’Р“Р”Р•РЃР–Р—РР™РљР›РњРќРћРџР РЎРўРЈР¤РҐР¦Р§РЁР©РЄР«Р¬Р­Р®РЇР‡РЋР°Р±РІРіРґРµС‘Р¶Р·РёР№РєР»РјРЅРѕРїСЂСЃС‚СѓС„С…С†С‡С€С‰СЉС‹СЊСЌСЋСЏС—Сћ";
 
-// Набор знаков препинания.
+// РќР°Р±РѕСЂ Р·РЅР°РєРѕРІ РїСЂРµРїРёРЅР°РЅРёСЏ.
 unsigned char RegExprMarks[] =
   "!?.,;:()[]{}";
 
-// Набор шестнадцатеричных символов.
+// РќР°Р±РѕСЂ С€РµСЃС‚РЅР°РґС†Р°С‚РµСЂРёС‡РЅС‹С… СЃРёРјРІРѕР»РѕРІ.
 unsigned char RegExprHexs[] =
   "0123456789ABCDEFabcdef";
 
 //.................................................................................................
-// Конструктор объекта.
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РѕР±СЉРµРєС‚Р°.
 
 __stdcall MRegExpr::MRegExpr(const char* _expression) : FTemplate(0)  
 {
@@ -51,7 +51,7 @@ __stdcall MRegExpr::MRegExpr(const char* _expression) : FTemplate(0)
 }
 
 //.................................................................................................
-// Деструктор объекта.
+// Р”РµСЃС‚СЂСѓРєС‚РѕСЂ РѕР±СЉРµРєС‚Р°.
 
 __stdcall MRegExpr::~MRegExpr(void)
 {
@@ -60,7 +60,7 @@ __stdcall MRegExpr::~MRegExpr(void)
 }
 
 //.................................................................................................
-// Поиск символа в буфере двоичных данных.
+// РџРѕРёСЃРє СЃРёРјРІРѕР»Р° РІ Р±СѓС„РµСЂРµ РґРІРѕРёС‡РЅС‹С… РґР°РЅРЅС‹С….
 
 void* __stdcall MRegExpr::MemChr(const void* _buffer, long _size, int _value, bool _last)
 {
@@ -76,7 +76,7 @@ void* __stdcall MRegExpr::MemChr(const void* _buffer, long _size, int _value, bo
 }
 
 //..................................................................................................
-// Поиск заданного символа в строке.
+// РџРѕРёСЃРє Р·Р°РґР°РЅРЅРѕРіРѕ СЃРёРјРІРѕР»Р° РІ СЃС‚СЂРѕРєРµ.
 
 char* __stdcall MRegExpr::StrChr(const char* _source, int _value, bool _last)
 {
@@ -87,7 +87,7 @@ char* __stdcall MRegExpr::StrChr(const char* _source, int _value, bool _last)
 }
 
 //..................................................................................................
-// Выделение памяти для сохранения шаблона.
+// Р’С‹РґРµР»РµРЅРёРµ РїР°РјСЏС‚Рё РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ С€Р°Р±Р»РѕРЅР°.
 
 unsigned char* __stdcall MRegExpr::GetBuffer(const char* _expression)
 {
@@ -157,7 +157,7 @@ unsigned char* __stdcall MRegExpr::GetBuffer(const char* _expression)
 }
 
 //.................................................................................................
-// Поиск в шаблоне заданного элемента.
+// РџРѕРёСЃРє РІ С€Р°Р±Р»РѕРЅРµ Р·Р°РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°.
 
 unsigned char* __stdcall MRegExpr::GetPatternGroup(unsigned char* _pattern, bool _breaked)  
 {
@@ -188,7 +188,7 @@ unsigned char* __stdcall MRegExpr::GetPatternGroup(unsigned char* _pattern, bool
 }
 
 //.................................................................................................
-// Поиск в шаблоне заданного элемента.
+// РџРѕРёСЃРє РІ С€Р°Р±Р»РѕРЅРµ Р·Р°РґР°РЅРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°.
 
 unsigned char* __stdcall MRegExpr::GetPatternItem(unsigned char* _pattern, unsigned char _item, bool _last)
 {
@@ -219,7 +219,7 @@ unsigned char* __stdcall MRegExpr::GetPatternItem(unsigned char* _pattern, unsig
 }
 
 //.................................................................................................
-// Рекурсивное сравнение строки с шаблоном.
+// Р РµРєСѓСЂСЃРёРІРЅРѕРµ СЃСЂР°РІРЅРµРЅРёРµ СЃС‚СЂРѕРєРё СЃ С€Р°Р±Р»РѕРЅРѕРј.
 
 const char* __stdcall MRegExpr::Advance (const char* _substr, unsigned char* _pattern)
 {
@@ -378,11 +378,11 @@ const char* __stdcall MRegExpr::Advance (const char* _substr, unsigned char* _pa
                                         continue;
 
                                     return (const char*) nextstr;
-								}
+				}
 
-						} while((_pattern = GetPatternItem(_pattern, MREGEXPR_VRNT, false)) != 0);
-					}
-                    return 0;
+			} while((_pattern = GetPatternItem(_pattern, MREGEXPR_VRNT, false)) != 0);
+		}
+                return 0;
 
                 case (MREGEXPR_CHAR | MREGEXPR_RNGE):
                     rmin = (short) *_pattern++;
@@ -574,40 +574,40 @@ const char* __stdcall MRegExpr::Advance (const char* _substr, unsigned char* _pa
                         chr = *substr++;
                         if (!(_pattern[(chr >> 3)] & (0x80 >> (chr & 0x07))))
 							return 0;
-					}
+		    }
 
                     currstr = substr;
 
                     while (rmax--)
-					{
+		    {
                         chr = *substr++;
                         if (!(_pattern[(chr >> 3)] & (0x80 >> (chr & 0x07))))
 							break;
-					}
+		    }
 
                     _pattern += 32;
                     break;
-	    }
+	}
 
         if(currstr)
         {
             if (rmax < 0)
-				substr++;
+		substr++;
             do
-			{
+	    {
                 const char* resstr = Advance((const char*) --substr, _pattern);
                 if (resstr)
-					return resstr;
+		    return resstr;
 
-			} while(substr > currstr);
-		}
+	    } while(substr > currstr);
+	}
         return 0;
   }
   return (const char*) substr;
 }
 
 //.................................................................................................
-// Загрузка и компиляция регулярного выражения.
+// Р—Р°РіСЂСѓР·РєР° Рё РєРѕРјРїРёР»СЏС†РёСЏ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ.
 
 bool __stdcall MRegExpr::Compile(const char* _expression)
 {
@@ -646,12 +646,12 @@ bool __stdcall MRegExpr::Compile(const char* _expression)
 					if ((startpat = GetPatternItem(buffer, 0, true)) == 0 || *startpat == MREGEXPR_VRNT || *startpat == MREGEXPR_SBRK)
 						curr = 0;
 						
-                    else
-                    {
-                        *ofspat++ = MREGEXPR_VRNT;
-                        if (!brkcount)
-							brkglob = true;	
-                        continue;
+                    			else
+                    			{
+                        			*ofspat++ = MREGEXPR_VRNT;
+                        			if (!brkcount)
+						    brkglob = true;	
+                        			    continue;
 					}
 
 				} break;
@@ -659,55 +659,55 @@ bool __stdcall MRegExpr::Compile(const char* _expression)
                 case '(':
                 {
                     if (!*curr)
-						curr = 0;
+			curr = 0;
                     else
-					{
-                        *ofspat++ = MREGEXPR_SBRK;
-                        brkcount++;
-                        continue;
-					}
+			{
+                        	*ofspat++ = MREGEXPR_SBRK;
+                        	brkcount++;
+                        	continue;
+			}
 
-				} break;
+		} break;
 
                 case ')':
-				{
+		{
                     if (brkcount <= 0 || (startpat = GetPatternItem(buffer, 0, true)) == 0 ||
                         *startpat == MREGEXPR_VRNT || *startpat == MREGEXPR_SBRK)
 						curr = 0;
                     else
-					{
+		    {
                         unsigned char* cpypos = buffer;
 
                         for (long index = 0; index < brkcount; index++)
-						{
+			{
                             if ((startpat = GetPatternItem(cpypos, MREGEXPR_SBRK, false)) == 0)
-								break;
+				break;
                             else
-								cpypos = startpat + 1;
+				cpypos = startpat + 1;
 
                             if (*startpat & MREGEXPR_RNGE)
-								cpypos += 2;
-						}
+				cpypos += 2;
+			}
 
                         if (!startpat)
-							curr = 0;
+				curr = 0;
                         else
-						{
+			{
                             if (*curr != '?' && *curr != '+' && *curr != '*' && *curr != '{' &&
                                 !GetPatternGroup(startpat + 1, false))
-							{
+			    {
                                 cpypos = startpat;
                                 while (ofspat >= cpypos)
-									*cpypos = *cpypos++;
-							}
+					*cpypos = *cpypos++;
+		            }
                             else
-								*ofspat++ = MREGEXPR_EBRK;
+				*ofspat++ = MREGEXPR_EBRK;
 
                             brkcount--;
                             FTemplate = 0;
-						}
-					}
-				} break;
+			}
+		}
+	} break;
 
                 case '[':
                 {
@@ -1018,7 +1018,7 @@ bool __stdcall MRegExpr::Compile(const char* _expression)
 }
 
 //.................................................................................................
-// Получение признака загрузки регулярного выражения.
+// РџРѕР»СѓС‡РµРЅРёРµ РїСЂРёР·РЅР°РєР° Р·Р°РіСЂСѓР·РєРё СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ РІС‹СЂР°Р¶РµРЅРёСЏ.
 
 bool __stdcall MRegExpr::IsLoaded(void) const
 {
@@ -1026,7 +1026,7 @@ bool __stdcall MRegExpr::IsLoaded(void) const
 }
 
 //.................................................................................................
-// Проверка строки на соответствие регулярному выражению.
+// РџСЂРѕРІРµСЂРєР° СЃС‚СЂРѕРєРё РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ СЂРµРіСѓР»СЏСЂРЅРѕРјСѓ РІС‹СЂР°Р¶РµРЅРёСЋ.
 
 bool __stdcall MRegExpr::IsEqual(const char* _string)
 {
@@ -1040,7 +1040,7 @@ bool __stdcall MRegExpr::IsEqual(const char* _string)
 }
 
 //.................................................................................................
-// Поиск подстроки, соответствующей регулярному выражению.
+// РџРѕРёСЃРє РїРѕРґСЃС‚СЂРѕРєРё, СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ СЂРµРіСѓР»СЏСЂРЅРѕРјСѓ РІС‹СЂР°Р¶РµРЅРёСЋ.
 
 const char* __stdcall MRegExpr::Find(const char* _string, long& _length)
 {
@@ -1096,7 +1096,7 @@ int main (int argc, char* argv[])
 	}
 
 	if (argc != 3)
-    {
+    	{
         puts("Command line error.");
 	    puts("Usage: mregexpr <regular expression> <path file name>");
 	    return -1;
