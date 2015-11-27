@@ -37,7 +37,7 @@ main:
 			cmp ah, 09h
 			jnz old_handler
 			
-			xor ax, ax
+			xor ax, ax	;test on installation
 			mov ax, cs:isinstalled
 			cmp ax, 1
 			jnz old_handler
@@ -72,22 +72,24 @@ main:
 	installed db "Handler is successfully installed!$"
 	uninstalled db "Handler is successfully removed!$"
 	not_installed_msg db "Handler is not installed!$"
+
+; the installation part:
 	
 start:
 
-	mov ax, 3521h
+	mov ax, 3521h	; getting old handler
 	int 21h
 	
-	mov word ptr old_int21h_handler, bx
+	mov word ptr old_int21h_handler, bx			; saving old handler
     mov word ptr old_int21h_handler + 2, es
 	
-	mov ah, cmd_len
+	mov ah, cmd_len	; checking the input parameter
     cmp ah, 0
     jnz withparam
 	
 	mov ax, es:isinstalled
 	cmp ax, 1
-	jz alreadyInst
+	jz alreadyInst	; if handler is already installed
 	
 	mov dx, offset installed
 	mov ah, 09h
@@ -96,11 +98,11 @@ start:
 	mov ax, 1
 	mov isinstalled, ax
 	
-	mov ax, 2521h
+	mov ax, 2521h	; restoring the old handler
 	mov dx, offset int21h_handler
 	int 21h
 	
-	mov dx, offset start
+	mov dx, offset start ; leaving active the resident part
 	int 27h
 	
 	ret
@@ -110,17 +112,17 @@ start:
 		mov di, offset cmd_line
 		mov al, [di + 1]
 		cmp al, '-'
-		jnz parameter_err
+		jnz parameter_err 
 		
 		mov al, [di + 2]
 		cmp al, 'd'
-		jnz parameter_err
+		jnz parameter_err	; if parameter is not '-d'
 		
 		mov ax, es:isinstalled
 		cmp ax, 1
-		jnz not_installed
+		jnz not_installed ; if handler is not installed
 		
-		mov ax, 0
+		mov ax, 0	; uninstallation
 		mov es:isinstalled, ax
 		
 		mov dx, offset uninstalled
