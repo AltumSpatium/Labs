@@ -16,6 +16,7 @@ main:
 	jmp start
 	
 	; the resident part:
+	
 	int21h_handler proc far
 	
 		jmp begin
@@ -37,7 +38,7 @@ main:
 			cmp ah, 09h
 			jnz old_handler
 			
-			xor ax, ax	;test on installation
+			xor ax, ax ;test on installation
 			mov ax, cs:isinstalled
 			cmp ax, 1
 			jnz old_handler
@@ -77,15 +78,15 @@ main:
 	
 start:
 
-	mov ax, 3521h	; getting old handler
+	mov ax, 3521h ; getting old handler
 	int 21h
 	
-	mov word ptr old_int21h_handler, bx			; saving old handler
-    mov word ptr old_int21h_handler + 2, es
+	mov word ptr old_int21h_handler, bx  ; saving old handler
+	mov word ptr old_int21h_handler + 2, es
 	
 	mov ah, cmd_len	; checking the input parameter
-    cmp ah, 0
-    jnz withparam
+    	cmp ah, 0
+    	jnz withparam
 	
 	mov ax, es:isinstalled
 	cmp ax, 1
@@ -98,7 +99,7 @@ start:
 	mov ax, 1
 	mov isinstalled, ax
 	
-	mov ax, 2521h	; restoring the old handler
+	mov ax, 2521h ; restoring the old handler
 	mov dx, offset int21h_handler
 	int 21h
 	
@@ -122,7 +123,7 @@ start:
 		cmp ax, 1
 		jnz not_installed ; if handler is not installed
 		
-		mov ax, 0	; uninstallation
+		mov ax, 0 ; uninstallation
 		mov es:isinstalled, ax
 		
 		mov dx, offset uninstalled
