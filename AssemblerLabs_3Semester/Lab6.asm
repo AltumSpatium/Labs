@@ -21,48 +21,70 @@ main:
 	
 		jmp begin
 		
-		;variables
 		old_int21h_handler dd ?
 		isinstalled dw ?
-		inputstr db ?
-		outputstr db 256 dup('$')
-		upperreg db "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		lowerreg db "abcdefghijklmnopqrstuvwxyz"
-		
+
 		begin:
 			
 			pushf
 			pusha			
-			cli
 			
 			cmp ah, 09h
 			jnz old_handler
 			
-			xor ax, ax ;test on installation
+			xor ax, ax ; testing on installation
 			mov ax, cs:isinstalled
 			cmp ax, 1
 			jnz old_handler
 			
-			;mov inputstr, offset dx
-			cld
-			mov si, offset inputstr
-			mov di, offset upperreg
+			mov ah, 02h
+			mov si, dx
 			
-			;mov cx, sizeof(inputstr) ;!!
+			checkloop:
 			
-			cycle:
+				mov dl, [si]
 				
-				lodsb
-				repne scasb
-				
+				cmp dl, '$'
+				jz end_handler
 			
+				cmp dl, 'A'
+				jl print_handler ; <
+				
+				cmp dl, 'Z'
+				ja islower ; >
+				
+				add dl, ('a' - 'A')
+				jmp print_handler
+				
+				islower:				
+				
+				cmp dl, 'z'
+				ja print_handler ; >
+				
+				cmp dl, 'a'
+				jl print_handler ; <
+				
+				sub dl, ('a' - 'A')
+								
+				print_handler:
+				
+					int 21h
+					
+				inc si
+				jmp checkloop		
+	
+			end_handler:
+			
+				popa
+				popf
+				
+				iret
+				
 			old_handler:
 				
 				popa
 				popf
-				;sti ; maybe
 				jmp dword ptr cs:old_int21h_handler
-				iret
 		
 		
 		
@@ -90,23 +112,26 @@ start:
 	
 	mov ax, es:isinstalled
 	cmp ax, 1
-	jz alreadyInst	; if handler is already installed
+	jnz newinst
+	jmp alreadyInst	; if handler is already installed
 	
-	mov dx, offset installed
-	mov ah, 09h
-	int 21h
+	newinst:
+		
+		mov dx, offset installed
+		mov ah, 09h
+		int 21h
 	
-	mov ax, 1
-	mov isinstalled, ax
+		mov ax, 1
+		mov isinstalled, ax
 	
-	mov ax, 2521h ; restoring the old handler
-	mov dx, offset int21h_handler
-	int 21h
+		mov ax, 2521h ; installing the new handler
+		mov dx, offset int21h_handler
+		int 21h
 	
-	mov dx, offset start ; leaving active the resident part
-	int 27h
+		mov dx, offset start ; leaving active the resident part
+		int 27h
 	
-	ret
+		ret
 	
 	withparam:
 		
@@ -125,6 +150,11 @@ start:
 		
 		mov ax, 0 ; uninstallation
 		mov es:isinstalled, ax
+		
+		mov ax, 2521h ; restoring the old handler
+		mov dx, word ptr old_int21h_handler
+		mov ds, word ptr old_int21h_handler+2
+		int 21h
 		
 		mov dx, offset uninstalled
 		mov ah, 09h
