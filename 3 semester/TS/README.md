@@ -1,1 +1,1 @@
-This repository contains labs on C#. BSUIR, FCSaN, CSaSE, PT, 3rd semester.
+This repository contains labs on Tools and Software (C#). BSUIR, FCSaN, CSaSE, PT, 3rd semester.
