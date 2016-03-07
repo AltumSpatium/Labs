@@ -1,0 +1,1 @@
+This repository contains labs on Tools and Software (Python). BSUIR, FCSaN, CSaSE, PT, 4th semester.
