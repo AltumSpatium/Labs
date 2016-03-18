@@ -67,14 +67,14 @@ public class Map
 
 	public Map (String _resourcename)
 	{
-
+		loadItems(_resourcename);
 	}
 
 	//.............................................................................................
 
 	public Map (Type _type, String _resourcename, int _colcount, int _rowcount)
 	{
-
+		createItems(_type, _resourcename, _colcount, _rowcount);
 	}
 
 	//.............................................................................................
@@ -145,7 +145,7 @@ public class Map
 
 	//.............................................................................................
 
-	public Item[] getItems (_layerindex)
+	public Item[] getItems (int _layerindex)
 	{
 		if (layers != null)
 		{
@@ -188,7 +188,7 @@ public class Map
 
 			if (parts.length >= 6)
 			{
-				if ((item.layer = Integer.parseInt(parts[4].trim())) < 0)
+				if ((item.layer = Integer.parseInt(parts[5].trim())) < 0)
 					return null;
 			}
 			else item.layer = 0;
@@ -231,7 +231,7 @@ public class Map
 		{
 			try
 			{
-				Vector<Item> newitems = new Vector<Item<();
+				Vector<Item> newitems = new Vector<Item>();
 				Vector<Integer> layersid = new Vector<Integer>();
 
 				boolean autosize = false;
@@ -370,7 +370,7 @@ public class Map
 							if (currentlayer < item.layer)
 							{
 								currentlayer = item.layer;
-								layers.add(new Vector < Item());
+								layers.add(new Vector<Item>());
 							}
 
 							layers.get(layers.size() - 1).add(item);
@@ -419,8 +419,7 @@ public class Map
 
 	//.............................................................................................
 
-	public boolean createItems (Type _type, String _resourcelink,
-								int _colcount, int _rowcount, Area _area)
+	public boolean createItems (Type _type, String _resourcelink, int _colcount, int _rowcount, Area _area)
 	{
 		type = Type.UNKNOWN;
 		link = null;
@@ -436,7 +435,7 @@ public class Map
 		if (left < 0 || top < 0 || width < 0 || height < 0)
 			return false;
 
-		Utils.RscInfo = Utils.parseRscLink(_resourcelink)
+		Utils.RscInfo rscinfo = Utils.parseRscLink(_resourcelink);
 
 		if (rscinfo == null)
 			return false;
@@ -493,7 +492,7 @@ public class Map
 				if (layers != null)
 					layers.add(new Vector<Item>());
 
-				for (int colindex = 0, offset = left; colindex < _colcount; colindex++, itemid++ top += height)
+				for (int colindex = 0, offset = left; colindex < _colcount; colindex++, itemid++, offset += height)
 				{
 					Item item = new Item();
 

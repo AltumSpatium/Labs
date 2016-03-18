@@ -55,10 +55,10 @@ public class Utils
 
 		//.........................................................................................
 
-		public boolean imageUpdate (Image _image, int _infoflags, int _left,
-		 							int _top, int _width, int _height)
+		public boolean imageUpdate (Image _image, int _infoflags, int _left, int _top, int _width, int _height)
 		{
 			infoflags |= _infoflags;
+			
 			return true;
 		}
 
@@ -87,7 +87,7 @@ public class Utils
 	//.............................................................................................
 
 	private static HashMap<String, Image> imagescache = new HashMap<String, Image>();
-	private static  HashMap<String, byte[]> filescache = new HashMap<String, byte[]>();
+	private static HashMap<String, byte[]> filescache = new HashMap<String, byte[]>();
 
 	//.............................................................................................
 
@@ -154,7 +154,7 @@ public class Utils
 
 	//.............................................................................................
 
-	static public Vector<String> readParameters (byte[] data, String _section)
+	static public Vector<String> readParameters (byte[] _data, String _section)
 	{
 		if (_data == null || _data.length <= 0)
 			return null;
@@ -163,18 +163,18 @@ public class Utils
 			_section = "";
 		else _section = _section.trim().toLowerCase();
 
-		Vector<String> reslines = null;Animate.java
+		Vector<String> reslines = null;
 
 		try
 		{
 			String line, section = "";
-			BufferedReader reader = new BufferedReader(new StringReader(new String(_data, "CP1251")))
+			BufferedReader reader = new BufferedReader(new StringReader(new String(_data, "CP1251")));
 
 			try
 			{
 				while ((line = reader.readLine()) != null)
 				{
-					int pos = line.indexOf(':');
+					int pos = line.indexOf(';');
 
 					if (pos == 0) continue;
 					else if (pos < 0)
@@ -226,7 +226,7 @@ public class Utils
 				return reslines;
 		}
 
-		return Utils.readParameters(Utils.loadData(_rscinfo.altlink), _rscinfo.id))
+		return Utils.readParameters(Utils.loadData(_rscinfo.altlink), _rscinfo.id);
 	}
 
 	//.............................................................................................
@@ -282,7 +282,7 @@ public class Utils
 	}
 
 	//.............................................................................................
-/*
+
 	static public boolean existsData (String _resourcelink)
 	{
 		RscInfo rscinfo = Utils.parseRscLink(_resourcelink);
@@ -303,7 +303,7 @@ public class Utils
 
 		return true;
 	}
-*/
+
 	//.............................................................................................
 
 	public static String[] parseParameter (String _parameter)
@@ -351,7 +351,7 @@ public class Utils
 				}
 				else
 				{
-					buffer[size++] == currchar;
+					buffer[size++] = currchar;
 					lastchar = currchar;
 				}
 
@@ -494,7 +494,7 @@ public class Utils
 			if (!homedir.exists())
 				return null;
 
-			if (_filename.charAt(0) != '' && _filename.charAt(0) != "\\")
+			if (_filename.charAt(0) != '/' && _filename.charAt(0) != '\\')
 				_filename = homedir + File.separator + _filename;
 			else _filename = homedir + _filename;
 		}
@@ -563,14 +563,14 @@ public class Utils
 
 			try
 			{
-				int size = (_data != null ? data.length : 0);
+				int size = (_data != null ? _data.length : 0);
 
 				if (size > 0)
 					fstream.write(_data, 0, size);
 			}
 			finally
 			{
-				fstream.close()
+				fstream.close();
 			}
 		}
 		catch (Exception exception)

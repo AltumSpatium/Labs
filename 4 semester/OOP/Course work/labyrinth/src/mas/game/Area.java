@@ -219,7 +219,7 @@ public class Area
 	}
 
 	//...............................................................................................
-/*
+
 	public boolean isContaint (int _xpos, int _ypos)
 	{
 		if (_xpos < left || _xpos >= (left + width) ||
@@ -230,7 +230,7 @@ public class Area
 	}
 
 	//...............................................................................................
-
+/*
 	public boolean isCrossing (Area _area)
 	{
 		if (((_area.left + _area.width) <= left) || (_area.left  >= (left + width)) ||
