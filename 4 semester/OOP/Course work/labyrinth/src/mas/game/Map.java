@@ -203,14 +203,218 @@ public class Map
 
 	public boolean loadItems (String _resourcelink)
 	{
+		type = Type.UNKNOWN;
+		link = null;
+		items = null;
+		layers = null;
 
+		Utils.RscInfo rscinfo = Utils.parseRscLink(_resourcelink);
+
+		if (rscinfo == null)
+			return false;
+
+		CacheInfo cacheinfo = mapcache.get(rscinfo.key);
+
+		if (cacheinfo != null)
+		{
+			type = cacheinfo.type;
+			link = cacheinfo.link;
+			items = cacheinfo.items;
+			layers = cacheinfo.layers;
+
+			return true;
+		}
+
+		Vector<String> resdata = Utils.loadConfig(rscinfo);
+
+		if (resdata != null)
+		{
+			try
+			{
+				Vector<Item> newitems = new Vector<Item<();
+				Vector<Integer> layersid = new Vector<Integer>();
+
+				boolean autosize = false;
+				int autocols = 0, autorows = 0, autoleft = 0,
+				 	autotop = 0, autowidth = 0, autoheight = 0;
+				int pos;
+
+				for (String line : resdata)
+				{
+					if ((pos = line.indexOf('=')) <= 0)
+						return false;
+
+					String key = line.substring(0, pos).trim().toLowerCase();
+					String value = line.substring(pos + 1).trim();
+
+					if (type == Type.UNKNOWN)
+					{
+						if (!key.equals("map.type"))
+							return false;
+
+						value = value.toLowerCase();
+
+						if ((pos = value.indexOf(':')) >= 0)
+						{
+							String modify = value.substring(pos + 1).trim();
+							value = value.substring(0, pos).trim();
+
+							if (modify.equals("auto"))
+								autosize = true;
+							else return false;
+						}
+
+						if (value.equals("linear"))
+							type = Type.LINEAR;
+						else if (value.equals("layered"))
+							type = Type.LAYERED;
+						else return false;
+					}
+					else if (link == null)
+					{
+						if (key.equals("map.link"))
+							link = value;
+						else
+						{
+							type = Type.UNKNOWN;
+
+							return false;
+						}
+					}
+					else if (autosize)
+					{
+						if (key.equals("map.cols"))
+							autocols = Integer.parseInt(value);
+						else if (key.equals("map.rows"))
+							autorows = Integer.parseInt(value);
+						else if (key.equals("map.left"))
+							autoleft = Integer.parseInt(value);
+						else if (key.equals("map.top"))
+							autotop = Integer.parseInt(value);
+						else if (key.equals("map.width"))
+							autowidth = Integer.parseInt(value);
+						else if (key.equals("map.height"))
+							autoheight = Integer.parseInt(value);
+					}
+					else
+					{
+						Item item = parseItem(key + "," + value);
+
+						if (item == null)
+						{
+							type = Type.UNKNOWN;
+							link = null;
+
+							return false;
+						}
+
+						if (!layersid.contains(item.layer))
+							layersid.add(item.layer);
+
+						newitems.add(item);
+					}
+				}
+
+				if (autosize)
+				{
+					if (autocols <= 0 || autorows <= 0 || autoleft < 0 || autotop < 0 ||
+					autowidth < 0 || autoheight < 0)
+					{
+						type = Type.UNKNOWN;
+						link = null;
+
+						return false;
+					}
+
+					String currlink = link;
+
+					if (!createItems(type, link, autocols, autorows,
+					                 new Area(autoleft, autotop, autowidth, autoheight)))
+						return false;
+
+					link = currlink;
+
+					cacheinfo = new CacheInfo();
+					cacheinfo.type = type;
+					cacheinfo.link = link;
+					cacheinfo.items = items;
+					cacheinfo.layers = layers;
+
+					mapcache.put(rscinfo.key, cacheinfo);
+
+					return true;
+				}
+
+				if (newitems.size() > 0)
+				{
+					if (type == Type.LAYERED && layersid.size() > 1)
+					{
+						newitems.sort(new Comparator<Item>()
+						{
+							public int compare(Item _left, Item _right)
+							{
+								int result = _left.layer - _right.layer;
+
+								if (result != 0)
+									return result;
+
+								return (_left.id - _right.id);
+							}
+						});
+
+						int currentlayer = -1;
+						layers = new Vector<Vector<Item>>();
+
+						for (Item item : newitems)
+						{
+							if (currentlayer < item.layer)
+							{
+								currentlayer = item.layer;
+								layers.add(new Vector < Item());
+							}
+
+							layers.get(layers.size() - 1).add(item);
+						}
+					}
+
+					newitems.sort(new Comparator<Item>()
+					{
+						public int compare(Item _left, Item _right)
+						{
+							return (_left.id - _right.id);
+						}
+					});
+
+					items = newitems;
+				}
+
+				cacheinfo = new CacheInfo();
+				cacheinfo.type = type;
+				cacheinfo.link = link;
+				cacheinfo.items = items;
+				cacheinfo.layers = layers;
+
+				mapcache.put(rscinfo.key, cacheinfo);
+
+				return true;
+			}
+			catch (Exception exception)
+			{
+				type = Type.UNKNOWN;
+				link = null;
+				items = null;
+				layers = null;
+			}
+		}
+
+		return false;
 	}
 
 	//.............................................................................................
 
 	public boolean createItems (Type _type, String _resourcelink, int _colcount, int _rowcount)
 	{
-
+		return createItems(_type, _resourcelink, _colcount, _rowcount, new Area());
 	}
 
 	//.............................................................................................
@@ -218,7 +422,111 @@ public class Map
 	public boolean createItems (Type _type, String _resourcelink,
 								int _colcount, int _rowcount, Area _area)
 	{
+		type = Type.UNKNOWN;
+		link = null;
+		items = null;
+		layers = null;
 
+		if (_type != Type.LINEAR && _type != Type.LAYERED || _colcount <= 0 || _rowcount <= 0)
+			return false;
+
+		int left = _area.getLeft(), top = _area.getTop();
+		int width = _area.getWidth(), height = _area.getHeight();
+
+		if (left < 0 || top < 0 || width < 0 || height < 0)
+			return false;
+
+		Utils.RscInfo = Utils.parseRscLink(_resourcelink)
+
+		if (rscinfo == null)
+			return false;
+
+		String cachekey = rscinfo.link.toLowerCase() + "?type=" + _type + 
+						  ",cols=" + _colcount + ",rows=" + _rowcount;
+		if (left > 0)
+			cachekey += (",left=" + left);
+		if (top > 0)
+			cachekey += (",top=" + top);
+		if (width > 0)
+			cachekey += (",width=" + width);
+		if (height > 0)
+			cachekey += (",height=" + height);
+
+		CacheInfo cacheinfo = mapcache.get(cachekey);
+
+		if (cacheinfo != null)
+		{
+			type = cacheinfo.type;
+			link = cacheinfo.link;
+			items = cacheinfo.items;
+			layers = cacheinfo.layers;
+
+			return true;
+		}
+
+		Image image = Utils.loadImage(rscinfo.link);
+
+		if (image != null)
+		{
+			if (width <= 0)
+				width = image.getWidth(null);
+
+			if (height <= 0)
+				height = image.getHeight(null);
+
+			if ((left + width) > image.getWidth(null) || (top + height) > image.getHeight(null))
+				return false;
+
+			width = width / _colcount;
+			height = height / _rowcount;
+
+			if (width <= 0 || height <= 0)
+				return false;
+
+			items = new Vector<Item>();
+
+			if (_type == Type.LAYERED && _rowcount > 1)
+				layers = new Vector<Vector<Item>>();
+
+			for (int rowindex = 0, itemid = 0; rowindex < _rowcount; rowindex++, top += height)
+			{
+				if (layers != null)
+					layers.add(new Vector<Item>());
+
+				for (int colindex = 0, offset = left; colindex < _colcount; colindex++, itemid++ top += height)
+				{
+					Item item = new Item();
+
+					item.id = itemid;
+					item.left = offset;
+					item.top = top;
+					item.right = offset + (width - 1);
+					item.bottom = top + (height - 1);
+					item.width = width;
+					item.height = height;
+
+					items.add(item);
+
+					if (layers != null)
+						layers.get(rowindex).add(item);
+				}
+			}
+
+			type = _type;
+			link = rscinfo.link;
+
+			cacheinfo = new CacheInfo();
+			cacheinfo.type = type;
+			cacheinfo.link = link;
+			cacheinfo.items = items;
+			cacheinfo.layers = layers;
+
+			mapcache.put(cachekey, cacheinfo);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	//.............................................................................................
