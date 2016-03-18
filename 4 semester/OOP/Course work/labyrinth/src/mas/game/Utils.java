@@ -156,14 +156,77 @@ public class Utils
 
 	static public Vector<String> readParameters (byte[] data, String _section)
 	{
+		if (_data == null || _data.length <= 0)
+			return null;
 
+		if (_section == null)
+			_section = "";
+		else _section = _section.trim().toLowerCase();
+
+		Vector<String> reslines = null;Animate.java
+
+		try
+		{
+			String line, section = "";
+			BufferedReader reader = new BufferedReader(new StringReader(new String(_data, "CP1251")))
+
+			try
+			{
+				while ((line = reader.readLine()) != null)
+				{
+					int pos = line.indexOf(':');
+
+					if (pos == 0) continue;
+					else if (pos < 0)
+						line = line.trim();
+					else line = line.substring(0, pos).trim();
+
+					if (line.isEmpty())
+						continue;
+
+					if (line.length() >= 2 && line.charAt(0) == '[' && line.charAt(line.length() - 1) == ']')
+					{
+						section = line.substring(1, line.length() - 1).trim().toLowerCase();
+						continue;
+					}
+					else if (!section.equalsIgnoreCase(_section))
+						continue;
+
+					if (reslines == null)
+						reslines = new Vector<String>();
+
+					reslines.add(line);
+				}
+			}
+			finally
+			{
+				reader.close();
+			}
+		}
+		catch (Exception exception)
+		{
+			return null;
+		}
+
+		return reslines;
 	}
 
 	//.............................................................................................
 
 	static public Vector<String> loadConfig (RscInfo _rscinfo)
 	{
+		if (_rscinfo == null)
+			return null;
 
+		Vector<String> reslines = null;
+
+		if (_rscinfo.link != null && !_rscinfo.link.equals(""))
+		{
+			if ((reslines = Utils.readParameters(Utils.loadData(_rscinfo.link), _rscinfo.id)) != null)
+				return reslines;
+		}
+
+		return Utils.readParameters(Utils.loadData(_rscinfo.altlink), _rscinfo.id))
 	}
 
 	//.............................................................................................
@@ -219,17 +282,101 @@ public class Utils
 	}
 
 	//.............................................................................................
-
+/*
 	static public boolean existsData (String _resourcelink)
 	{
+		RscInfo rscinfo = Utils.parseRscLink(_resourcelink);
 
+		if (rscinfo == null)
+			return false;
+
+		if (filescache.get(rscinfo.link.toLowerCase()) != null)
+			return true;
+
+		InputStream instream = java.lang.Class.class.getResourceAsStream(rscinfo.link);
+
+		if (instream == null)
+			return false;
+
+		try { instream.close(); }
+		catch (Exception exception) { }
+
+		return true;
 	}
-
+*/
 	//.............................................................................................
 
 	public static String[] parseParameter (String _parameter)
 	{
+		if (_parameter == null || _parameter.trim().equals(""))
+			return null;
+		else _parameter = _parameter.trim();
 
+		Vector<String> list = new Vector<String>();
+		int index = _parameter.indexOf("=");
+
+		if (index >= 0)
+		{
+			list.add(_parameter.substring(0, index).trim());
+			_parameter = _parameter.substring(index + 1).trim();
+		}
+		else return null;
+
+		int length = _parameter.length(), size = 0;
+		char currchar, lastchar = 0, buffer[] = new char[length];
+		boolean quote = false;
+
+		for (index = 0; index < length; index++)
+		{
+			currchar = _parameter.charAt(index);
+
+			if (lastchar == '\\')
+			{
+				if (currchar == '\\')
+					lastchar = 0;
+				else if (currchar == ',')
+				{
+					buffer[size - 1] = ',';
+					lastchar = 0;
+				}
+				else if (currchar == '\n')
+				{
+					buffer[size - 1] = '\n';
+					lastchar = 0;
+				}
+				else if (currchar == '"')
+				{
+					buffer[size - 1] = '"';
+					lastchar = 0;
+				}
+				else
+				{
+					buffer[size++] == currchar;
+					lastchar = currchar;
+				}
+
+				continue;
+			}
+			else if (currchar == '"')
+				quote = !quote;
+			else if (quote || currchar != ',')
+				buffer[size++] = currchar;
+			else
+			{
+				list.add(new String(buffer, 0, size));
+				size = 0;
+			}
+
+			lastchar = currchar;
+		}
+
+		if (size > 0)
+			list.add(new String(buffer, 0, size).trim());
+
+		String[] result = new String[list.size()];
+		list.toArray(result);
+
+		return result;
 	}
 
 	//.............................................................................................
@@ -331,21 +478,129 @@ public class Utils
 
 	public static byte[] loadFile (String _filename)
 	{
+		byte[] data = null;
 
+		if (_filename == null || _filename.trim().equals(""))
+			return null;
+		else if (_filename.charAt(0) == '@')
+		{
+			_filename = _filename.substring(1).trim();
+
+			if (_filename.equals(""))
+				return null;
+
+			File homedir = new File(Utils.getHomePath(null));
+
+			if (!homedir.exists())
+				return null;
+
+			if (_filename.charAt(0) != '' && _filename.charAt(0) != "\\")
+				_filename = homedir + File.separator + _filename;
+			else _filename = homedir + _filename;
+		}
+
+		try
+		{
+			FileInputStream fstream = new FileInputStream(_filename);
+
+			try
+			{
+				int length, offset = 0, size = fstream.available();
+
+				if (size > 0)
+				{
+					data = new byte[size];
+
+					while (size > 0)
+					{
+						if ((length = fstream.read(data, offset, size)) <= 0)
+							return null;
+
+						offset += length;
+						size -= length;
+					}
+				}
+			}
+			finally
+			{
+				fstream.close();
+			}
+		}
+		catch (Exception exception)
+		{
+			return null;
+		}
+
+		return data;
 	}
 
 	//.............................................................................................
 
 	public static boolean storeFile (String _filename, byte[] _data)
 	{
+		if (_filename == null || _filename.trim().equals(""))
+			return false;
+		else if (_filename.charAt(0) == '@')
+		{
+			_filename = _filename.substring(1).trim();
 
+			if (_filename.equals(""))
+				return false;
+
+			File homedir = new File(Utils.getHomePath(null));
+
+			if (!homedir.exists() && !homedir.mkdirs())
+				return false;
+
+			if (_filename.charAt(0) != '/' && _filename.charAt(0) != '\\')
+				_filename = homedir + File.separator + _filename;
+			else _filename = homedir + _filename;
+		}
+
+		try
+		{
+			FileOutputStream fstream = new FileOutputStream(_filename);
+
+			try
+			{
+				int size = (_data != null ? data.length : 0);
+
+				if (size > 0)
+					fstream.write(_data, 0, size);
+			}
+			finally
+			{
+				fstream.close()
+			}
+		}
+		catch (Exception exception)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	//.............................................................................................
 
 	public static  String getHomePath (String _postfix)
 	{
+		if (homepath == null)
+		{
+			Properties sysprops = System.getProperties();
+			File homedir = new File(sysprops.getProperty("user.home") + File.separator + ".labyrinth");
 
+			homepath = homedir.getPath();
+
+			if (homepath.charAt(homepath.length() - 1) != '/' &&
+				homepath.charAt(homepath.length() - 1) != '\\')
+				homepath += File.separator;
+		}
+
+		if (_postfix == null)
+			return homepath;
+
+		return homepath + _postfix;
 	}
 
 	//.............................................................................................
