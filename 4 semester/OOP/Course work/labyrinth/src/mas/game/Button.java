@@ -2,53 +2,71 @@
 
 package mas.game;
 
-//.................................................................................................
-
-import java.awt.Graphics;
-
 //*************************************************************************************************
 
-public class Status extends Sprite
+public class Button extends Sprite
 {
 	//.............................................................................................
 
-	private Label label = new Label(Builder.typeLabel, "label", "@fonts.map:smallfont", "");
+	private boolean isfocus = false;
 
 	//.............................................................................................
 
-	public Status (int _type, String _id, String _resourcelink)
+	public Button (int _type, String _id, String _resourcelink)
 	{
 		super(_type, _id, _resourcelink);
 	}
 
 	//.............................................................................................
 
-	public Status (int _type, String _id, String _resourcelink, int _left, int _top)
+	public Button (int _type, String _id, String _resourcelink, int _left, int _top)
 	{
 		super(_type, _id, _resourcelink, _left, _top);
 	}
 
 	//.............................................................................................
 
-	public void setText (String _text)
+	public void setVisible (boolean _enable)
 	{
-		super.setText(_text);
-		label.setText(_text);
+		super.setVisible(_enable);
+
+		if (isfocus && !isVisible())
+			isfocus = false;
+
+		stateUpdate();
 	}
 
 	//.............................................................................................
 
-	public void drawImage (Graphics _graphics)
+	public void setFocus (boolean _enable)
 	{
-		super.drawImage(_graphics);
+		if (isVisible())
+			isfocus = _enable;
+		else isfocus = false;
 
-		if (isVisible() && label != null)
-		{
-			label.setPos(getLeft() + 33, getTop + 7);
-			label.drawImage(_graphics);
-		}
+		stateUpdate();
 	}
 
+	//.............................................................................................
+
+	public boolean isFocus ()
+	{
+		return isfocus;
+	}
+
+	//.............................................................................................
+
+	public boolean canFocus ()
+	{
+		return isVisible();
+	}
+
+	//.............................................................................................
+
+	public void stateUpdate ()
+	{
+		setLayerIndex(isfocus ? 1 : 0);
+	}
 	//.............................................................................................
 }
 
