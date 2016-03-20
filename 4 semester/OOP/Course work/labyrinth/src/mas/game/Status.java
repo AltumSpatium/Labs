@@ -44,7 +44,7 @@ public class Status extends Sprite
 
 		if (isVisible() && label != null)
 		{
-			label.setPos(getLeft() + 33, getTop + 7);
+			label.setPos(getLeft() + 33, getTop() + 7);
 			label.drawImage(_graphics);
 		}
 	}
