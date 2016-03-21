@@ -32,7 +32,7 @@ public class Person extends Sprite
 
 	//.............................................................................................
 
-	public Person (int _type, String _id, String _resourcelink)
+	public Person (int _type, String _id, String _resourcelink, int _row, int _col)
 	{
 		super(_type, _id, _resourcelink);
 		setRowCol(_row, _col, true);
@@ -40,7 +40,7 @@ public class Person extends Sprite
 
 	//.............................................................................................
 
-	public void setRowCol (int _row, _col, boolean _withposition)
+	public void setRowCol (int _row, int _col, boolean _withposition)
 	{
 		row = _row;
 		col = _col;
@@ -62,14 +62,14 @@ public class Person extends Sprite
 
 	//.............................................................................................
 
-	public void getRow ()
+	public int getRow ()
 	{
 		return row;
 	}
 
 	//.............................................................................................
 
-	public void getCol ()
+	public int getCol ()
 	{
 		return col;
 	}
@@ -90,7 +90,7 @@ public class Person extends Sprite
 
 	//.............................................................................................
 
-	public void setActive (_isactive)
+	public void setActive (boolean _isactive)
 	{
 		isactive = _isactive;
 	}
@@ -121,7 +121,10 @@ public class Person extends Sprite
 
 	public void copyState (Person _person)
 	{
-
+		setState(_person.getState());
+		isactive = _person.isactive;
+		row = _person.row;
+		col = _person.col;
 	}
 
 	//.............................................................................................
@@ -135,7 +138,21 @@ public class Person extends Sprite
 
 	public void nextStep (int _offset)
 	{
-
+		switch(getState())
+		{
+			case STATE_UP:
+				addTop(-_offset);
+				break;
+			case STATE_DOWN:
+				addTop(_offset);
+				break;
+			case STATE_LEFT:
+				addLeft(-_offset);
+				break;
+			case STATE_RIGHT:
+				addLeft(_offset);
+				break;
+		}
 	}
 
 	//.............................................................................................
@@ -155,14 +172,22 @@ public class Person extends Sprite
 
 	public void animateUpdate ()
 	{
+		if ((getLayerIndex() == STATE_DIE || getLayerIndex() == STATE_FIRE) &&
+			getImageIndex() == (getImagesCount() - 1))
+			return;
 
+		super.animateUpdate();
 	}
 
 	//.............................................................................................
 
-	public void animateNex ()
+	public void animateNext ()
 	{
+		if ((getLayerIndex() == STATE_DIE || getLayerIndex() == STATE_FIRE) &&
+			getImageIndex() == (getImagesCount() - 1))
+			return;
 
+		super.animateNext();
 	}
 
 	//.............................................................................................
