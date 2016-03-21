@@ -20,7 +20,7 @@ public class Hero extends Person
 	public int status = Person.STATE_WAIT;
 	public int level = 1;
 	public int mark = 0; //?
-	public timepower = 0;
+	public long timepower = 0;
 	public int scores = 0;
 	public int lives = 5;
 	public int keys = 0;
@@ -68,7 +68,7 @@ public class Hero extends Person
 
 	public void copyState (Hero _hero)	
 	{
-		super.copyState();
+		super.copyState(_hero);
 
 		mark = _hero.mark;
 		status = _hero.status;
@@ -248,7 +248,7 @@ public class Hero extends Person
 
 			for (String line : parameters)
 			{
-				if ((values = Utils.parseParameters(line)) == null || values.length < 2)
+				if ((values = Utils.parseParameter(line)) == null || values.length < 2)
 					continue;
 				else if (values[0].trim().equalsIgnoreCase("hero.name"))
 					name = values[1].trim();
