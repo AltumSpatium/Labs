@@ -1,0 +1,9 @@
+;***********************************************************
+[stoune]
+
+map.type=linear:auto
+map.link=/mas/game/resource/custom/grassy/tree.jpg
+map.rows=1
+map.cols=1
+
+;***********************************************************

@@ -1,0 +1,35 @@
+;***********************************************************
+[mainmenu]
+
+map.type=dialog
+
+picture=static,,"@logo.jpg",0,0
+
+map.left=30
+map.top=460
+
+button=button,"new","@buttons.map:select"
+label=label,"new","@fonts.map:smallfont",50,12,"ÕŒ¬¿ﬂ »√–¿"
+
+button=button,"continue","@buttons.map:select",220
+label=label,"continue","@fonts.map:smallfont",270,12,"œ–ŒƒŒÀ∆»“‹"
+
+button=button,"exit","@buttons.map:select",700
+label=label,"exit","@fonts.map:smallfont",775,12,"¬€’Œƒ"
+
+;***********************************************************
+[exitbox]
+
+map.type=dialog
+
+picture=static,,"@logo.jpg",0,0
+
+map.left=320
+map.top=150
+
+picture=static,,"@dialog.png"
+label=label,"label","@fonts.map:smallfont",70,65,"¬€…“» »« »√–€ ?"
+button=button,"yes","@buttons.map:yes",90,140
+button=button,"no","@buttons.map:no",160,140
+
+;***********************************************************

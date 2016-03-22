@@ -127,7 +127,7 @@ public class Builder
 				else if (values[0].equals("button"))
 					primitive = new Button(type, values[2].trim(), values[3].trim(), left, top);
 				else if (values[0].equals("label"))
-					primitive = new Label(type, values[2].trim(), values[3].trim(), left, top);
+					primitive = new Label(type, values[2].trim(), values[3].trim(), left, top, line);
 				else if (values[0].equals("sprite"))
 					primitive = new Sprite(type, values[2].trim(), values[3].trim(), left, top);
 				else if (values[0].equals("status"))

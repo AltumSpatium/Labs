@@ -1,0 +1,9 @@
+;***********************************************************
+[stoune]
+
+map.type=linear:auto
+map.link=/mas/game/resource/custom/metal/metal.jpg
+map.rows=1
+map.cols=1
+
+;***********************************************************
