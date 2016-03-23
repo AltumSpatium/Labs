@@ -1,0 +1,36 @@
+; уровень 30x15
+; X - стена
+; I - входная дверь
+; O - выходная дверь
+; K - ключ
+; D - бриллиант
+; S - звезда
+; * - герой
+; + - враг
+; F - огонь
+; T - порт
+; W - дерево
+; V - ведро
+; B - бомда
+; M - мина
+; P - сила
+; H - преграда
+; L - жизнь
+
+[scheme]
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XX   S +  X  D  D X  SS  XDDDX
+X  TXXX  S H XXXX X XXXX   XKX
+XSXXXMXPSXX XXXWX  D  XXXXXXXX
+XD  X XXX X XD    XXXXX   XBBX
+XXXVX   +   XMXXXXXX D  X   MX
+XD  XXXX XX X  XX +  X XXXXXXX
+XS XXSSX  X XXH X XX X  VX  *I
+X XWXX XXXX X F D  X X X X X X
+X    X + XX X XXXX X  D	D  XDX  
+XX X X X H   MXTX  XXX XX    X
+XTSX D X X  XXX  SD    X  XXXX
+XXXXXXXXFXXXXWX XXXX XXXFXXDLX
+O D D D D +      SSX D D H  DX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

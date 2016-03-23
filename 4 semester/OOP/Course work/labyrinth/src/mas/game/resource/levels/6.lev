@@ -1,0 +1,42 @@
+; уровень 30x15
+; X - стена
+; I - входная дверь
+; O - выходная дверь
+; K - ключ
+; D - бриллиант
+; S - звезда
+; * - герой
+; + - враг
+; F - огонь
+; T - порт
+; W - дерево
+; V - ведро
+; B - бомда
+; M - мина
+; P - сила
+; H - преграда
+; L - жизнь
+
+[config]
+
+level.background=/mas/game/resource/custom/metal/metal_desert.jpg
+level.sound=/mas/game/resource/custom/metal/wind-sand.wav
+level.map=/mas/game/resource/custom/metal/metal_desert.map
+
+[scheme]
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XT   X WXDHDXXBXDX X  S  X DLX
+X +X D    X   D  + X XXX+XHXSX
+X  XXXF XXXXX X  XDX     D XSX
+X BD X DX X X X XXDX X XXXXXXX
+XXXX X XX D+X X TXXX X F XDWDX
+XSX  X SX X X XXXXS  X X X   X
+X X XXXXX D V  DD  F X D X X X
+X X   XWX X XXXXXXXXXX X X X X
+X + X   X D X D      X + XMXBX
+XX XXXX XXX D XFD XSXX X X X X
+XS KX   XXXXXXXXX+X  X D D X X
+XXXXX XXX D D D X XXSX X   X X
+XSS V + M X XTX   XSDXSX X X*I
+XXXXXXXXXXXXXXXXXXXXXXXXXXOXXX
