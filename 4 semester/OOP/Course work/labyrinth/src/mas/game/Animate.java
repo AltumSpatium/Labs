@@ -96,7 +96,7 @@ public class Animate
 	{
 		if (elementmap != null)
 		{
-			BufferStrategy bufferstrategy = null; //?
+			BufferStrategy bufferstrategy = null;
 
 			while ((bufferstrategy = _canvas.getBufferStrategy()) == null)
 			{
@@ -125,7 +125,8 @@ public class Animate
 				Utils.delayMillis(50);
 			}
 
-			_canvas.removeKeyListener(keyadapter);
+			if (_usescankey)
+				_canvas.removeKeyListener(keyadapter);
 		}
 	}
 

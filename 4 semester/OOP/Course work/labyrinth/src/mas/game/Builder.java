@@ -287,10 +287,11 @@ public class Builder
 						primitive = new Sprite(typeOutDoor, "outdoor", _config.link + ":closedoor");
 						break;
 					case '*':
-						primitive = new Sprite(typeHero, "hero", _config.link + ":hero", rowindex, colindex);
+						primitive = new Hero(typeHero, "hero", _config.link + ":hero", rowindex, colindex);
 						break;
 					case '+':
-						primitive = new Sprite(typeGhost, "ghost", _config.link + ":ghost", rowindex, colindex);
+						primitive = new Ghost(typeGhost, "ghost", _config.link + ":ghost", rowindex, colindex);
+						break;
 					default:
 						primitive = null;
 				}

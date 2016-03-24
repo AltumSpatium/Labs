@@ -19,7 +19,7 @@ public class Hero extends Person
 	public String name = "hero";
 	public int status = Person.STATE_WAIT;
 	public int level = 1;
-	public int mark = 0; //?
+	public int mark = 0;
 	public long timepower = 0;
 	public int scores = 0;
 	public int lives = 5;

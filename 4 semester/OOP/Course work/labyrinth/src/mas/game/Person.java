@@ -46,7 +46,7 @@ public class Person extends Sprite
 		col = _col;
 
 		if (_withposition)
-			setPos(col << 5, row << 5); // !!
+			setPos(col << 5, row << 5);
 	}
 
 	//.............................................................................................
