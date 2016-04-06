@@ -13,7 +13,7 @@ double input()
 	int c;
 	int count = 0;
 	int flagpoint = 0;
-	char line[307];
+	char line[310];
 
 	do
 	{
@@ -31,7 +31,7 @@ double input()
 					if (line[--count] == '.')
 						flagpoint = 0;
 				}
-				else if (count < 305)
+				else if (count < 308)
 				{
 					if (c == '.')
 						flagpoint = 1;
