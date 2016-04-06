@@ -16,6 +16,7 @@ public class Sound
 
 	private Clip clip = null;
 	private boolean isplaying = false;
+	public String link;
 
 	//.............................................................................................
 
@@ -36,7 +37,10 @@ public class Sound
 	public Sound (String _resourcelink)
 	{
 		if ((clip = Utils.loadSound(_resourcelink)) != null)
+		{
 			clip.addLineListener(linelistener);
+			link = _resourcelink;
+		}
 	}
 
 	//.............................................................................................

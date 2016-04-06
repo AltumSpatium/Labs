@@ -153,18 +153,22 @@ public class Builder
 
 	//.............................................................................................
 
-	public static Primitive[][] loadLevel (String _resourcelink, Level.Config _config)
+	public static Primitive[][] loadLevel (String _resourcelink, Level.Config _config, String _levelinfo)
 	{
-		Utils.RscInfo rscinfo = Utils.parseRscLink(_resourcelink);
+		Utils.RscInfo rscinfo = null;
+    Vector<String> parameters;
+    String values[];
 
-		if (rscinfo == null)
-			return null;
-
-		Vector<String> parameters;
-		String values[];
-
-		rscinfo.id = "config";
-		parameters = Utils.loadConfig(rscinfo);
+		if(_levelinfo == null)
+		{
+		  if ((rscinfo = Utils.parseRscLink(_resourcelink)) == null)
+			  return null;
+	    
+		  rscinfo.id = "config";
+	    parameters = Utils.loadConfig(rscinfo);
+		}
+		else if((parameters = Utils.readParameters(_levelinfo.getBytes(), "config")) == null)
+		  return null;
 
 		if (parameters != null)
 		{
@@ -200,11 +204,16 @@ public class Builder
 			}
 		}
 
-		rscinfo.id = "scheme";
-		parameters = Utils.loadConfig(rscinfo);
-
-		if (parameters == null)
-			return null;
+		if(_levelinfo == null)
+		{
+		  rscinfo.id = "scheme";
+		  parameters = Utils.loadConfig(rscinfo);
+		
+		  if (parameters == null)
+			  return null;
+		}
+		else if((parameters = Utils.readParameters(_levelinfo.getBytes(), "scheme")) == null)
+      return null;
 
 		if ((_config.link = _config.link.trim()).isEmpty())
 			_config.link = "@objects.map";
@@ -310,6 +319,88 @@ public class Builder
 
 		return level;
 	}
+
+  //.............................................................................................
+	
+	public static String saveLevel(Level _level)
+	{
+	  if (_level != null)
+	  {
+	    String level = "";
+	    int maxrow = 15, maxcol = 30;
+	    Primitive[][] levelmap = new Primitive[maxrow][maxcol];
+	        
+	    for(int row = 0; row < maxrow; row++)
+	      for(int col = 0; col < maxcol; col++)
+	        levelmap[row][col] = _level.levelmap[row][col];
+	    
+      levelmap[_level.hero.getRow()][_level.hero.getCol()] = _level.hero;
+      
+      for (Ghost ghost : _level.ghosts)
+        levelmap[ghost.getRow()][ghost.getCol()] = ghost;
+      
+      Level.Config config = _level.config;
+      
+      if (config != null)
+      {
+        level += "[config]\n\n";
+        level += "level.sound=" + config.sound.link + "\n";
+        level += "level.background=" + config.background.link + "\n";
+        level += "level.map=" + config.link + "\n\n";
+      }            
+            
+      level += "[scheme]\n\n";
+            
+      for (int row = 0; row < levelmap.length; row++)
+      {
+        for (int col = 0; col < levelmap[row].length; col++)
+        {
+          if (levelmap[row][col] == null)
+            level += ' ';
+          else if (levelmap[row][col].getType() == Builder.typeStone)
+            level += 'X';
+          else if (levelmap[row][col].getType() == Builder.typeDiamond)
+            level += 'D';
+          else if (levelmap[row][col].getType() == Builder.typeStar)
+            level += 'S';
+          else if (levelmap[row][col].getType() == Builder.typeBomb)
+            level += 'B';
+          else if (levelmap[row][col].getType() == Builder.typeMine)
+            level += 'M';
+          else if (levelmap[row][col].getType() == Builder.typeKey)
+            level += 'K';
+          else if (levelmap[row][col].getType() == Builder.typeWood)
+            level += 'W';
+          else if (levelmap[row][col].getType() == Builder.typeBucket)
+            level += 'V';
+          else if (levelmap[row][col].getType() == Builder.typeFire)
+            level += 'F';
+          else if (levelmap[row][col].getType() == Builder.typeHedge)
+            level += 'H';
+          else if (levelmap[row][col].getType() == Builder.typeInDoor)
+            level += 'I';
+          else if (levelmap[row][col].getType() == Builder.typeOutDoor)
+            level += 'O';
+          else if (levelmap[row][col].getType() == Builder.typeLife)
+            level += 'L';
+          else if (levelmap[row][col].getType() == Builder.typePort)
+            level += 'T';
+          else if (levelmap[row][col].getType() == Builder.typePower)
+            level += 'P';
+          else if (levelmap[row][col].getType() == Builder.typeHero)
+            level += '*';
+          else if (levelmap[row][col].getType() == Builder.typeGhost)
+            level += '+';
+        }
+          
+        level += '\n';                
+      }         
+    
+      return level;
+	  }
+	    
+	  return null;
+  }
 
 	//.............................................................................................
 }

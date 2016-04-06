@@ -14,6 +14,7 @@ public class Picture extends Primitive
 	//.............................................................................................
 
 	private Image image = null;
+	public String link;
 
 	//.............................................................................................
 
@@ -21,6 +22,7 @@ public class Picture extends Primitive
 	{
 		super(_type, _id);
 		loadResource(_resourcelink);
+		link = _resourcelink;
 	}
 
 	//.............................................................................................
@@ -29,6 +31,7 @@ public class Picture extends Primitive
 	{
 		super(_type, _id, _left, _top);
 		loadResource(_resourcelink);
+		link = _resourcelink;
 	}
 
 	public void loadResource (String _resourcelink)

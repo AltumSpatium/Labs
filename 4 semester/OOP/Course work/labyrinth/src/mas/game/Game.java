@@ -107,7 +107,7 @@ public class Game extends Canvas implements Runnable
 		menusound.loopClip(0);
 
 		Primitive contbutton = null;
-		boolean cancontinue = (hero.level > 1 && hero.lives > 0 ? true : false);
+		boolean cancontinue = ((hero.level > 1 || hero.levelmap != null) && hero.lives > 0 ? true : false);
 
 		while ((contbutton = mainmenu.getPrimitive("continue", -1, contbutton)) != null)
 			contbutton.setVisible(cancontinue);
@@ -151,7 +151,11 @@ public class Game extends Canvas implements Runnable
 				startwait.runProcess(this, 1000, false);
 			}
 
-			if (result == Level.Result.WINNER)
+			if(result == Level.Result.CANCEL)
+			{
+			  hero.saveProfile();
+			}			
+			else if (result == Level.Result.WINNER)
 			{
 				winnersound.playClip();
 				Animate winneranimate = new Animate("@animate.map:winner");
