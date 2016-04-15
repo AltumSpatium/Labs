@@ -2,7 +2,7 @@ class Vector(object):
 	def __init__(self, *args):
 		self.values = []
 		for val in args:
-				if isinstance(val, (int, float)):
+			if isinstance(val, (int, float)):
 					self.values.append(val)
 
 	def length(self):
