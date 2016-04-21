@@ -24,8 +24,8 @@ def to_json(obj, raise_unknown = False):
 		json_line += str(obj)
 	elif isinstance(obj, str):
 		json_line += '\"' + obj + '\"'
-	elif isinstance(obj, None):
-		json_line += '\n'
+	elif obj is None:
+		json_line += "\n"
 	if raise_unknown is True:
-		raise UnknownTypeError("Unknown type!")
+		raise UnknownTypeError("Type {0} is unknown!".format(type(obj)))
 	return json_line
