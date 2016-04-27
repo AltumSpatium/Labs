@@ -20,12 +20,13 @@ def to_json(obj, raise_unknown = False):
 			json_line += to_json(key) + ': ' + to_json(val) + ', '
 		json_line = json_line[:-2]
 		json_line += '}'
-	elif isinstance(obj, (int, float)):
+	elif isinstance(obj, (int, float, bool)):
 		json_line += str(obj)
 	elif isinstance(obj, str):
+		obj = obj.replace('\"', '\\\"')
 		json_line += '\"' + obj + '\"'
 	elif obj is None:
-		json_line += "\n"
+		json_line += "null"
 	if raise_unknown is True:
 		raise UnknownTypeError("Type {0} is unknown!".format(type(obj)))
 	return json_line
