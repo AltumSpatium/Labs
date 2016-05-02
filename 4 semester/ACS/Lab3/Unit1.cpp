@@ -38,7 +38,6 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
   }
 }
 //---------------------------------------------------------------------------
-
 void __fastcall TForm1::Button2Click(TObject *Sender)
 {
   for (int i = 0; i < 32; i++)
@@ -48,12 +47,34 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
 void __fastcall TForm1::Button3Click(TObject *Sender)
 {
   for (int i = 0; i < 32; i++)
   {
     edits[i]->Text = StrToInt(rand() % 10 + 1);
   }  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+  bool ismmx=false;
+  
+  asm
+  {
+    mov eax,1
+    mov ecx,0
+    cpuid
+  };
+
+  int edx=_EDX;
+
+  if(edx & (1<<23))
+    ismmx=true;
+
+  if (ismmx)
+    MessageBox(Handle,"MMX is available!","MMX Check",MB_OK);
 }
 //---------------------------------------------------------------------------
 
@@ -80,5 +101,4 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
   }
 }
 //---------------------------------------------------------------------------
-
 
