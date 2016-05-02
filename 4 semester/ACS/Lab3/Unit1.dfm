@@ -44,7 +44,7 @@ object Form1: TForm1
   end
   object Label5: TLabel
     Left = 214
-    Top = 37
+    Top = 40
     Width = 6
     Height = 13
     Caption = 'F'
@@ -256,7 +256,7 @@ object Form1: TForm1
   end
   object Edit25: TEdit
     Left = 140
-    Top = 56
+    Top = 57
     Width = 34
     Height = 21
     MaxLength = 3
@@ -264,7 +264,7 @@ object Form1: TForm1
   end
   object Edit26: TEdit
     Left = 140
-    Top = 88
+    Top = 89
     Width = 34
     Height = 21
     MaxLength = 3
@@ -272,7 +272,7 @@ object Form1: TForm1
   end
   object Edit27: TEdit
     Left = 140
-    Top = 121
+    Top = 122
     Width = 34
     Height = 21
     MaxLength = 3
@@ -280,7 +280,7 @@ object Form1: TForm1
   end
   object Edit28: TEdit
     Left = 140
-    Top = 155
+    Top = 156
     Width = 34
     Height = 21
     MaxLength = 3
@@ -288,7 +288,7 @@ object Form1: TForm1
   end
   object Edit29: TEdit
     Left = 140
-    Top = 189
+    Top = 190
     Width = 34
     Height = 21
     MaxLength = 3
@@ -296,7 +296,7 @@ object Form1: TForm1
   end
   object Edit30: TEdit
     Left = 140
-    Top = 223
+    Top = 224
     Width = 34
     Height = 21
     MaxLength = 3
@@ -304,7 +304,7 @@ object Form1: TForm1
   end
   object Edit31: TEdit
     Left = 140
-    Top = 258
+    Top = 259
     Width = 34
     Height = 21
     MaxLength = 3
@@ -312,7 +312,7 @@ object Form1: TForm1
   end
   object Edit32: TEdit
     Left = 140
-    Top = 294
+    Top = 295
     Width = 34
     Height = 21
     MaxLength = 3
@@ -320,66 +320,66 @@ object Form1: TForm1
   end
   object Edit33: TEdit
     Left = 201
-    Top = 56
+    Top = 57
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 32
   end
   object Edit34: TEdit
     Left = 201
-    Top = 88
+    Top = 89
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 33
   end
   object Edit35: TEdit
     Left = 201
-    Top = 121
+    Top = 122
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 34
   end
   object Edit36: TEdit
     Left = 201
-    Top = 155
+    Top = 156
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 35
   end
   object Edit37: TEdit
     Left = 201
-    Top = 189
+    Top = 190
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 36
   end
   object Edit38: TEdit
     Left = 201
-    Top = 223
+    Top = 224
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 37
   end
   object Edit39: TEdit
     Left = 201
-    Top = 258
+    Top = 259
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 38
   end
   object Edit40: TEdit
     Left = 201
-    Top = 294
+    Top = 295
     Width = 34
     Height = 21
-    ReadOnly = True
+    Enabled = False
     TabOrder = 39
   end
   object Button1: TButton
