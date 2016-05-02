@@ -39,3 +39,46 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+  for (int i = 0; i < 32; i++)
+  {
+    edits[i]->Clear();
+  }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+  for (int i = 0; i < 32; i++)
+  {
+    edits[i]->Text = StrToInt(rand() % 10 + 1);
+  }  
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+  for (int i = 0; i < 32; i++)
+  {
+    try
+    {
+      isdigit(StrToInt(edits[i]->Text));
+    }
+    catch(...)
+    {
+      MessageBox(Handle,"Incorrect input! Input value must be integer!","Warning!",MB_OK);
+
+      return;
+    }
+    if (StrToInt(edits[i]->Text) > 127 || StrToInt(edits[i]->Text) < -127)
+    {
+      MessageBox(Handle,"Input must be above -127 and less than 127!","Warning!",MB_OK);
+      edits[i]->Text = 0;
+      return;
+    }
+  }
+}
+//---------------------------------------------------------------------------
+
+
