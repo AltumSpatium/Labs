@@ -99,9 +99,15 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 
       return;
     }
-    if (StrToInt(edits[i]->Text) > 127 || StrToInt(edits[i]->Text) < -128)
+    if ((StrToInt(edits[i]->Text) > 127 || StrToInt(edits[i]->Text) < -128) && i < 24)
     {
-      MessageBox(Handle,"Input must be above -128 and less than 127!","Warning!",MB_OK);
+      MessageBox(Handle,"Input must be above -128 and less than 127 in arrays A, B, C!","Warning!",MB_OK);
+      edits[i]->Text = 0;
+      return;
+    }
+    if ((StrToInt(edits[i]->Text) > 32767 || StrToInt(edits[i]->Text) < -32768) && i >= 24)
+    {
+      MessageBox(Handle,"Input must be above -32768 and less than 32767 in array D!","Warning!",MB_OK);
       edits[i]->Text = 0;
       return;
     }
@@ -275,20 +281,20 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
     // Loading first parts of array D and result of multiplying into MMX registers
     movq mm0, [eax]
     movq mm1, [ebx]
-    
+
     // Adding mm1 to mm0
     paddsw mm0, mm1
-    
+
     // Loading result in memory by the address of the array F
     movq [edx], mm0
 
     // Loading second parts of array D and result of multiplying into MMX registers
     movq mm0, [eax+8]
     movq mm1, [ebx+8]
-    
+
     // Adding mm1 to mm0
     paddsw mm0, mm1
-    
+
     // Loading result in memory by the address of the array F
     movq [edx+8], mm0
 
