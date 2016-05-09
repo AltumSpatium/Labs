@@ -20,7 +20,12 @@ def to_json(obj, raise_unknown = False):
 			json_line += to_json(key) + ': ' + to_json(val) + ', '
 		json_line = json_line[:-2]
 		json_line += '}'
-	elif isinstance(obj, (int, float, bool)):
+	elif isinstance(obj, bool):
+		if obj:
+			json_line += 'true'
+		else:
+			json_line += 'false'
+	elif isinstance(obj, (int, float)):
 		json_line += str(obj)
 	elif isinstance(obj, str):
 		obj = obj.replace('\"', '\\\"')

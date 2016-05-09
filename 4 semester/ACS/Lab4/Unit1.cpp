@@ -24,7 +24,6 @@ AnsiString randDouble()
 
   AnsiString result = IntToStr(intpart) + '.' + IntToStr(fractpart);
   return result;
-  // There must be random double value generation
 }
 //---------------------------------------------------------------------------
 
@@ -328,7 +327,7 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 
   for (int i = 0; i < 8; i++)
   {
-    edits[i+32]->Text = FloatToStrF(F[i], ffFixed, 8, 2);
+    edits[i+32]->Text = FloatToStrF(F[i], ffFixed, 8, 5);
   }
 }
 //---------------------------------------------------------------------------
