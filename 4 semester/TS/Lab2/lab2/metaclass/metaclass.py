@@ -18,4 +18,12 @@ def read_attributes(filepath):
 		print "No such file!"
 
 class MyClass(object):
-	__metaclass__ = metaclassfactory(r"d:\Programs\Python\2.7.11\lab2\metaclass\attrs")
+	__metaclass__ = metaclassfactory("attrs")
+
+def main():
+	print "Attributes of MyClass:"
+	print MyClass.first
+	print MyClass.second
+
+if __name__ == "__main__":
+	main()

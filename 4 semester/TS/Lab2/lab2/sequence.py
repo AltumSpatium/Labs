@@ -30,3 +30,12 @@ class Sequence(object):
  
     def filter(self, func):
         return self.Iterator(self.sequence).apply_filter(func)
+
+def main():
+    seq = Sequence(range(10))
+    fseq = seq.filter(lambda x: x % 3 == 0)
+
+    print "Filtered sequence:", fseq
+
+if __name__ == "__main__":
+    main()

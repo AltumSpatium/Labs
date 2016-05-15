@@ -35,3 +35,11 @@ def to_json(obj, raise_unknown = False):
 	if raise_unknown is True:
 		raise UnknownTypeError("Type {0} is unknown!".format(type(obj)))
 	return json_line
+
+def main():
+	obj = {"key": ["val 1", "val 2", {3: True, 4: False}], "key 2": None}
+
+	print "JSON line:", to_json(obj)
+
+if __name__ == "__main__":
+	main()

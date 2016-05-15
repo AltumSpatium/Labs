@@ -14,3 +14,11 @@ def cached(func):
 @cached
 def power(num, power):
 	return num ** power
+
+def main():
+	print "First try:", power(2, 5)
+	print
+	print "Second try:", power(2, 5)
+
+if __name__ == "__main__":
+	main()

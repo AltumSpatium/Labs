@@ -25,7 +25,15 @@ class My_xrange(object):
     		else:
     			fixed_index = index
 
-    		if not 0 <= fixed_index <= len(self):
+    		if not 0 <= fixed_index < len(self):
     			raise StopIteration()
 
     		return self.start + self.step * fixed_index
+
+def main():
+    print "My_xrange(10):"
+    for i in My_xrange(10):
+        print i
+
+if __name__ == "__main__":
+    main()

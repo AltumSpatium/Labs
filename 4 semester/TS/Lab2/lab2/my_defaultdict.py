@@ -8,3 +8,12 @@ class My_defaultdict(dict):
 			return self[key]
 		else:
 			raise KeyError(key)
+
+def main():
+	dd = My_defaultdict(My_defaultdict)
+	dd["a"]["b"]["c"] = True
+
+	print "My_defaultdict:", dd
+
+if __name__ == "__main__":
+	main()

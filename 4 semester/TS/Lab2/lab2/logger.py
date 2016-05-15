@@ -22,3 +22,16 @@ class Logger(object):
 			return getlogs
 		else:
 			return object.__getattribute__(self, name)
+
+def main():
+	class Text(Logger):
+		def your_text(self, text):
+			return "Your text: " + text
+
+	t = Text()
+	t.your_text("This is the text I wrote!")
+
+	print str(t)
+
+if __name__ == "__main__":
+	main()

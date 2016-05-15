@@ -67,3 +67,17 @@ class Vector(object):
 
 	def __str__(self):
 		return str(self.values)
+
+def main():
+	v1 = Vector(1, 2, 3)
+	v2 = Vector(2, 3 ,4)
+
+	print "v1:", v1
+	print "v2:", v2
+	print
+	print "v1 + v2:", v1 + v2
+	print "v2 * 10:", v2 * 10
+	print "v2 - v1:", v2 - v1
+
+if __name__ == "__main__":
+	main()
