@@ -8,10 +8,11 @@ class BigDataGenerator(object):
 		self.numeric = numeric
 
 	def generate_file(self, size, lines_count, sections_count):
-		with open(self.f_output, 'w') as output:
-			while os.path.getsize(self.f_output) < size:
-				print os.path.getsize(self.f_output)
-				self.write_to_file(output, lines_count, sections_count)
+		output = open(self.f_output, 'w')
+		while os.path.getsize(self.f_output) < size:
+			output = open(self.f_output, 'w')
+			self.write_to_file(output, lines_count, sections_count)
+			output.close()
 
 	def write_to_file(self, f_output, lines_count, sections_count):
 		for i in range(lines_count):

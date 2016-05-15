@@ -51,6 +51,7 @@ class Vector(object):
 				coords_mul = []
 				for i in range(len(self)):
 					coords_mul.append(self.values[i] * mult[i])
+				self.values = coords_mul
 				return sum(self.values)
 			else:
 				raise ValueError("Vectors' length not equals!")
