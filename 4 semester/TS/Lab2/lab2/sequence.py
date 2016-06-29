@@ -1,5 +1,7 @@
 class Sequence(object):
+
     class Iterator(object):
+
         def __init__(self, sequence):
             self.index = 0
             self.sequence = sequence
@@ -18,18 +20,19 @@ class Sequence(object):
                 if not func(self.sequence[i - offset]):
                     del(self.sequence[i - offset])
                     offset += 1
-            return self.sequence           
+            return self.sequence
 
     def __init__(self, obj):
         if not hasattr(obj, '__iter__'):
             raise TypeError
         self.sequence = obj
- 
+
     def __iter__(self):
         return Sequence.Iterator(self.sequence)
- 
+
     def filter(self, func):
         return self.Iterator(self.sequence).apply_filter(func)
+
 
 def main():
     seq = Sequence(range(10))
