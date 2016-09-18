@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <tchar.h>
-#include <tlhelp32.h>
 
 #define ID_LISTBOX 1001
 

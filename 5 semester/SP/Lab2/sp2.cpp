@@ -1,6 +1,4 @@
 #include <windows.h>
-#include <string.h>
-#include <stdlib.h>
 #include <tchar.h>
 
 #define ID_ADD_BTN 1001
