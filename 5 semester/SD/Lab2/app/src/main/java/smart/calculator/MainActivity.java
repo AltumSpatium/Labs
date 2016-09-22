@@ -5,12 +5,14 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,11 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         llMain = (LinearLayout) findViewById(R.id.llMain);
 
         tvDisplay = (TextView) findViewById(R.id.tvDisplay);
+        tvDisplay.setMovementMethod(new ScrollingMovementMethod());
 
         btn0 = (Button) findViewById(R.id.btn0);
         btn1 = (Button) findViewById(R.id.btn1);
@@ -89,6 +91,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnDel.setOnClickListener(this);
     }
 
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("oper", oper);
+        outState.putString("resultExpr", resultExpr);
+        outState.putString("screen", screen);
+        outState.putFloat("num1", num1);
+        outState.putFloat("num2", num2);
+        outState.putFloat("result", result);
+        outState.putBoolean("afterCalc", afterCalc);
+        outState.putInt("childCount", llMain.getChildCount());
+        for (int i = 0; i < llMain.getChildCount(); i++) {
+            TextView tv = (TextView)llMain.getChildAt(i);
+            outState.putString("res" + i, tv.getText().toString());
+        }
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        oper = savedInstanceState.getString("oper");
+        resultExpr = savedInstanceState.getString("resultExpr");
+        screen = savedInstanceState.getString("screen");
+        num1 = savedInstanceState.getFloat("num1");
+        num2 = savedInstanceState.getFloat("num2");
+        result = savedInstanceState.getFloat("result");
+        afterCalc = savedInstanceState.getBoolean("afterCalc");
+        tvDisplay.setText(screen);
+        int childCount = savedInstanceState.getInt("childCount");
+        for (int i = 0; i < childCount; i++) {
+            saveCalcResult(savedInstanceState.getString("res" + i));
+        }
+    }
+
+    void saveCalcResult(String text) {
+        LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lParams.topMargin = 8;
+        lParams.rightMargin = 7;
+
+        TextView tvSav = new TextView(this);
+
+        tvSav.setBackgroundColor(Color.parseColor("#cecece"));
+        tvSav.setText(text);
+        tvSav.setTextColor(Color.BLACK);
+        tvSav.setTextSize(25);
+        tvSav.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        llMain.addView(tvSav, lParams);
+    }
+
+    String getButtonValue(int id) {
+        Button btn = (Button) findViewById(id);
+        return btn.getText().toString();
+    }
+
+    String strConv(float num) {
+        return (num == Math.round(num)) ? Integer.toString(Math.round(num))
+                : Float.toString(num);
+    }
+
     @Override
     public void onClick(View v) {
         float lastNum = 0;
@@ -107,56 +169,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 afterCalc = false;
                 break;
             case R.id.btn1:
-                if (screen.equals("0"))
-                    screen = "1";
-                else screen += "1";
-                afterCalc = false;
-                break;
             case R.id.btn2:
-                if (screen.equals("0"))
-                    screen = "2";
-                else screen += "2";
-                afterCalc = false;
-                break;
             case R.id.btn3:
-                if (screen.equals("0"))
-                    screen = "3";
-                else screen += "3";
-                afterCalc = false;
-                break;
             case R.id.btn4:
-                if (screen.equals("0"))
-                    screen = "4";
-                else screen += "4";
-                afterCalc = false;
-                break;
             case R.id.btn5:
-                if (screen.equals("0"))
-                    screen = "5";
-                else screen += "5";
-                afterCalc = false;
-                break;
             case R.id.btn6:
-                if (screen.equals("0"))
-                    screen = "6";
-                else screen += "6";
-                break;
             case R.id.btn7:
-                if (screen.equals("0"))
-                    screen = "7";
-                else screen += "7";
-                afterCalc = false;
-                break;
             case R.id.btn8:
-                if (screen.equals("0"))
-                    screen = "8";
-                else screen += "8";
-                afterCalc = false;
-                break;
             case R.id.btn9:
                 if (screen.equals("0"))
-                    screen = "9";
-                else screen += "9";
+                    screen = getButtonValue(v.getId());
+                else screen += getButtonValue(v.getId());
                 afterCalc = false;
                 break;
             case R.id.btnPM:
@@ -227,24 +250,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     switch (oper) {
                         case "+":
                             result = num1 + num2;
-                            resultExpr = num1 + " + " + num2 + " = " + result;
-                            screen = Float.toString(result);
+                            resultExpr = strConv(num1) + " + " + strConv(num2) + " = " + strConv(result);
+                            screen = strConv(result);
                             break;
                         case "-":
                             result = num1 - num2;
-                            resultExpr = num1 + " - " + num2 + " = " + result;
-                            screen = Float.toString(result);
+                            resultExpr = strConv(num1) + " - " + strConv(num2) + " = " + strConv(result);
+                            screen = strConv(result);
                             break;
                         case "*":
                             result = num1 * num2;
-                            resultExpr = num1 + " * " + num2 + " = " + result;
-                            screen = Float.toString(result);
+                            resultExpr = strConv(num1) + " * " + strConv(num2) + " = " + strConv(result);
+                            screen = strConv(result);
                             break;
                         case "/":
                             if (num2 != 0) {
                                 result = num1 / num2;
-                                resultExpr = num1 + " / " + num2 + " = " + result;
-                                screen = Float.toString(result);
+                                resultExpr = strConv(num1) + " / " + strConv(num2) + " = " + strConv(result);
+                                screen = strConv(result);
                             }
                             else {
                                 num1 = num2 = result = 0;
@@ -262,20 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnSav:
                 if (!resultExpr.isEmpty()) {
-                    LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    lParams.bottomMargin = 5;
-
-                    TextView tvSav = new TextView(this);
-
-                    tvSav.setBackgroundColor(Color.parseColor("#cecece"));
-                    tvSav.setText(resultExpr);
-                    tvSav.setTextColor(Color.BLACK);
-                    tvSav.setTextSize(25);
-                    tvSav.setGravity(Gravity.CENTER_HORIZONTAL);
-
-                    llMain.addView(tvSav, lParams);
+                    saveCalcResult(resultExpr);
                     resultExpr = "";
                 }
                 break;

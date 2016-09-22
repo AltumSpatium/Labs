@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="25pt"
-        android:layout_marginTop="20pt"
-        android:layout_marginLeft="3pt"
-        android:layout_marginRight="3pt"
-        android:textSize="20pt"
+        android:layout_height="20pt"
+        android:layout_marginTop="2pt"
+        android:layout_marginLeft="2pt"
+        android:layout_marginRight="2pt"
+        android:textSize="16pt"
         android:gravity="right"
         android:id="@+id/tvDisplay"
         android:background="@color/colorGray"
         android:scrollbars="vertical"/>
     <TableLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:layout_width="170pt"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20pt">
+        android:layout_marginTop="21pt">
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,28 +29,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="7"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn7"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="8"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn8"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="9"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn9"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:text="+"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnAdd"/>
         </TableRow>
         <TableRow
@@ -62,28 +62,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="4"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn4"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="5"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn5"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="6"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn6"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:text="-"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnSub"/>
         </TableRow>
         <TableRow
@@ -95,28 +95,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="1"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn1"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="2"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn2"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="3"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn3"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:text="*"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnMul"/>
         </TableRow>
         <TableRow
@@ -128,28 +128,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btn0"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="."
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btnDot"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="+/-"
-                android:textSize="@dimen/digit_size"
+                android:textSize="@dimen/digit_size_land"
                 android:id="@+id/btnPM"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="6"
+                android:layout_weight="5"
                 android:text="/"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnDiv"/>
         </TableRow>
         <TableRow
@@ -161,27 +161,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="del"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnDel"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="sav"
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnSav"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="="
-                android:textSize="@dimen/operator_size"
+                android:textSize="@dimen/operator_size_land"
                 android:id="@+id/btnEq"/>
         </TableRow>
     </TableLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22pt"
+        android:layout_marginLeft="171pt">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -189,4 +191,4 @@
             android:id="@+id/llMain">
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>
