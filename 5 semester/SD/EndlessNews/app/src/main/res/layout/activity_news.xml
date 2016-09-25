@@ -8,6 +8,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lvMain2">
+        android:id="@+id/lvNews">
     </ListView>
 </RelativeLayout>

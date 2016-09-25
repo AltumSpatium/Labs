@@ -68,12 +68,12 @@ public class CategoryAdapter extends BaseAdapter {
         return view;
     }
 
-    public void addCategory(String name, ArrayList<News> allNews) {
+    public ArrayList<Category> addCategory(String name, ArrayList<News> allNews) {
         for (Category c : categories)
             if (c.getName().equals(name)) {
                 Toast.makeText(lInflater.getContext(), "Such category already exists!",
                         Toast.LENGTH_SHORT).show();
-                return;
+                return categories;
             }
 
         Category newCategory = new Category(name);
@@ -83,13 +83,15 @@ public class CategoryAdapter extends BaseAdapter {
         }
 
         categories.add(newCategory);
+        return categories;
     }
 
-    public void deleteCategory() {
+    public ArrayList<Category> deleteCategory() {
         ArrayList<Category> finalCategories = new ArrayList<>();
         for (Category c : categories)
             if (!c.getDeleteState())
                 finalCategories.add(c);
         categories = finalCategories;
+        return categories;
     }
 }

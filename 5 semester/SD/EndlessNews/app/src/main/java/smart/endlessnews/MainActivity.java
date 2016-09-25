@@ -29,13 +29,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        addTestCategories();
+        if (savedInstanceState == null) addTestCategories();
+
         categoryAdapter = new CategoryAdapter(this, categories);
 
         lvMain = (ListView) findViewById(R.id.lvMain);
 
         if (lvMain != null)
             lvMain.setAdapter(categoryAdapter);
+    }
+
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("categories_count", categories.size());
+        outState.putInt("news_count", allNews.size());
+        for (int i = 0; i < categories.size(); i++)
+            outState.putParcelable("category" + i, categories.get(i));
+        for (int i = 0; i < allNews.size(); i++)
+            outState.putParcelable("news" + i, allNews.get(i));
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        int categoriesCount = savedInstanceState.getInt("categories_count");
+        int newsCount = savedInstanceState.getInt("news_count");
+        for (int i = 0; i < categoriesCount; i++)
+            categories.add((Category) savedInstanceState.getParcelable("category" + i));
+        for (int i = 0; i < newsCount; i++)
+            allNews.add((News) savedInstanceState.getParcelable("news" + i));
     }
 
     public void addTestCategories() {
@@ -57,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void setNewCategoryName() {
+    public void addNewCategory() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("New category");
         alert.setMessage("Enter new category name:");
@@ -74,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                categoryAdapter.addCategory(value, allNews);
+                categories = categoryAdapter.addCategory(value, allNews);
                 lvMain.setAdapter(categoryAdapter);
             }
         });
@@ -91,11 +112,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_ADD_ID:
-                setNewCategoryName();
+                addNewCategory();
                 break;
             case MENU_DELETE_ID:
                 if (isNeededDeletion()) {
-                    categoryAdapter.deleteCategory();
+                    categories = categoryAdapter.deleteCategory();
                     lvMain.setAdapter(categoryAdapter);
                 }
                 break;
