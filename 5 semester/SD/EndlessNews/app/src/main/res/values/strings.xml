@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">EndlessNews</string>
+    <string name="dialog_add">Add</string>
+    <string name="dialog_cancel">Cancel</string>
+</resources>
