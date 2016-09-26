@@ -1,5 +1,7 @@
 package smart.endlessnews;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,7 @@ public class NewsAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView != null ? convertView :
                 lInflater.inflate(R.layout.news_item, parent, false);
-        News news = getItem(position);
+        final News news = getItem(position);
 
         String description = news.getDescription();
         if (description.length() > 120) description = description.substring(0, 120) + "...";
@@ -52,6 +54,21 @@ public class NewsAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FragmentTransaction ft = ((NewsActivity)ctx).getFragmentManager().beginTransaction();
+                Fragment frag = new NewsFragment();
+                ft.add(R.id.frNews, frag);
+
+                //Fragment frag = ((NewsActivity)ctx).getFragmentManager().findFragmentById(R.id.frNews);
+
+//                ((TextView)frag.getView().findViewById(R.id.tvFragmentTitle)).
+//                        setText(news.getTitle());
+//                ((TextView)frag.getView().findViewById(R.id.tvFragmentFullText)).
+//                        setText(news.getFullText());
+//                ((TextView)frag.getView().findViewById(R.id.tvFragmentPubDate)).
+//                        setText(news.getPubDate().toString());
+//                new DownloadImageTask((ImageView)frag.getView().
+//                        findViewById(R.id.ivFragmentPicture)).execute(news.getPicture());
+                ft.commit();
             }
         });
 

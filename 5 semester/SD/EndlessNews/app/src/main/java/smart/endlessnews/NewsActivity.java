@@ -25,7 +25,7 @@ public class NewsActivity extends AppCompatActivity {
                         " parser and news will be loaded automatically from news-websites!!!!!!!",
                 "Full text is unavailable now.",
                 "Link is unavailable now.",
-                "http://cdn1.vesti.ru/vh/p/b_1189253.jpg",
+                "http://scoopak.com/wp-content/uploads/2013/06/free-hd-natural-wallpapers-download-for-pc.jpg",
                 category.getName(),
                 new Date(100));
         category.addNews(news);
