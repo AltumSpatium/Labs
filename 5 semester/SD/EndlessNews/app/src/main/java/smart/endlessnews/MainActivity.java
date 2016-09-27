@@ -1,11 +1,14 @@
 package smart.endlessnews;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
     final int MENU_DELETE_ID = 2;
     final int MENU_QUIT_ID = 3;
 
+    private SharedPreferences sharedPreferences;
+
     ArrayList<Category> categories = new ArrayList<>();
     ArrayList<News> allNews = new ArrayList<>();
     CategoryAdapter categoryAdapter;
@@ -28,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 
         if (savedInstanceState != null) {
             int categoriesCount = savedInstanceState.getInt("categories_count");
@@ -37,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 categories.add((Category) savedInstanceState.getParcelable("category" + i));
             for (int i = 0; i < newsCount; i++)
                 allNews.add((News) savedInstanceState.getParcelable("news" + i));
-        } else addTestCategories();
+        }
 
         categoryAdapter = new CategoryAdapter(this, categories);
 
@@ -57,8 +65,29 @@ public class MainActivity extends AppCompatActivity {
             outState.putParcelable("news" + i, allNews.get(i));
     }
 
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int size = categories.size();
+        editor.putInt("categoriesCount", size);
+        for (int i = 0; i < size; i++)
+            editor.putString("categoryName" + i, categories.get(i).getName());
+        editor.apply();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        int size = sharedPreferences.getInt("categoriesCount", 0);
+        if (size > 0 && categories.size() == 0)
+            for (int i = 0; i < size; i++) {
+                String name = sharedPreferences.getString("categoryName" + i, "");
+                categories.add(new Category(name));
+            }
+        //else addTestCategories();
+    }
+
     public void addTestCategories() {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
             categories.add(new Category("Category " + (i + 1)));
         addTestNews(0);
     }
