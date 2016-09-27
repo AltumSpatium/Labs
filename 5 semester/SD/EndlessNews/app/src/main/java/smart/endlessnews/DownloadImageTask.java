@@ -8,18 +8,21 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 
-public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-    ImageView imageView;
+class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private ImageView imageView;
+    private Bitmap downloadedImage;
 
-    public DownloadImageTask(ImageView imageView) {
+    DownloadImageTask() {}
+
+    DownloadImageTask(ImageView imageView) {
         this.imageView = imageView;
     }
 
     protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
+        String urlDisplay = urls[0];
         Bitmap bmp = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
+            InputStream in = new java.net.URL(urlDisplay).openStream();
             bmp = BitmapFactory.decodeStream(in);
         }
         catch (Exception e) {
@@ -30,6 +33,11 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        imageView.setImageBitmap(result);
+        if (imageView != null) imageView.setImageBitmap(result);
+        downloadedImage = result;
+    }
+
+    public Bitmap getDownloadedImage() {
+        return downloadedImage;
     }
 }

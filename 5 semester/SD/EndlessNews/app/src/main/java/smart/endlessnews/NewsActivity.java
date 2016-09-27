@@ -1,12 +1,8 @@
 package smart.endlessnews;
 
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.Date;
 
 public class NewsActivity extends AppCompatActivity {
 
@@ -19,6 +15,8 @@ public class NewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
 
         category = getIntent().getParcelableExtra("current_category");
         newsAdapter = new NewsAdapter(this, category.getNews());

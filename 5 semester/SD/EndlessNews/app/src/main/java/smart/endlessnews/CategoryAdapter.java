@@ -12,12 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
-public class CategoryAdapter extends BaseAdapter {
+class CategoryAdapter extends BaseAdapter {
     private Context ctx;
     private ArrayList<Category> categories;
     private LayoutInflater lInflater;
 
-    public CategoryAdapter(Context context, ArrayList<Category> categories) {
+    CategoryAdapter(Context context, ArrayList<Category> categories) {
         this.ctx = context;
         this.categories = categories;
         lInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,7 +68,7 @@ public class CategoryAdapter extends BaseAdapter {
         return view;
     }
 
-    public ArrayList<Category> addCategory(String name, ArrayList<News> allNews) {
+    ArrayList<Category> addCategory(String name, ArrayList<News> allNews) {
         for (Category c : categories)
             if (c.getName().equals(name)) {
                 Toast.makeText(lInflater.getContext(), "Such category already exists!",
@@ -86,7 +86,7 @@ public class CategoryAdapter extends BaseAdapter {
         return categories;
     }
 
-    public ArrayList<Category> deleteCategory() {
+    ArrayList<Category> deleteCategory() {
         ArrayList<Category> finalCategories = new ArrayList<>();
         for (Category c : categories)
             if (!c.getDeleteState())

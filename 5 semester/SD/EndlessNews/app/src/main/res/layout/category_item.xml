@@ -12,7 +12,7 @@
         android:layout_marginStart="10dp"
         android:textSize="33sp"
         android:text=""
-        android:textColor="@color/colorCategoryText"
+        android:textColor="@color/colorText"
         android:layout_alignParentStart="true"
         android:id="@+id/tvCategoryName"/>
     <CheckBox

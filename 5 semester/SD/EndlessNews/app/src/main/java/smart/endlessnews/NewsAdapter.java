@@ -46,9 +46,11 @@ class NewsAdapter extends BaseAdapter {
         ImageView ivPicture = (ImageView)view.findViewById(R.id.ivPicture);
         new DownloadImageTask(ivPicture).execute(news.getPicture());
 
+        String title = news.getTitle();
         String description = news.getDescription();
+        if (title.length() > 40) title = title.substring(0, 40) + "...";
         if (description.length() > 120) description = description.substring(0, 120) + "...";
-        ((TextView) view.findViewById(R.id.tvTitle)).setText(news.getTitle());
+        ((TextView) view.findViewById(R.id.tvTitle)).setText(title);
         ((TextView) view.findViewById(R.id.tvDescription)).setText(description);
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -60,21 +62,6 @@ class NewsAdapter extends BaseAdapter {
                 intent.putExtra("current_category", currentCategory);
                 intent.putExtra("current_news", position);
                 ctx.startActivity(intent);
-
-                //fragment = (NewsFragment) ((NewsActivity)ctx).getFragmentManager().findFragmentById(R.id.frNews);
-
-//                if (fragment == null)
-//                    Toast.makeText(ctx, "NULL", Toast.LENGTH_SHORT).show();
-
-//                ((TextView)fragment.getView().findViewById(R.id.tvFragmentTitle)).
-//                        setText(news.getTitle());
-//                ((TextView)fragment.getView().findViewById(R.id.tvFragmentFullText)).
-//                        setText(news.getFullText());
-//                ((TextView)fragment.getView().findViewById(R.id.tvFragmentPubDate)).
-//                        setText(news.getPubDate().toString());
-//                new DownloadImageTask((ImageView)fragment.getView().
-//                        findViewById(R.id.ivFragmentPicture)).execute(news.getPicture());
-
             }
         });
 

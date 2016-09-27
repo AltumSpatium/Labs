@@ -45,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 categories.add((Category) savedInstanceState.getParcelable("category" + i));
             for (int i = 0; i < newsCount; i++)
                 allNews.add((News) savedInstanceState.getParcelable("news" + i));
+        } else {
+            RSSParser rssParser = new RSSParser("http://www.vesti.ru/vesti.rss");
+            allNews = rssParser.parseFeed();
+            Toast.makeText(getApplicationContext(),
+                    "News count: " + allNews.size(),
+                    Toast.LENGTH_SHORT).show();
         }
 
         categoryAdapter = new CategoryAdapter(this, categories);
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         News news = new News("This is my first news's title!",
                 "This news is goddamn useless! But I hope that someday I will finish RSS" +
                         " parser and news will be loaded automatically from news-websites!!!!!!!",
-                "Full text is unavailable now.",
+                "Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now. Full text is unavailable now.",
                 "Link is unavailable now.",
                 "http://scoopak.com/wp-content/uploads/2013/06/free-hd-natural-wallpapers-download-for-pc.jpg",
                 categories.get(categoryIndex).getName(),
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 categories = categoryAdapter.addCategory(value, allNews);
-                lvMain.setAdapter(categoryAdapter);
+                categoryAdapter.notifyDataSetChanged();
             }
         });
 
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             case MENU_DELETE_ID:
                 if (isNeededDeletion()) {
                     categories = categoryAdapter.deleteCategory();
-                    lvMain.setAdapter(categoryAdapter);
+                    categoryAdapter.notifyDataSetChanged();
                 }
                 break;
             case MENU_QUIT_ID:

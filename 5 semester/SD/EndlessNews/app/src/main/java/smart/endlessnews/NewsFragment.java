@@ -23,13 +23,16 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater lInflater, ViewGroup container, Bundle savedInstanceState) {
         News news = getArguments().getParcelable("news");
         View v = lInflater.inflate(R.layout.news_fragment, container, false);
-        new DownloadImageTask((ImageView)v.findViewById(R.id.ivFragmentPicture)).
-                execute(news.getPicture());
-        ((TextView)v.findViewById(R.id.tvFragmentTitle)).setText(news.getTitle());
-        ((TextView)v.findViewById(R.id.tvFragmentFullText)).
-                setText(news.getFullText());
-        ((TextView)v.findViewById(R.id.tvFragmentPubDate)).
-                setText(news.getPubDate().toString());
+        if (news != null) {
+            new DownloadImageTask((ImageView) v.findViewById(R.id.ivFragmentPicture)).
+                    execute(news.getPicture());
+            ((TextView) v.findViewById(R.id.tvFragmentTitle)).setText(news.getTitle());
+            ((TextView) v.findViewById(R.id.tvFragmentFullText)).
+                    setText(news.getFullText());
+            ((TextView) v.findViewById(R.id.tvFragmentPubDate)).
+                    setText(news.getPubDate().toString());
+        }
+
         return v;
     }
 }

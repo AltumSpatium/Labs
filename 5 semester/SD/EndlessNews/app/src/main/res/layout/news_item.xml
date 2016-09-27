@@ -19,7 +19,7 @@
             android:layout_height="30sp"
             android:maxHeight="20sp"
             android:textSize="15sp"
-            android:textColor="@color/colorCategoryText"
+            android:textColor="@color/colorText"
             android:text=""
             android:gravity="center"
             android:id="@+id/tvTitle"/>
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="35sp"
             android:textSize="10sp"
-            android:textColor="@color/colorCategoryText"
+            android:textColor="@color/colorText"
             android:text=""
             android:id="@+id/tvDescription"/>
     </LinearLayout>

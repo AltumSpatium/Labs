@@ -29,6 +29,22 @@ class News implements Parcelable{
         this.mPubDate = pubDate;
     }
 
+    private News(Parcel in) {
+        this.mTitle = in.readString();
+        this.mDescription = in.readString();
+        this.mFullText = in.readString();
+        this.mLink = in.readString();
+        this.mPicture = in.readString();
+        this.mCategory = in.readString();
+        DateFormat format = SimpleDateFormat.getDateInstance();
+        try {
+            this.mPubDate = format.parse(in.readString());
+        }
+        catch (ParseException e) {
+            this.mPubDate = new Date();
+        }
+    }
+
     String getTitle() {
         return mTitle;
     }
@@ -45,7 +61,7 @@ class News implements Parcelable{
         mDescription = description;
     }
 
-    public String getFullText() {
+    String getFullText() {
         return mFullText;
     }
 
@@ -77,7 +93,7 @@ class News implements Parcelable{
         mCategory = category;
     }
 
-    public Date getPubDate() {
+    Date getPubDate() {
         return mPubDate;
     }
 
@@ -110,20 +126,4 @@ class News implements Parcelable{
             return new News[size];
         }
     };
-
-    private News(Parcel in) {
-        this.mTitle = in.readString();
-        this.mDescription = in.readString();
-        this.mFullText = in.readString();
-        this.mLink = in.readString();
-        this.mPicture = in.readString();
-        this.mCategory = in.readString();
-        DateFormat format = SimpleDateFormat.getDateInstance();
-        try {
-            this.mPubDate = format.parse(in.readString());
-        }
-        catch (ParseException e) {
-            this.mPubDate = new Date();
-        }
-    }
 }
