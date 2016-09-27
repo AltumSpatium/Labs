@@ -10,9 +10,4 @@
         android:layout_height="match_parent"
         android:id="@+id/lvNews">
     </ListView>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/frNews">
-    </FrameLayout>
 </RelativeLayout>

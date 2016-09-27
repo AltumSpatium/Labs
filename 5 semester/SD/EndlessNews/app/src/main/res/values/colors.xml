@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorMainBg">#7bafa0</color>
+    <color name="colorBtnNext">#578175</color>
     <color name="colorCategoryText">#FFFFFF</color>
 </resources>

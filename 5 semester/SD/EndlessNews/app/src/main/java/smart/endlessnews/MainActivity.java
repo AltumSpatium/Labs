@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +30,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) addTestCategories();
+        if (savedInstanceState != null) {
+            int categoriesCount = savedInstanceState.getInt("categories_count");
+            int newsCount = savedInstanceState.getInt("news_count");
+            for (int i = 0; i < categoriesCount; i++)
+                categories.add((Category) savedInstanceState.getParcelable("category" + i));
+            for (int i = 0; i < newsCount; i++)
+                allNews.add((News) savedInstanceState.getParcelable("news" + i));
+        } else addTestCategories();
 
         categoryAdapter = new CategoryAdapter(this, categories);
 
@@ -49,19 +57,34 @@ public class MainActivity extends AppCompatActivity {
             outState.putParcelable("news" + i, allNews.get(i));
     }
 
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        int categoriesCount = savedInstanceState.getInt("categories_count");
-        int newsCount = savedInstanceState.getInt("news_count");
-        for (int i = 0; i < categoriesCount; i++)
-            categories.add((Category) savedInstanceState.getParcelable("category" + i));
-        for (int i = 0; i < newsCount; i++)
-            allNews.add((News) savedInstanceState.getParcelable("news" + i));
+    public void addTestCategories() {
+        for (int i = 0; i < 10; i++)
+            categories.add(new Category("Category " + (i + 1)));
+        addTestNews(0);
     }
 
-    public void addTestCategories() {
-        for (int i = 0; i < 20; i++)
-            categories.add(new Category("Category " + (i + 1)));
+    public void addTestNews(int categoryIndex) {
+        News news = new News("This is my first news's title!",
+                "This news is goddamn useless! But I hope that someday I will finish RSS" +
+                        " parser and news will be loaded automatically from news-websites!!!!!!!",
+                "Full text is unavailable now.",
+                "Link is unavailable now.",
+                "http://scoopak.com/wp-content/uploads/2013/06/free-hd-natural-wallpapers-download-for-pc.jpg",
+                categories.get(categoryIndex).getName(),
+                new Date(100));
+
+        categories.get(0).addNews(news);
+
+        news = new News("This is my second news's title!",
+                "This news is goddamn useless! But I hope that someday I will finish RSS" +
+                        " parser and news will be loaded automatically from news-websites!!!!!!!",
+                "Full text is unavailable now.",
+                "Link is unavailable now.",
+                "http://scoopak.com/wp-content/uploads/2013/06/free-hd-natural-wallpapers-download-for-pc.jpg",
+                categories.get(categoryIndex).getName(),
+                new Date(100));
+
+        categories.get(0).addNews(news);
     }
 
     public boolean isNeededDeletion() {

@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class News implements Parcelable{
+class News implements Parcelable{
     private String mTitle;
     private String mDescription;
     private String mFullText;
@@ -17,7 +17,7 @@ public class News implements Parcelable{
     private String mCategory;
     private Date mPubDate;
 
-    public News(String title, String description, String fullText,
+    News(String title, String description, String fullText,
                 String link, String picture, String category, Date pubDate)
     {
         this.mTitle = title;
@@ -29,7 +29,7 @@ public class News implements Parcelable{
         this.mPubDate = pubDate;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return mTitle;
     }
 
@@ -37,7 +37,7 @@ public class News implements Parcelable{
         mTitle = title;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return mDescription;
     }
 
@@ -61,7 +61,7 @@ public class News implements Parcelable{
         mLink = link;
     }
 
-    public String getPicture() {
+    String getPicture() {
         return mPicture;
     }
 
@@ -69,7 +69,7 @@ public class News implements Parcelable{
         mPicture = picture;
     }
 
-    public String getCategory() {
+    String getCategory() {
         return mCategory;
     }
 

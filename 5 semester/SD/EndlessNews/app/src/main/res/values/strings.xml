@@ -2,4 +2,6 @@
     <string name="app_name">EndlessNews</string>
     <string name="dialog_add">Add</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="next_news">Next</string>
+    <string name="prev_news">Prev</string>
 </resources>

@@ -4,13 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
 
-public class Category implements Parcelable {
+class Category implements Parcelable {
     private String mName;
     private boolean mDeleteState = false;
     private ArrayList<News> mNews = new ArrayList<>();
 
-    public Category(String name) {
+    Category(String name) {
         this.mName = name;
+    }
+
+    Category(String name, ArrayList<News> news) {
+        this.mName = name;
+        this.mNews = news;
     }
 
     private Category(Parcel in) {
@@ -28,20 +33,28 @@ public class Category implements Parcelable {
         mName = name;
     }
 
-    public boolean getDeleteState() {
+    boolean getDeleteState() {
         return mDeleteState;
     }
 
-    public void setDeleteState(boolean deleteState) {
+    void setDeleteState(boolean deleteState) {
         mDeleteState = deleteState;
     }
 
-    public void addNews(News news) {
+    void addNews(News news) {
         mNews.add(news);
     }
 
-    public ArrayList<News> getNews() {
+    News getNews(int position) {
+        return mNews.get(position);
+    }
+
+    ArrayList<News> getNews() {
         return mNews;
+    }
+
+    public void setNews(ArrayList<News> news) {
+        this.mNews = news;
     }
 
     @Override
