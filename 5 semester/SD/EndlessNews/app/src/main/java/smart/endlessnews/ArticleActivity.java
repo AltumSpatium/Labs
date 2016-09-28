@@ -3,10 +3,12 @@ package smart.endlessnews;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 public class ArticleActivity extends AppCompatActivity {
+    private static final String TAG = "ArticleActivity";
 
     Category currentCategory;
     News currentNews;
@@ -16,6 +18,7 @@ public class ArticleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "ArticleActivity OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         if (getSupportActionBar() != null)
@@ -59,5 +62,12 @@ public class ArticleActivity extends AppCompatActivity {
                 else finish();
             }
         });
+    }
+
+    protected void onPause() {
+        Log.d(TAG, "ArticleActivity OnPause");
+        super.onPause();
+        MyApplication myApp = (MyApplication) this.getApplication();
+        myApp.setLastNewsTitle(currentNews.getTitle());
     }
 }

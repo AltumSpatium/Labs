@@ -53,7 +53,7 @@ class Category implements Parcelable {
         return mNews;
     }
 
-    public void setNews(ArrayList<News> news) {
+    void setNews(ArrayList<News> news) {
         this.mNews = news;
     }
 

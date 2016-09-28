@@ -4,4 +4,5 @@
     <color name="colorBtnNextPrev">#578175</color>
     <color name="colorText">#FFFFFF</color>
     <color name="colorActionBar">#2b564a</color>
+    <color name="colorTVLast">#ab68978a</color>
 </resources>

@@ -49,7 +49,7 @@ class NewsAdapter extends BaseAdapter {
         String title = news.getTitle();
         String description = news.getDescription();
         if (title.length() > 40) title = title.substring(0, 40) + "...";
-        if (description.length() > 120) description = description.substring(0, 120) + "...";
+        if (description.length() > 140) description = description.substring(0, 120) + "...";
         ((TextView) view.findViewById(R.id.tvTitle)).setText(title);
         ((TextView) view.findViewById(R.id.tvDescription)).setText(description);
 

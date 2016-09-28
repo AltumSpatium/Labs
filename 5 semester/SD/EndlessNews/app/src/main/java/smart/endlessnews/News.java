@@ -49,56 +49,28 @@ class News implements Parcelable{
         return mTitle;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
     String getDescription() {
         return mDescription;
-    }
-
-    public void setDescription(String description) {
-        mDescription = description;
     }
 
     String getFullText() {
         return mFullText;
     }
 
-    public void setFullText(String fullText) {
-        mFullText = fullText;
-    }
-
-    public String getLink() {
+    String getLink() {
         return mLink;
-    }
-
-    public void setLink(String link) {
-        mLink = link;
     }
 
     String getPicture() {
         return mPicture;
     }
 
-    public void setPicture(String picture) {
-        mPicture = picture;
-    }
-
     String getCategory() {
         return mCategory;
     }
 
-    public void setCategory(String category) {
-        mCategory = category;
-    }
-
     Date getPubDate() {
         return mPubDate;
-    }
-
-    public void setPubDate(Date pubDate) {
-        mPubDate = pubDate;
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class NewsFragment extends Fragment {
 
@@ -26,9 +25,12 @@ public class NewsFragment extends Fragment {
         if (news != null) {
             new DownloadImageTask((ImageView) v.findViewById(R.id.ivFragmentPicture)).
                     execute(news.getPicture());
-            ((TextView) v.findViewById(R.id.tvFragmentTitle)).setText(news.getTitle());
+            ((TextView) v.findViewById(R.id.tvFragmentTitle)).
+                    setText(news.getTitle());
             ((TextView) v.findViewById(R.id.tvFragmentFullText)).
                     setText(news.getFullText());
+            ((TextView) v.findViewById(R.id.tvFragmentLink)).
+                    setText(news.getLink());
             ((TextView) v.findViewById(R.id.tvFragmentPubDate)).
                     setText(news.getPubDate().toString());
         }

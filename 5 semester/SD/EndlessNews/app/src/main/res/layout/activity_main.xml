@@ -5,12 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
+    android:orientation="vertical"
     tools:context="smart.endlessnews.MainActivity"
     android:background="@color/colorMainBg">
     <ListView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/lvMain">
     </ListView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTVLast"
+        android:textStyle="italic"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:textSize="12sp"
+        android:textColor="@color/colorText"
+        android:id="@+id/tvLastNews"/>
 </LinearLayout>
