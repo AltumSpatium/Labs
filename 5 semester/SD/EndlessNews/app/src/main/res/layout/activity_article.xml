@@ -9,7 +9,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMainBg">
+        android:background="@color/colorMainBg"
+        android:id="@+id/svMain">
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"

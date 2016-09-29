@@ -1,11 +1,16 @@
 package smart.endlessnews;
 
 import android.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 public class ArticleActivity extends AppCompatActivity {
     private static final String TAG = "ArticleActivity";
@@ -13,6 +18,7 @@ public class ArticleActivity extends AppCompatActivity {
     Category currentCategory;
     News currentNews;
     Button btnNextNews, btnPrevNews;
+    ScrollView svMain;
 
     int newsID;
 
@@ -37,14 +43,7 @@ public class ArticleActivity extends AppCompatActivity {
         btnPrevNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (--newsID >= 0) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    currentNews = currentCategory.getNews(newsID);
-                    NewsFragment fragment = NewsFragment.newInstance(currentNews);
-                    ft.replace(R.id.frNews, fragment);
-                    ft.commit();
-                }
-                else finish();
+                if (!prevNews()) finish();
             }
         });
 
@@ -52,16 +51,63 @@ public class ArticleActivity extends AppCompatActivity {
         btnNextNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (++newsID < currentCategory.getNews().size()) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    currentNews = currentCategory.getNews(newsID);
-                    NewsFragment fragment = NewsFragment.newInstance(currentNews);
-                    ft.replace(R.id.frNews, fragment);
-                    ft.commit();
-                }
-                else finish();
+                if (!nextNews()) finish();
             }
         });
+
+        svMain = (ScrollView) findViewById(R.id.svMain);
+        svMain.setOnTouchListener(new OnSwipeTouchListener(ArticleActivity.this) {
+            public void onSwipeRight() {
+                if (!prevNews()) finish();
+            }
+
+            public void onSwipeLeft() {
+                if (!nextNews()) finish();
+            }
+        });
+
+        /*final ImageView ivFragmentPicture = (ImageView) findViewById(R.id.ivFragmentPicture);
+        ivFragmentPicture.setOnTouchListener(new OnScaleTouchListener(ArticleActivity.this) {
+            @Override
+            void scaleDilute(float coeff) {
+                int currWidth = ivFragmentPicture.getLayoutParams().width;
+                int currHeight = ivFragmentPicture.getLayoutParams().height;
+                ivFragmentPicture.setLayoutParams(new ActionBar.LayoutParams(
+                        (int)(currWidth * coeff), (int)(currHeight * coeff)));
+            }
+
+            @Override
+            void scalePinch(float coeff) {
+                int currWidth = ivFragmentPicture.getLayoutParams().width;
+                int currHeight = ivFragmentPicture.getLayoutParams().height;
+                ivFragmentPicture.setLayoutParams(new ActionBar.LayoutParams(
+                        (int)(currWidth * coeff), (int)(currHeight * coeff)));
+            }
+        });*/
+    }
+
+    public boolean nextNews() {
+        if (++newsID < currentCategory.getNews().size()) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            currentNews = currentCategory.getNews(newsID);
+            NewsFragment fragment = NewsFragment.newInstance(currentNews);
+            ft.replace(R.id.frNews, fragment);
+            ft.commit();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean prevNews() {
+        if (--newsID >= 0) {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            currentNews = currentCategory.getNews(newsID);
+            NewsFragment fragment = NewsFragment.newInstance(currentNews);
+            ft.replace(R.id.frNews, fragment);
+            ft.commit();
+            return true;
+        }
+        return false;
     }
 
     protected void onPause() {
