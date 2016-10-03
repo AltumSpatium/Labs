@@ -1,25 +1,29 @@
 #include <windows.h>
 #include <tchar.h>
+#include <regex>
 
 #define ID_LISTBOX 1001
 
-#define ID_BTN_SEARCH 2001
-#define ID_BTN_CLEAR 2002
-#define ID_BTN_PAUSE 2003
+#define ID_EDIT 2001
+
+#define ID_BTN_SEARCH 3001
+#define ID_BTN_CLEAR 3002
 
 #define MAX_KEY_LENGTH 255
 #define MAX_VALUE_NAME 16383
 
 #define TIMER 3001
 
+using namespace std;
+
 HINSTANCE hInst;
 HWND hListbox;
-HWND hBtnSearch, hBtnClear, hBtnPause;
+HWND hEdit;
+HWND hBtnSearch, hBtnClear;
 HANDLE hBgThread;
-TCHAR pathTemplate[3] = L":\\";
+TCHAR bufExpr[128];
 
-static int count = 0;
-static bool isThreadFinished = false, ThreadSuspended = false;
+static bool isThreadFinished = false;
 
 void CreateWindowElements(HWND hWnd)
 {
@@ -28,29 +32,29 @@ void CreateWindowElements(HWND hWnd)
 		10, 10, 700, 400, hWnd, (HMENU)ID_LISTBOX,
 		hInst, NULL);
 
+	hEdit = CreateWindow(_T("EDIT"), _T(""),
+		WS_CHILD | WS_VISIBLE | WS_BORDER,
+		10, 420, 450, 25, hWnd, (HMENU)ID_EDIT,
+		hInst, NULL);
+
 	hBtnSearch = CreateWindow(_T("BUTTON"), _T("Search"),
 		WS_CHILD | WS_VISIBLE | WS_BORDER,
-		10, 420, 100, 25, hWnd, (HMENU)ID_BTN_SEARCH,
+		470, 420, 100, 25, hWnd, (HMENU)ID_BTN_SEARCH,
 		hInst, NULL);
 
 	hBtnClear = CreateWindow(_T("BUTTON"), _T("Clear"),
 		WS_CHILD | WS_VISIBLE | WS_BORDER,
-		120, 420, 100, 25, hWnd, (HMENU)ID_BTN_CLEAR,
-		hInst, NULL);
-
-	hBtnPause = CreateWindow(_T("BUTTON"), _T("Pause"),
-		WS_CHILD | WS_VISIBLE | WS_BORDER,
-		230, 420, 100, 25, hWnd, (HMENU)ID_BTN_PAUSE,
+		580, 420, 100, 25, hWnd, (HMENU)ID_BTN_CLEAR,
 		hInst, NULL);
 }
 
-void PrintResultText(HWND hWnd)
+void PrintResult(HWND hWnd)
 {
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hWnd, &ps);
 
 	if (isThreadFinished)
-		TextOut(hdc, 250, 420, _T("Search finished!"), 16);
+		TextOut(hdc, 315, 450, _T("Search finished!"), 16);
 
 	EndPaint(hWnd, &ps);
 }
@@ -75,36 +79,25 @@ void GetKey(HWND hWnd, HKEY hPrevKey, LPCWSTR subKey)
 
 		DWORD valueLength = MAX_KEY_LENGTH;
 		DWORD valLength = MAX_KEY_LENGTH;
-		DWORD index = 0, type = 0;
+		DWORD ind = 0, type = 0;
 		TCHAR valueBuf[MAX_KEY_LENGTH];
 		BYTE value[MAX_KEY_LENGTH];
 
-		while (RegEnumValue(hSubKey, index++, valueBuf,
+		while (RegEnumValue(hSubKey, ind++, valueBuf,
 			&valueLength, NULL, &type, value, &valLength)
 			== ERROR_SUCCESS)
 		{
 			TCHAR* chars = (TCHAR*)value;
+			wstring s1(&chars[0]);
+			wstring s2(bufExpr);
 
-			if ((type == REG_SZ || type == REG_EXPAND_SZ ||
-				type == REG_MULTI_SZ) && valLength > 3)
-			{
-				if (chars[1] == pathTemplate[0] && chars[2] == pathTemplate[1])
-				{
-					for (int i = 3; i < valLength; i++)
-						if (chars[i] == ' ' || chars[i] == ',' || chars[i] == '\\')
-							if (i - 4 >= 0)
-								if (chars[i - 4] == '.' && chars[i - 3] != '.')
-								{
-									chars[i] = '\0';
-									break;
-								}
+			string str(s1.begin(), s1.end());
+			regex reg(string(s2.begin(), s2.end()));
 
-					if (GetFileAttributes(chars) == INVALID_FILE_ATTRIBUTES)
-						SendDlgItemMessage(hWnd, ID_LISTBOX, LB_SETITEMDATA,
-							(WPARAM)SendDlgItemMessage(hWnd, ID_LISTBOX, LB_ADDSTRING, 0, (LPARAM)chars),
-							(LPARAM)chars);
-				}
-			}
+			if (regex_match(str, reg) && !s1.empty())
+				SendDlgItemMessage(hWnd, ID_LISTBOX, LB_SETITEMDATA,
+				(WPARAM)SendDlgItemMessage(hWnd, ID_LISTBOX, LB_ADDSTRING, 0, (LPARAM)chars),
+					(LPARAM)chars);
 
 			valLength = MAX_KEY_LENGTH;
 		}
@@ -120,36 +113,45 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 	return 0;
 }
 
+bool ReadExpression(HWND hWnd)
+{
+	GetDlgItemText(hWnd, ID_EDIT, bufExpr, 128);
+	SetDlgItemText(hWnd, ID_EDIT, (LPWSTR)"");
+
+	bool isEmpty = true;
+	for (int i = 0; bufExpr[i] != '\0'; i++)
+	{
+		if (bufExpr[i] != ' ')
+		{
+			isEmpty = false;
+			break;
+		}
+	}
+
+	return !isEmpty;
+}
+
 void ProcessCommand(HWND hWnd, WPARAM wParam)
 {
 	switch (LOWORD(wParam))
 	{
 	case ID_BTN_SEARCH:
-		if ((hBgThread = CreateThread(NULL, 0, &ThreadProc, hWnd, 0, NULL)) == NULL)
-			MessageBox(hWnd, _T("Error opening search thread!"), MB_OK, NULL);
-		isThreadFinished = ThreadSuspended = false;
-		SetTimer(hWnd, TIMER, 500, NULL);		
+		if (ReadExpression(hWnd))
+		{
+			if ((hBgThread = CreateThread(NULL, 0, &ThreadProc, hWnd, 0, NULL)) == NULL)
+				MessageBox(hWnd, _T("Error opening search thread!"), MB_OK, NULL);
+			isThreadFinished = false;
+			SetTimer(hWnd, TIMER, 500, NULL);
+		}
 		break;
 	case ID_BTN_CLEAR:
 		if (hBgThread != nullptr)
 			TerminateThread(hBgThread, 0);
-		isThreadFinished = !(ThreadSuspended = true);
-		count = SendDlgItemMessage(hWnd, ID_LISTBOX, LB_GETCOUNT, NULL, NULL);
+		int count = SendDlgItemMessage(hWnd, ID_LISTBOX, LB_GETCOUNT, NULL, NULL);
 		for (int i = 0; i < count; i++)
 			SendDlgItemMessage(hWnd, ID_LISTBOX, LB_DELETESTRING, (WPARAM)0, NULL);
-		ResumeThread(hBgThread);
-		ThreadSuspended = false;
-		break;
-	case ID_BTN_PAUSE:
-		if (hBgThread != nullptr)
-		{
-			ThreadSuspended ? SetWindowText(hBtnPause, _T("Pause")) :
-				SetWindowText(hBtnPause, _T("Resume"));
-			ThreadSuspended ? (ResumeThread(hBgThread), SetTimer(hWnd, TIMER, 500, 0)) :
-				(SuspendThread(hBgThread), KillTimer(hWnd, TIMER));
-			ThreadSuspended = !ThreadSuspended;
-			InvalidateRect(hWnd, 0, 0);
-		}
+		isThreadFinished = false;
+		InvalidateRect(hWnd, 0, true);
 		break;
 	}
 }
@@ -162,7 +164,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		CreateWindowElements(hWnd);
 		break;
 	case WM_PAINT:
-		PrintResultText(hWnd);
+		PrintResult(hWnd);
 		break;
 	case WM_TIMER:
 		if (isThreadFinished)
