@@ -1,16 +1,12 @@
 package smart.endlessnews;
 
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 public class ArticleActivity extends AppCompatActivity {
     private static final String TAG = "ArticleActivity";

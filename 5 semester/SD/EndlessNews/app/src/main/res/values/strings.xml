@@ -4,4 +4,9 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="next_news">Next</string>
     <string name="prev_news">Prev</string>
+    <string name="btnStop">Stop</string>
+    <string name="btnPause">Pause</string>
+    <string name="btnPlay">Play</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

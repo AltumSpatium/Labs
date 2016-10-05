@@ -11,7 +11,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.List;
 
 class CategoryAdapter extends BaseAdapter {
     private Context ctx;

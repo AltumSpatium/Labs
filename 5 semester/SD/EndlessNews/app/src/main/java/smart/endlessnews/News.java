@@ -18,8 +18,7 @@ class News implements Parcelable{
     private Date mPubDate;
 
     News(String title, String description, String fullText,
-                String link, String picture, String category, Date pubDate)
-    {
+                String link, String picture, String category, Date pubDate) {
         this.mTitle = title;
         this.mDescription = description;
         this.mFullText = fullText;

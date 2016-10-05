@@ -5,4 +5,6 @@
     <color name="colorText">#FFFFFF</color>
     <color name="colorActionBar">#2b564a</color>
     <color name="colorTVLast">#ab68978a</color>
+    <!--<color name="playerButtons">#40806e</color>-->
+    <color name="playerButtons">#acf1f1f1</color>
 </resources>

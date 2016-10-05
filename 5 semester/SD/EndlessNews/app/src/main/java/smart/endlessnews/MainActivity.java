@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     final int MENU_ADD_ID = 1;
     final int MENU_DELETE_ID = 2;
-    final int MENU_QUIT_ID = 3;
+    final int MENU_AUDIO_ID = 3;
+    final int MENU_QUIT_ID = 4;
 
     String RSS_URL = "http://www.vesti.ru/vesti.rss";
     String lastNewsTitle;
@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_ADD_ID, 0, "Add new category");
         menu.add(0, MENU_DELETE_ID, 0, "Delete selected categories");
+        menu.add(0, MENU_AUDIO_ID, 0, "Audio Player");
         menu.add(0, MENU_QUIT_ID, 0, "Quit");
         return super.onCreateOptionsMenu(menu);
     }
@@ -218,6 +219,10 @@ public class MainActivity extends AppCompatActivity {
                     categoryAdapter.notifyDataSetChanged();
                 }
                 if (categories.isEmpty()) userCategories = false;
+                break;
+            case MENU_AUDIO_ID:
+                Intent intent = new Intent(MainActivity.this, AudioPlayerActivity.class);
+                startActivity(intent);
                 break;
             case MENU_QUIT_ID:
                 finish();
