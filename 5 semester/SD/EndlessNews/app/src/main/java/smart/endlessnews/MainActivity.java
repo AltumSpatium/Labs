@@ -19,6 +19,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+/*
+Создать приложение для просмотра новостей. На главном экране вывести
+список новостей по категориям с чекбоксами для возможности удаления категорий,
+которые не интересны. При нажатии на категорию открывается новое активити со
+списком новостей (реализовать с использованием своего customAdapter для списка).
+Каждая новость имеет заголовок, картинку и небольшое описание. По нажатию на пункт
+открывается окно с подробным текстом новости (использовать фрагменты), большой
+картинкой и кнопкой перехода на следующую новость. Отобразить заголовок последней
+просмотренной новости в основной активити с категориями новостей. Вывести
+в лог информацию о жизненном цикле дополнительного активити.
+ */
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
@@ -90,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             lvMain.setAdapter(categoryAdapter);
     }
 
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "MainActivity OnSaveInstanceState");
         super.onSaveInstanceState(outState);
@@ -103,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             outState.putParcelable("news" + i, allNews.get(i));
     }
 
+    @Override
     protected void onPause() {
         Log.d(TAG, "MainActivity OnPause");
         super.onPause();
@@ -116,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    @Override
     protected void onResume() {
         Log.d(TAG, "MainActivity OnResume");
         super.onResume();
@@ -230,4 +245,29 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "MainActivity OnStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "MainActivity OnStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "MainActivity OnRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "MainActivity OnDestroy");
+    }
+
 }

@@ -106,10 +106,41 @@ public class ArticleActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
     protected void onPause() {
-        Log.d(TAG, "ArticleActivity OnPause");
         super.onPause();
+        Log.d(TAG, "ArticleActivity OnPause");
         MyApplication myApp = (MyApplication) this.getApplication();
         myApp.setLastNewsTitle(currentNews.getTitle());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "ArticleActivity OnResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "ArticleActivity OnStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "ArticleActivity OnStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "ArticleActivity OnRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "ArticleActivity OnDestroy");
     }
 }

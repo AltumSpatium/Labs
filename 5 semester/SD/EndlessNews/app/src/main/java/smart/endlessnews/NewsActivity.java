@@ -28,4 +28,40 @@ public class NewsActivity extends AppCompatActivity {
         if (lvNews != null)
             lvNews.setAdapter(newsAdapter);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "NewsActivity OnPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "NewsActivity OnResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "NewsActivity OnStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "NewsActivity OnStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "NewsActivity OnRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "NewsActivity OnDestroy");
+    }
 }
