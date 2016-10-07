@@ -4,9 +4,11 @@ import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class ArticleActivity extends AppCompatActivity {
     private static final String TAG = "ArticleActivity";
@@ -15,7 +17,12 @@ public class ArticleActivity extends AppCompatActivity {
     News currentNews;
     Button btnNextNews, btnPrevNews;
     ScrollView svMain;
+    TextView tvFullText;
 
+    NewsFragment fragment;
+
+    float scale = 1f;
+    float startSize;
     int newsID;
 
     @Override
@@ -31,7 +38,7 @@ public class ArticleActivity extends AppCompatActivity {
         currentNews = currentCategory.getNews(newsID);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NewsFragment fragment = NewsFragment.newInstance(currentNews);
+        fragment = NewsFragment.newInstance(currentNews);
         ft.add(R.id.frNews, fragment);
         ft.commit();
 
@@ -61,25 +68,6 @@ public class ArticleActivity extends AppCompatActivity {
                 if (!nextNews()) finish();
             }
         });
-
-        /*final ImageView ivFragmentPicture = (ImageView) findViewById(R.id.ivFragmentPicture);
-        ivFragmentPicture.setOnTouchListener(new OnScaleTouchListener(ArticleActivity.this) {
-            @Override
-            void scaleDilute(float coeff) {
-                int currWidth = ivFragmentPicture.getLayoutParams().width;
-                int currHeight = ivFragmentPicture.getLayoutParams().height;
-                ivFragmentPicture.setLayoutParams(new ActionBar.LayoutParams(
-                        (int)(currWidth * coeff), (int)(currHeight * coeff)));
-            }
-
-            @Override
-            void scalePinch(float coeff) {
-                int currWidth = ivFragmentPicture.getLayoutParams().width;
-                int currHeight = ivFragmentPicture.getLayoutParams().height;
-                ivFragmentPicture.setLayoutParams(new ActionBar.LayoutParams(
-                        (int)(currWidth * coeff), (int)(currHeight * coeff)));
-            }
-        });*/
     }
 
     public boolean nextNews() {
@@ -118,6 +106,18 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "ArticleActivity OnResume");
+        tvFullText = (TextView) fragment.getView().findViewById(R.id.tvFragmentFullText);
+        startSize = tvFullText.getTextSize();
+
+        tvFullText.setOnTouchListener(new OnScaleTouchListener(ArticleActivity.this) {
+            @Override
+            void resize(ScaleGestureDetector detector) {
+                scale *= detector.getScaleFactor();
+                scale = Math.max(0.5f, Math.min(scale, 1.2f));
+
+                tvFullText.setTextSize(startSize * scale);
+            }
+        });
     }
 
     @Override

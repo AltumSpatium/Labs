@@ -17,30 +17,13 @@ class OnScaleTouchListener implements View.OnTouchListener{
         return scaleGestureDetector.onTouchEvent(event);
     }
 
-    private final class ScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener {
+    private final class ScaleGestureListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         public boolean onScale(ScaleGestureDetector detector) {
-            try {
-                if (detector.getScaleFactor() > 1) scaleDilute(detector.getScaleFactor());
-                else if (detector.getScaleFactor() < 1) scalePinch(detector.getScaleFactor());
-                return true;
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-
-        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            resize(detector);
             return true;
         }
-
-        public void onScaleEnd(ScaleGestureDetector detector) {
-        }
     }
 
-    void scaleDilute(float coeff) {
-    }
-
-    void scalePinch(float coeff) {
+    void resize(ScaleGestureDetector detector) {
     }
 }

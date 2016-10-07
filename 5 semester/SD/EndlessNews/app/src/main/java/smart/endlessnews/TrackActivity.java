@@ -25,8 +25,6 @@ public class TrackActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_track);
 
         track = getIntent().getParcelableExtra("current_track");
-//        intent = savedInstanceState == null ? new Intent(this, AudioPlayService.class) :
-//                (Intent)savedInstanceState.getParcelable("intent");
         intent = new Intent(this, AudioPlayService.class);
         intent.putExtra("track", track);
 
@@ -70,9 +68,7 @@ public class TrackActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnPlay:
-                if (!bound) {
-                    startService(intent);
-                }
+                if (!bound) startService(intent);
                 else service.play();
                 if (((Button)findViewById(R.id.btnPause)).getText().equals("Resume"))
                     ((Button)findViewById(R.id.btnPause)).setText(R.string.pause);

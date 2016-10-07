@@ -23,7 +23,7 @@ class Track implements Parcelable {
         this.mData = in.readString();
     }
 
-    public int getID() {
+    int getID() {
         return mID;
     }
 
