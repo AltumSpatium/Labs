@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,10 +23,12 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    final int MENU_ADD_ID = 1;
-    final int MENU_DELETE_ID = 2;
-    final int MENU_AUDIO_ID = 3;
-    final int MENU_QUIT_ID = 4;
+    final int MENU_REFRESH_ID = 1;
+    final int MENU_ADD_ID = 2;
+    final int MENU_DELETE_ID = 3;
+    final int MENU_ALLNEWS_ID = 4;
+    final int MENU_AUDIO_ID = 5;
+    final int MENU_QUIT_ID = 6;
 
     String RSS_URL = "http://www.vesti.ru/vesti.rss";
     String lastNewsTitle;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     ListView lvMain;
 
+    DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "MainActivity OnCreate");
@@ -49,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             userCategories = savedInstanceState.getBoolean("userCategories");
-            RSS_URL = savedInstanceState.getString("rssurl");
             int categoriesCount = savedInstanceState.getInt("categories_count");
             int newsCount = savedInstanceState.getInt("news_count");
             for (int i = 0; i < categoriesCount; i++)
@@ -57,23 +61,12 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < newsCount; i++)
                 allNews.add((News) savedInstanceState.getParcelable("news" + i));
         } else {
-            userCategories = sharedPreferences.getBoolean("userCategories", false);
-            RSS_URL = sharedPreferences.getString("rssurl", RSS_URL);
-            int size = sharedPreferences.getInt("categoriesCount", 0);
-            if (size > 0 && categories.isEmpty())
-                for (int i = 0; i < size; i++) {
-                    String name = sharedPreferences.getString("categoryName" + i, "");
-                    categories.add(new Category(name));
-                }
+            dbHelper = new DBHelper(this);
 
-            RSSParser rssParser = new RSSParser(RSS_URL);
-            rssParser.execute();
-            try {
-                allNews = rssParser.get(3, TimeUnit.SECONDS);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            categories = fillCategories(dbHelper.getWritableDatabase());
+            allNews = fillNews(dbHelper.getWritableDatabase());
+
+            userCategories = sharedPreferences.getBoolean("userCategories", false);
         }
 
         if (categories.isEmpty() && !userCategories) {
@@ -95,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "MainActivity OnSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putBoolean("userCategories", userCategories);
-        outState.putString("rssurl", RSS_URL);
         outState.putInt("categories_count", categories.size());
         outState.putInt("news_count", allNews.size());
         for (int i = 0; i < categories.size(); i++)
@@ -110,11 +102,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("userCategories", userCategories);
-        editor.putString("rssurl", RSS_URL);
-        int size = categories.size();
-        editor.putInt("categoriesCount", size);
-        for (int i = 0; i < size; i++)
-            editor.putString("categoryName" + i, categories.get(i).getName());
         editor.apply();
     }
 
@@ -127,6 +114,33 @@ public class MainActivity extends AppCompatActivity {
         if (lastNewsTitle != null) {
             String text = "Last viewed news: " + lastNewsTitle;
             ((TextView) findViewById(R.id.tvLastNews)).setText(text);
+        }
+    }
+
+    public ArrayList<News> fillNews(SQLiteDatabase db) {
+        ArrayList<News> news;
+        NewsRepository repository = new NewsRepository(categories);
+
+        repository.connect(db);
+        news = repository.loadAll();
+        if (news.isEmpty()) {
+            news = loadNews(RSS_URL);
+            for (News n : news)
+                repository.add(n);
+        }
+
+        return news;
+    }
+
+    public ArrayList<News> loadNews(String url) {
+        RSSParser rssParser = new RSSParser(url);
+        rssParser.execute();
+        try {
+            return rssParser.get(6, TimeUnit.SECONDS);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -165,16 +179,34 @@ public class MainActivity extends AppCompatActivity {
         return catToFill;
     }
 
+    public ArrayList<Category> fillCategories(SQLiteDatabase db) {
+        CategoryRepository repository = new CategoryRepository();
+        repository.connect(db);
+
+        return repository.loadAll();
+    }
+
     public boolean isNeededDeletion() {
         for (Category c : categories)
             if (c.getDeleteState()) return true;
         return false;
     }
 
+    public void refresh() {
+        dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 0, 1);
+        allNews = loadNews(RSS_URL);
+        categories = createCategories(allNews);
+        categoryAdapter = new CategoryAdapter(this, categories);
+        if (lvMain != null)
+            lvMain.setAdapter(categoryAdapter);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, MENU_REFRESH_ID, 0, "Refresh");
         menu.add(0, MENU_ADD_ID, 0, "Add new category");
         menu.add(0, MENU_DELETE_ID, 0, "Delete selected categories");
+        menu.add(0, MENU_ALLNEWS_ID, 0, "Show all news");
         menu.add(0, MENU_AUDIO_ID, 0, "Audio Player");
         menu.add(0, MENU_QUIT_ID, 0, "Quit");
         return super.onCreateOptionsMenu(menu);
@@ -213,6 +245,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case MENU_REFRESH_ID:
+                refresh();
+                break;
             case MENU_ADD_ID:
                 addNewCategory();
                 break;
@@ -222,6 +257,12 @@ public class MainActivity extends AppCompatActivity {
                     categoryAdapter.notifyDataSetChanged();
                 }
                 if (categories.isEmpty()) userCategories = false;
+                break;
+            case MENU_ALLNEWS_ID:
+                Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
+                newsIntent.putExtra("all_news", new Category("AllNews", dbHelper.innerJoin("")));
+
+                startActivity(newsIntent);
                 break;
             case MENU_AUDIO_ID:
                 Intent intent = new Intent(MainActivity.this, AudioPlayerActivity.class);
@@ -256,6 +297,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "MainActivity OnDestroy");
-    }
+        CategoryRepository repository = new CategoryRepository();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        repository.connect(db);
 
+        repository.saveAll(categories);
+    }
 }

@@ -1,5 +1,8 @@
 package smart.endlessnews;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
@@ -80,4 +83,42 @@ class Category implements Parcelable {
             return new Category[size];
         }
     };
+}
+
+class CategoryRepository {
+    private SQLiteDatabase db;
+
+    void connect(SQLiteDatabase db) {
+        this.db = db;
+    }
+
+    void add(Category category) {
+        ContentValues cv = new ContentValues();
+        cv.put("name", category.getName());
+        db.insert("CategoryTable", null, cv);
+    }
+
+    ArrayList<Category> loadAll() {
+        ArrayList<Category> categories = new ArrayList<>();
+        Cursor c = db.query("CategoryTable", null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int nameColIndex = c.getColumnIndex("name");
+
+            do {
+                String name = c.getString(nameColIndex);
+                categories.add(new Category(name));
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return categories;
+    }
+
+    void saveAll(ArrayList<Category> categories) {
+        db.delete("CategoryTable", null, null);
+        for (Category c : categories)
+            add(c);
+    }
 }

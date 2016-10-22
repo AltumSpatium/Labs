@@ -13,12 +13,17 @@ import java.util.ArrayList;
 
 class NewsAdapter extends BaseAdapter {
     private Context ctx;
+    private Category category;
     private ArrayList<News> allNews;
     private LayoutInflater lInflater;
 
-    NewsAdapter(Context context, ArrayList<News> allNews) {
+    private boolean isSimpleLayout = false;
+
+    NewsAdapter(Context context, Category category) {
         this.ctx = context;
-        this.allNews = allNews;
+        this.category = category;
+        this.allNews = category.getNews();
+        this.isSimpleLayout = category.getName().equals("AllNews");
         lInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -41,22 +46,30 @@ class NewsAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView != null ? convertView :
                 lInflater.inflate(R.layout.news_item, parent, false);
+        if (isSimpleLayout)
+            view = lInflater.inflate(R.layout.news_item_simple, parent, false);
         News news = getItem(position);
 
-        ImageView ivPicture = (ImageView)view.findViewById(R.id.ivPicture);
+        ImageView ivPicture = isSimpleLayout ? (ImageView)view.findViewById(R.id.ivPictureSimple) :
+                (ImageView)view.findViewById(R.id.ivPicture);
         new DownloadImageTask(ivPicture).execute(news.getPicture());
 
         String title = news.getTitle();
         String description = news.getDescription();
         if (title.length() > 40) title = title.substring(0, 40) + "...";
         if (description.length() > 140) description = description.substring(0, 120) + "...";
-        ((TextView) view.findViewById(R.id.tvTitle)).setText(title);
-        ((TextView) view.findViewById(R.id.tvDescription)).setText(description);
+        if (isSimpleLayout) {
+            ((TextView) view.findViewById(R.id.tvTitleSimple)).setText(title);
+            ((TextView) view.findViewById(R.id.tvCategorySimple)).setText(news.getCategory());
+        } else {
+            ((TextView) view.findViewById(R.id.tvTitle)).setText(title);
+            ((TextView) view.findViewById(R.id.tvDescription)).setText(description);
+        }
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Category currentCategory = new Category(getItem(position).getCategory(), allNews);
+                Category currentCategory = category;
                 Intent intent = new Intent(ctx, ArticleActivity.class);
 
                 intent.putExtra("current_category", currentCategory);

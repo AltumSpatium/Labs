@@ -1,14 +1,18 @@
 package smart.endlessnews;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-class News implements Parcelable{
+class News implements Parcelable {
     private String mTitle;
     private String mDescription;
     private String mFullText;
@@ -97,4 +101,80 @@ class News implements Parcelable{
             return new News[size];
         }
     };
+}
+
+class NewsRepository {
+    private SQLiteDatabase db;
+    private ArrayList<Category> categories;
+
+    NewsRepository(ArrayList<Category> categories) {
+        this.categories = categories;
+    }
+
+    private int getId(String category) {
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getName().equals(category))
+                return i + 1;
+        }
+
+        return 1;
+    }
+
+    void connect(SQLiteDatabase db) {
+        this.db = db;
+    }
+
+    void add(News news) {
+        ContentValues cv = new ContentValues();
+
+        cv.put("title", news.getTitle());
+        cv.put("description", news.getDescription());
+        cv.put("fulltext", news.getFullText());
+        cv.put("link", news.getLink());
+        cv.put("picture", news.getPicture());
+        cv.put("category", news.getCategory());
+        cv.put("pubdate", news.getPubDate().toString());
+        cv.put("cat_id", getId(news.getCategory()));
+
+        db.insert("NewsTable", null, cv);
+    }
+
+    ArrayList<News> loadAll() {
+        ArrayList<News> news = new ArrayList<>();
+        Cursor c = db.query("NewsTable", null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int titleColIndex = c.getColumnIndex("title");
+            int descriptionColIndex = c.getColumnIndex("description");
+            int fulltextColIndex = c.getColumnIndex("fulltext");
+            int linkColIndex = c.getColumnIndex("link");
+            int pictureColIndex = c.getColumnIndex("picture");
+            int categoryColIndex = c.getColumnIndex("category");
+            int pubdateColIndex = c.getColumnIndex("pubdate");
+
+            do {
+                String title = c.getString(titleColIndex);
+                String description = c.getString(descriptionColIndex);
+                String fulltext = c.getString(fulltextColIndex);
+                String link = c.getString(linkColIndex);
+                String picture = c.getString(pictureColIndex);
+                String category = c.getString(categoryColIndex);
+                Date pubdate;
+                DateFormat format = SimpleDateFormat.getDateInstance();
+                try {
+                    pubdate = format.parse(c.getString(pubdateColIndex));
+                }
+                catch (ParseException e) {
+                    pubdate = new Date();
+                }
+
+                news.add(new News(title, description, fulltext, link, picture, category, pubdate));
+            } while (c.moveToNext());
+        }
+
+        c.close();
+
+        return news;
+    }
+
 }
