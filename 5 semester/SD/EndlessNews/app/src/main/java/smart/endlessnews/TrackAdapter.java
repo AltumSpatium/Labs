@@ -1,10 +1,14 @@
 package smart.endlessnews;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -54,6 +58,35 @@ class TrackAdapter extends BaseAdapter {
                 ctx.startActivity(intent);
             }
         });
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            public boolean onLongClick(View view) {
+                final CharSequence[] items = { "Delete" };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+
+                builder.setTitle("Action:");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        DBHelper dbHelper = new DBHelper(ctx);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        TrackRepository repository = new TrackRepository();
+
+                        repository.connect(db);
+                        repository.delete(track.getTitle());
+                        tracks.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+
+                alert.show();
+                return false;
+            }
+        });
+
+        //((AudioPlayerActivity)ctx).registerForContextMenu(view);
 
         return view;
     }

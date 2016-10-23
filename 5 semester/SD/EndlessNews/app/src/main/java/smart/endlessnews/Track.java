@@ -1,7 +1,12 @@
 package smart.endlessnews;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.ArrayList;
 
 class Track implements Parcelable {
     private int mID;
@@ -59,4 +64,70 @@ class Track implements Parcelable {
             return new Track[size];
         }
     };
+}
+
+class TrackRepository {
+    private SQLiteDatabase db;
+
+    void connect(SQLiteDatabase db) {
+        this.db = db;
+    }
+
+    void create() {
+        db.execSQL(
+                "create table if not exists TrackTable ("
+                + "id integer primary key autoincrement, "
+                + "title text, "
+                + "artist text, "
+                + "data text" + ");"
+        );
+    }
+
+    void add(Track track) {
+        ContentValues cv = new ContentValues();
+
+        cv.put("title", track.getTitle());
+        cv.put("artist", track.getArtist());
+        cv.put("data", track.getData());
+
+        db.insert("TrackTable", null, cv);
+    }
+
+    void delete(String title) {
+        db.delete("TrackTable", "title = '" + title + "'", null);
+    }
+
+    ArrayList<Track> loadAll() {
+        ArrayList<Track> tracks = new ArrayList<>();
+        Cursor c = db.query("TrackTable", null, null, null, null, null, null);
+
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int idColIndex = c.getColumnIndex("id");
+                int titleColIndex = c.getColumnIndex("title");
+                int artistColIndex = c.getColumnIndex("artist");
+                int dataColIndex = c.getColumnIndex("data");
+
+                do {
+                    int id = c.getInt(idColIndex);
+                    String title = c.getString(titleColIndex);
+                    String artist = c.getString(artistColIndex);
+                    String data = c.getString(dataColIndex);
+
+                    tracks.add(new Track(id, title, artist, data));
+                } while (c.moveToNext());
+            }
+
+            c.close();
+        }
+
+        return tracks;
+    }
+
+    void saveAll(ArrayList<Track> tracks) {
+        db.delete("TrackTable", null, null);
+
+        for (Track t : tracks)
+            add(t);
+    }
 }

@@ -12,38 +12,41 @@ import java.util.ArrayList;
 import java.util.Date;
 
 class DBHelper extends SQLiteOpenHelper {
+    private boolean isNews;
+
     DBHelper(Context ctx) {
         super(ctx, "EndlessDB", null, 1);
+        isNews = ctx.getClass() == MainActivity.class || ctx.getClass() == NewsActivity.class;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Table for storing full info about News
-        db.execSQL(
-                "create table NewsTable ("
-                + "id integer primary key autoincrement,"
-                + "title text,"
-                + "description text,"
-                + "fulltext text,"
-                + "link text,"
-                + "picture text,"
-                + "category text,"
-                + "pubdate text,"
-                + "cat_id integer" + ");"
-        );
+        if (isNews) {
+            // Table for storing full info about News
+            NewsRepository newsRepository = new NewsRepository(null);
+            newsRepository.connect(db);
+            newsRepository.create();
 
-        // Table for storing full info about Categories
-        db.execSQL(
-                "create table CategoryTable ("
-                + "id integer primary key autoincrement,"
-                + "name text" + ");"
-        );
+            // Table for storing full info about Categories
+            CategoryRepository categoryRepository = new CategoryRepository();
+            categoryRepository.connect(db);
+            categoryRepository.create();
+        } else {
+            // Table for storing full info about Tracks on device
+            TrackRepository trackRepository = new TrackRepository();
+            trackRepository.connect(db);
+            trackRepository.create();
+        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS NewsTable");
-        db.execSQL("DROP TABLE IF EXISTS CategoryTable");
+        if (isNews) {
+            db.execSQL("DROP TABLE IF EXISTS NewsTable");
+            db.execSQL("DROP TABLE IF EXISTS CategoryTable");
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS TrackTable");
+        }
 
         onCreate(db);
     }

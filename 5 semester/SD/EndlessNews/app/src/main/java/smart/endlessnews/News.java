@@ -124,6 +124,21 @@ class NewsRepository {
         this.db = db;
     }
 
+    void create() {
+        db.execSQL(
+                "create table if not exists NewsTable ("
+                        + "id integer primary key autoincrement,"
+                        + "title text,"
+                        + "description text,"
+                        + "fulltext text,"
+                        + "link text,"
+                        + "picture text,"
+                        + "category text,"
+                        + "pubdate text,"
+                        + "cat_id integer" + ");"
+        );
+    }
+
     void add(News news) {
         ContentValues cv = new ContentValues();
 
@@ -143,38 +158,38 @@ class NewsRepository {
         ArrayList<News> news = new ArrayList<>();
         Cursor c = db.query("NewsTable", null, null, null, null, null, null);
 
-        if (c.moveToFirst()) {
-            int titleColIndex = c.getColumnIndex("title");
-            int descriptionColIndex = c.getColumnIndex("description");
-            int fulltextColIndex = c.getColumnIndex("fulltext");
-            int linkColIndex = c.getColumnIndex("link");
-            int pictureColIndex = c.getColumnIndex("picture");
-            int categoryColIndex = c.getColumnIndex("category");
-            int pubdateColIndex = c.getColumnIndex("pubdate");
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int titleColIndex = c.getColumnIndex("title");
+                int descriptionColIndex = c.getColumnIndex("description");
+                int fulltextColIndex = c.getColumnIndex("fulltext");
+                int linkColIndex = c.getColumnIndex("link");
+                int pictureColIndex = c.getColumnIndex("picture");
+                int categoryColIndex = c.getColumnIndex("category");
+                int pubdateColIndex = c.getColumnIndex("pubdate");
 
-            do {
-                String title = c.getString(titleColIndex);
-                String description = c.getString(descriptionColIndex);
-                String fulltext = c.getString(fulltextColIndex);
-                String link = c.getString(linkColIndex);
-                String picture = c.getString(pictureColIndex);
-                String category = c.getString(categoryColIndex);
-                Date pubdate;
-                DateFormat format = SimpleDateFormat.getDateInstance();
-                try {
-                    pubdate = format.parse(c.getString(pubdateColIndex));
-                }
-                catch (ParseException e) {
-                    pubdate = new Date();
-                }
+                do {
+                    String title = c.getString(titleColIndex);
+                    String description = c.getString(descriptionColIndex);
+                    String fulltext = c.getString(fulltextColIndex);
+                    String link = c.getString(linkColIndex);
+                    String picture = c.getString(pictureColIndex);
+                    String category = c.getString(categoryColIndex);
+                    Date pubdate;
+                    DateFormat format = SimpleDateFormat.getDateInstance();
+                    try {
+                        pubdate = format.parse(c.getString(pubdateColIndex));
+                    } catch (ParseException e) {
+                        pubdate = new Date();
+                    }
 
-                news.add(new News(title, description, fulltext, link, picture, category, pubdate));
-            } while (c.moveToNext());
+                    news.add(new News(title, description, fulltext, link, picture, category, pubdate));
+                } while (c.moveToNext());
+            }
+
+            c.close();
         }
-
-        c.close();
 
         return news;
     }
-
 }

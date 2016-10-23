@@ -92,6 +92,14 @@ class CategoryRepository {
         this.db = db;
     }
 
+    void create() {
+        db.execSQL(
+                "create table if not exists CategoryTable ("
+                        + "id integer primary key autoincrement,"
+                        + "name text" + ");"
+        );
+    }
+
     void add(Category category) {
         ContentValues cv = new ContentValues();
         cv.put("name", category.getName());
@@ -102,16 +110,18 @@ class CategoryRepository {
         ArrayList<Category> categories = new ArrayList<>();
         Cursor c = db.query("CategoryTable", null, null, null, null, null, null);
 
-        if (c.moveToFirst()) {
-            int nameColIndex = c.getColumnIndex("name");
+        if (c != null) {
+            if (c.moveToFirst()) {
+                int nameColIndex = c.getColumnIndex("name");
 
-            do {
-                String name = c.getString(nameColIndex);
-                categories.add(new Category(name));
-            } while (c.moveToNext());
+                do {
+                    String name = c.getString(nameColIndex);
+                    categories.add(new Category(name));
+                } while (c.moveToNext());
+            }
+
+            c.close();
         }
-
-        c.close();
 
         return categories;
     }
