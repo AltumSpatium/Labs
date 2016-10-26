@@ -127,7 +127,6 @@ class CategoryRepository {
     }
 
     void saveAll(ArrayList<Category> categories) {
-        db.delete("CategoryTable", null, null);
         for (Category c : categories)
             add(c);
     }

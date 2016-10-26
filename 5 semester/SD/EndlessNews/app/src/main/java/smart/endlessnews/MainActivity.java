@@ -193,12 +193,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refresh() {
-        dbHelper.onUpgrade(dbHelper.getWritableDatabase(), 0, 1);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper.onUpgrade(db, 0, 1);
         allNews = loadNews(RSS_URL);
         categories = createCategories(allNews);
         categoryAdapter = new CategoryAdapter(this, categories);
         if (lvMain != null)
             lvMain.setAdapter(categoryAdapter);
+
+        CategoryRepository repository = new CategoryRepository();
+        repository.connect(db);
+        repository.saveAll(categories);
     }
 
     @Override
@@ -260,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MENU_ALLNEWS_ID:
                 Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
-                newsIntent.putExtra("all_news", new Category("AllNews", dbHelper.innerJoin("")));
+                newsIntent.putExtra("current_category", new Category("AllNews", dbHelper.innerJoin("", dbHelper.getWritableDatabase())));
 
                 startActivity(newsIntent);
                 break;
@@ -297,10 +302,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "MainActivity OnDestroy");
-        CategoryRepository repository = new CategoryRepository();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        repository.connect(db);
-
-        repository.saveAll(categories);
     }
 }

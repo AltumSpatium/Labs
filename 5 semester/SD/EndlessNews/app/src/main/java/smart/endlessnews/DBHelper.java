@@ -51,9 +51,8 @@ class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    ArrayList<News> innerJoin(String orderBy) {
+    ArrayList<News> innerJoin(String orderBy, SQLiteDatabase db) {
         ArrayList<News> news = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor c = db.rawQuery(
                 "select NW.title, NW.description, NW.fulltext, NW.link, NW.picture, NW.pubdate, CT.name as Name "
