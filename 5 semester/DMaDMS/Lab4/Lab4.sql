@@ -76,7 +76,7 @@ VALUES ('3', '27349', 'Ltd. Aaronson Furniture', 'Frankie G. Caffey', '401-216-1
 INSERT INTO `labs`.`organizations` (`organizationID`, `taxNumber`, `name`, `boss`, `phone`, `adress`)
 VALUES ('4', '85940', 'Ltd. Handy Dan', 'Jill C. Sheedy', '617-826-8034', 'Boston');
 INSERT INTO `labs`.`organizations` (`organizationID`, `taxNumber`, `name`, `boss`, `phone`, `adress`)
-VALUES ('5', '85733', 'JSC', 'Maurice E. Hill', '701-325-2778', 'Linton');
+VALUES ('5', '85733', 'JSC Globus', 'Maurice E. Hill', '701-325-2778', 'Linton');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
