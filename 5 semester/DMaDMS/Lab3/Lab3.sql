@@ -3,13 +3,13 @@ CREATE SCHEMA IF NOT EXISTS Labs;
 DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS order_status;
 DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS stock; -- + --
+DROP TABLE IF EXISTS stock;
 DROP TABLE IF EXISTS organizations;
-DROP TABLE IF EXISTS clients; -- + --
-DROP TABLE IF EXISTS suppliers; -- + --
-DROP TABLE IF EXISTS orders; -- + + + --
-DROP TABLE IF EXISTS arrive_stock; -- + + --
-DROP TABLE IF EXISTS orders; -- + + --
+DROP TABLE IF EXISTS clients;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS arrive_stock;
+DROP TABLE IF EXISTS ordered_products;
 
 ----------------------------------------------------------------------------
 -- Таблица «Сотрудники» хранит данные о работниках торговой фирмы, --
@@ -201,4 +201,48 @@ CREATE TABLE `labs`.`ordered_products` (
 	`amount` INT NOT NULL,
 	`sellingPrice` FLOAT NOT NULL,
 	PRIMARY KEY (`orderID`, `stockID`));
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE stock
+ADD CONSTRAINT has_product FOREIGN KEY (productID)
+REFERENCES products (productID) ON UPDATE CASCADE;
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE clients
+ADD CONSTRAINT client_from_organization FOREIGN KEY (organizationID)
+REFERENCES organizations (organizationID) ON UPDATE CASCADE;
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE suppliers
+ADD CONSTRAINT supplier_from_organization FOREIGN KEY (organizationID)
+REFERENCES organizations (organizationID) ON UPDATE CASCADE;
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE orders
+ADD CONSTRAINT client_for_order FOREIGN KEY (clientManagerID)
+REFERENCES clients (clientManagerID) ON UPDATE CASCADE,
+ADD CONSTRAINT employee_for_order FOREIGN KEY (employeeID)
+REFERENCES employees (employeeID) ON UPDATE CASCADE,
+ADD CONSTRAINT order_status FOREIGN KEY (statusID)
+REFERENCES order_status (statusID) ON UPDATE CASCADE;
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE arrive_stock
+ADD CONSTRAINT arrive_to_stock FOREIGN KEY (stockID)
+REFERENCES stock (stockID) ON UPDATE CASCADE,
+ADD CONSTRAINT arrive_from_supplier FOREIGN KEY (supplierID)
+REFERENCES suppliers (supplierManagerID) ON UPDATE CASCADE;
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+ALTER TABLE ordered_products
+ADD CONSTRAINT products_from_order FOREIGN KEY (orderID)
+REFERENCES orders (orderID) ON UPDATE CASCADE,
+ADD CONSTRAINT ordered_from_stock FOREIGN KEY (stockID)
+REFERENCES stock (stockID) ON UPDATE CASCADE;
 ----------------------------------------------------------------------------
