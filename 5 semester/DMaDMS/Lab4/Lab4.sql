@@ -31,6 +31,8 @@ INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('7', 'Milk');
 INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('8', 'Porks');
 INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('9', 'Bag');
 INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('10', 'Car');
+INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('11', 'Chocolates');
+INSERT INTO `labs`.`products` (`productID`, `name`) VALUES ('12', 'Oranges');
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
