@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS ordered_products;
 CREATE TABLE `labs`.`employees` (
 	`employeeID` INT NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(30) NOT NULL,
-	`position` VARCHAR(15) DEFAULT NULL,
+	`position` VARCHAR(30) DEFAULT NULL,
 	`phone` VARCHAR(15) DEFAULT NULL,
 	PRIMARY KEY (`employeeID`));
 ----------------------------------------------------------------------------
@@ -57,23 +57,32 @@ CREATE TABLE `labs`.`products` (
 ----------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
--- Таблица «Склад» хранит данные о товарах, поступавших на склад. --
+-- Таблица «Склад» хранит данные о складах товаров. --
 ----------------------------------------------------------------------------
 -- stockID - ID склада --
--- specification - спецификация товаров склада --
--- productPrice - цена товаров --
--- productsLeft - осталось товаров --
 -- productPlace - месторасположение товаров --
--- productID - ID товара --
 ----------------------------------------------------------------------------
 CREATE TABLE `labs`.`stock` (
 	`stockID` INT NOT NULL AUTO_INCREMENT,
+	`productPlace` VARCHAR(30) NOT NULL,
+	PRIMARY KEY (`stockID`));
+----------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+-- Таблица «Информация о складе» хранит данные о товарах на складе. --
+----------------------------------------------------------------------------
+-- stockID - ID склада --
+-- productID - ID товара --
+-- specification - спецификация товаров склада --
+-- productPrice - цена товаров --
+-- productsLeft - осталось товаров --
+----------------------------------------------------------------------------
+CREATE TABLE `labs`.`stock_info` (
+	`stockID` INT NOT NULL,
+	`productID` INT NOT NULL,
 	`specification` VARCHAR(30) NULL,
 	`productPrice` FLOAT NOT NULL,
-	`productsLeft` INT NOT NULL,
-	`productPlace` VARCHAR(30) NOT NULL,
-	`productID` INT NOT NULL,
-	PRIMARY KEY (`stockID`));
+	`productsLeft` INT NOT NULL);
 ----------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
@@ -91,8 +100,8 @@ CREATE TABLE `labs`.`stock` (
 CREATE TABLE `labs`.`organizations` (
 	`organizationID` INT NOT NULL AUTO_INCREMENT,
 	`taxNumber` INT NOT NULL,
-	`name` VARCHAR(15) NOT NULL,
-	`boss` VARCHAR(15) NOT NULL,
+	`name` VARCHAR(45) NOT NULL,
+	`boss` VARCHAR(45) NOT NULL,
 	`phone` VARCHAR(15) DEFAULT NULL,
 	`adress` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`organizationID`));
@@ -110,7 +119,7 @@ CREATE TABLE `labs`.`organizations` (
 ----------------------------------------------------------------------------
 CREATE TABLE `labs`.`clients` (
 	`clientManagerID` INT NOT NULL AUTO_INCREMENT,
-	`manager` VARCHAR(15) NOT NULL,
+	`manager` VARCHAR(45) NOT NULL,
 	`phone` VARCHAR(15) DEFAULT NULL,
 	`fax` VARCHAR(15) DEFAULT NULL,
 	`organizationID` INT NOT NULL,
@@ -129,7 +138,7 @@ CREATE TABLE `labs`.`clients` (
 ----------------------------------------------------------------------------
 CREATE TABLE `labs`.`suppliers` (
 	`supplierManagerID` INT NOT NULL AUTO_INCREMENT,
-	`manager` VARCHAR(15) NOT NULL,
+	`manager` VARCHAR(45) NOT NULL,
 	`phone` VARCHAR(15) DEFAULT NULL,
 	`fax` VARCHAR(15) DEFAULT NULL,
 	`organizationID` INT NOT NULL,
@@ -182,7 +191,7 @@ CREATE TABLE `labs`.`arrive_stock` (
 	`invoiceNumber` INT NOT NULL,
 	`amount` INT NOT NULL,
 	`price` FLOAT NOT NULL,
-	`inspector` VARCHAR(15) NOT NULL,
+	`inspector` VARCHAR(25) NOT NULL,
 	PRIMARY KEY (`stockID`, `arriveDate`));
 ----------------------------------------------------------------------------
 
@@ -204,7 +213,7 @@ CREATE TABLE `labs`.`ordered_products` (
 ----------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------
-ALTER TABLE stock
+ALTER TABLE stock_info
 ADD CONSTRAINT has_product FOREIGN KEY (productID)
 REFERENCES products (productID) ON UPDATE CASCADE;
 ----------------------------------------------------------------------------
