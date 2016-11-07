@@ -4,8 +4,9 @@
 -----------------------------------------------------------------------------
 SELECT o.name, o.taxNumber, o.adress
 FROM organizations o, suppliers s
-WHERE s.organizationID IN (SELECT o.organizationID
-						   FROM organizations);
+WHERE s.organizationID IN (
+    SELECT o.organizationID
+    FROM organizations);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -13,8 +14,9 @@ WHERE s.organizationID IN (SELECT o.organizationID
 -----------------------------------------------------------------------------
 SELECT name
 FROM products
-WHERE productID NOT IN (SELECT productID
-						FROM stock_info);
+WHERE productID NOT IN (
+    SELECT productID
+    FROM stock_info);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -22,10 +24,11 @@ WHERE productID NOT IN (SELECT productID
 -----------------------------------------------------------------------------
 SELECT name
 FROM products
-WHERE productID IN (SELECT productID
-					FROM stock_info
-                    GROUP BY productID
-                    HAVING SUM(productsLeft) <= 100);
+WHERE productID IN (
+    SELECT productID
+    FROM stock_info
+    GROUP BY productID
+    HAVING SUM(productsLeft) <= 100);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -35,11 +38,12 @@ WHERE productID IN (SELECT productID
 SELECT o.orderID, o.invoiceNumber, o.orderDate
 FROM orders o, ordered_products op
 WHERE o.orderID = op.orderID
-AND o.orderID IN (SELECT op.orderID
-				  FROM stock_info si 
-                  WHERE op.stockID = si.stockID
-                  GROUP BY si.stockID
-                  HAVING COUNT(DISTINCT si.productID) > 2);
+AND o.orderID IN (
+    SELECT op.orderID
+    FROM stock_info si
+    WHERE op.stockID = si.stockID
+    GROUP BY si.stockID
+    HAVING COUNT(DISTINCT si.productID) > 2);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -47,11 +51,12 @@ AND o.orderID IN (SELECT op.orderID
 -----------------------------------------------------------------------------
 SELECT org.name
 FROM organizations org
-WHERE org.organizationID IN (SELECT c.organizationID
-						     FROM clients c, orders o
-                             WHERE c.clientManagerID = o.clientManagerID
-                             GROUP BY o.clientManagerID
-                             HAVING COUNT(o.orderID) > 1);
+WHERE org.organizationID IN (
+    SELECT c.organizationID
+    FROM clients c, orders o
+    WHERE c.clientManagerID = o.clientManagerID
+    GROUP BY o.clientManagerID
+    HAVING COUNT(o.orderID) > 1);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -60,11 +65,12 @@ WHERE org.organizationID IN (SELECT c.organizationID
 -----------------------------------------------------------------------------
 SELECT org.name
 FROM organizations org
-WHERE org.organizationID IN (SELECT c.organizationID
-							 FROM clients c, orders o, ordered_products op
-                             WHERE c.clientManagerID = o.clientManagerID
-                             AND op.orderID = o.orderID
-                             AND op.stockID = 2);
+WHERE org.organizationID IN (
+    SELECT c.organizationID
+    FROM clients c, orders o, ordered_products op
+    WHERE c.clientManagerID = o.clientManagerID
+    AND op.orderID = o.orderID
+    AND op.stockID = 2);
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -74,6 +80,7 @@ WHERE org.organizationID IN (SELECT c.organizationID
 SELECT DISTINCT p.name
 FROM products p, stock_info si
 WHERE p.productID = si.productID
-AND si.productPrice = (SELECT MIN(productPrice)
-					   FROM stock_info);
+AND si.productPrice = (
+    SELECT MIN(productPrice)
+    FROM stock_info);
 -----------------------------------------------------------------------------
