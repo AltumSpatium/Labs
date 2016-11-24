@@ -1,4 +1,5 @@
-.386p
+P286
+
 model large
 
 ; 8-byte descriptor structure:
@@ -40,9 +41,6 @@ VIDEOMEM_HIGH         equ 0Bh ; high byte of phys address of videomemory segment
 PROTECTED_MODE_BIT    equ 0001h ; protected mode transition bit
 SHUT_DOWN_COMMAND     equ 0feh ; processor shut down command
 
-A20_ON                equ 0dfh ; open A20
-A20_OFF               equ 0ddh ; close A20
-
 ; selectors:
 SELECTOR_DS      = (gdt_ds - gdt_0) ; data segment selector
 SELECTOR_CS      = (gdt_cs - gdt_0) ; code segment selector
@@ -57,10 +55,7 @@ PORT_6845       equ 0063h ; BIOS data area address, where 6845 port value is sit
 PORT_MONOCHR    equ 03b4h ; monochrome videocontroller port
 PORT_COLOR      equ 03d4h ; color videocontroller port
 PORT_STATUS     equ 64h ; keyboard status port
-PORT_KEYBOARD_A equ 60h ; keyboard port's address
-PORT_KEYBOARD_B equ 61h ; keyboard port's address
 PORT_INT_MASKED equ 21h ; interruptions masking port
-PORT_A20        equ 0d1h ; address line A20 port
 
 stack STACK_SIZE ; stack segment
 
@@ -117,13 +112,13 @@ proc start
 
 	call set_PM
 
-	;call write_message
-	;call pause
+	call write_message
+	call pause
 
-	;call set_RM
+	call set_RM
 
-	;mov bh, 77h
-	;call clear_screen
+	mov bh, 77h
+	call clear_screen
 
 	mov ah, 4Ch
 	int 21h
@@ -131,15 +126,6 @@ endp start
 
 ; base videobuffer address definition
 proc set_videobuffer_base near
-	;mov ax, 40
-	;mov es, ax
-	;mov bx, word [es:4ah]
-	;mov [columns], bl
-
-	;mov bl, byte [es:84]
-	;inc bl
-	;mov [rows], bl
-
 	mov bx, word [es:PORT_6845]
 	cmp bx, PORT_COLOR
 	je videobuffer_exit
@@ -163,10 +149,8 @@ endp clear_screen
 
 ; macrocommand for writing segment base address into descriptor
 set_gdt_entry macro
-	;mov [(descriptor bx).base_l], ax
-	;mov [(descriptor bx).base_h], dl
-	mov (descriptor.base_l) [bx], ax
-	mov (descriptor.base_h) [bx], dl
+	mov [bx+16], ax
+	mov [bx+32], dl
 endm
 
 ; preparation before entering protected mode
@@ -235,31 +219,11 @@ proc init_PM near
 	ret
 endp init_PM
 
-; procedure for opening address line A20
-proc enable_A20 near
-	mov al, PORT_A20
-	out PORT_STATUS, al
-	mov al, A20_ON
-	out PORT_KEYBOARD_A, al
-	ret
-endp enable_A20
-
-; procedure for closing address line A20
-proc disable_A20 near
-	mov al, PORT_A20
-	out PORT_STATUS, al
-	mov al, A20_OFF
-	out PORT_KEYBOARD_A, al
-	ret
-endp disable_A20
-
 ; transition to protected mode
 proc set_PM near
 	; writing in es videomemory segment address
 	mov ax, [videobuffer_address]
 	mov es, ax
-
-	; call enable_A20 ; open address line A20
 
 	; saving stack pointer for real mode
 	mov [real_ss], ss
@@ -269,11 +233,8 @@ proc set_PM near
 	lgdt qword [gdt_gdt]
 
 	; enabling protected mode
-;	mov ax, PROTECTED_MODE_BIT
-;	lmsw ax
-    mov eax,cr0
-    or al,1 ; set PE flag to 1
-    mov cr0,eax
+	mov ax, PROTECTED_MODE_BIT
+	lmsw ax
 
 	; performing inter-segment transition
 	db 0eah
@@ -380,8 +341,6 @@ label shutdown_return far
 
 	; restoring es
 	mov es, [real_es]
-
-	;call disable_A20
 
 	; permitting all interruptions
 	mov ax, 000dh
