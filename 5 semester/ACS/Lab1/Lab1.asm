@@ -1,5 +1,4 @@
 P286
-
 model large
 
 ; 8-byte descriptor structure:
@@ -71,7 +70,7 @@ real_es dw ?
 GDT_BEGIN = $
 
 ; GDT table:
-label gdt word
+gdt label word
 	gdt_0       descriptor <0, 0, 0, 0, 0>
 	gdt_gdt     descriptor <GDT_SIZE-1,,,DATA_SEGMENT,0>
 	gdt_ds      descriptor <DATA_SEGMENT_SIZE-1,,,DATA_SEGMENT,0>
@@ -98,7 +97,7 @@ DATA_SEGMENT_SIZE = ($ - DATA_SEGMENT_BEGIN); data segment size
 codeseg ; code segment
 
 ; main procedure
-proc start
+start proc
 	; initializing data segment register
 	mov ax, DGROUP
 	mov ds, ax
@@ -122,10 +121,10 @@ proc start
 
 	mov ah, 4Ch
 	int 21h
-endp start
+start endp
 
 ; base videobuffer address definition
-proc set_videobuffer_base near
+set_videobuffer_base proc near
 	mov bx, word [es:PORT_6845]
 	cmp bx, PORT_COLOR
 	je videobuffer_exit
@@ -135,26 +134,26 @@ proc set_videobuffer_base near
 
 videobuffer_exit:
 	ret
-endp set_videobuffer_base
+set_videobuffer_base endp
 
 ; screen clearing procedure
-proc clear_screen near
+clear_screen proc near
 	xor cx, cx
 	mov dl, [columns]
 	mov dh, [rows]
 	mov ax, 0600h
 	int 10h
 	ret
-endp clear_screen
+clear_screen endp
 
 ; macrocommand for writing segment base address into descriptor
 set_gdt_entry macro
-	mov [bx+16], ax
-	mov [bx+32], dl
+	mov (descriptor.base_l) [bx], ax
+	mov (descriptor.base_h) [bx], dl
 endm
 
 ; preparation before entering protected mode
-proc init_PM near
+init_PM proc near
 	; filling GDT:
 
 	; computing data segment base address
@@ -217,10 +216,10 @@ proc init_PM near
 	out PORT_CMOS+1, al ; writing return code
 
 	ret
-endp init_PM
+init_PM endp
 
 ; transition to protected mode
-proc set_PM near
+set_PM proc near
 	; writing in es videomemory segment address
 	mov ax, [videobuffer_address]
 	mov es, ax
@@ -241,20 +240,20 @@ proc set_PM near
 	dw offset flush ; offset in next segment
 	dw SELECTOR_CS ; selector of next segment
 
-label flush far
+flush label far
 	mov ax, SELECTOR_DS ; loading data segment
 	mov ds, ax
 	mov ax, SELECTOR_SS ; loading stack segment
 	mov ss, ax
 	ret
-endp set_PM
+set_PM endp
 
 ; write some text on the screen to the x and y coordinates
 ; x = ax
 ; y = bx
 ; length = cx
 ; attribute = dh
-proc write_on_screen near
+write_on_screen proc near
 	push si
 	push di
 
@@ -275,10 +274,10 @@ write_xy:
 	pop di
 	pop si
 	ret
-endp write_on_screen
+write_on_screen endp
 
 ; writing text message on the screen
-proc write_message near
+write_message proc near
 	; loading videomemory selector to es
 	mov ax, [videobuffer_selector]
 	mov es, ax
@@ -296,10 +295,10 @@ proc write_message near
 	call write_on_screen
 
 	ret
-endp write_message
+write_message endp
 
 ; small time delay
-proc pause near
+pause proc near
 	push cx
 	mov cx, 50
 
@@ -314,9 +313,9 @@ loop1:
 
 	pop cx
 	ret
-endp pause
+pause endp
 
-proc set_RM near
+set_RM proc near
 	; saving stack pointer value
 	mov [real_sp], sp
 
@@ -329,7 +328,7 @@ wait_reset:
 	hlt
 	jmp wait_reset
 
-label shutdown_return far
+shutdown_return label far
 	; initializing ds with data segment address
 	mov ax, DGROUP
 	mov ds, ax
@@ -351,7 +350,7 @@ label shutdown_return far
 	out PORT_INT_MASKED, al
 	sti
 	ret
-endp set_RM
+set_RM endp
 
 CODE_SEGMENT_SIZE = ($ - start)
 
