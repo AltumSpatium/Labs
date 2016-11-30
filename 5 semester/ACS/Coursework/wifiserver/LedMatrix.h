@@ -47,6 +47,7 @@ private:
 protected:
 
   void SendCmd(uint8_t _command, uint8_t _argument);
+  void SendLine(uint8_t _line);
 
   //................................................................................................
 

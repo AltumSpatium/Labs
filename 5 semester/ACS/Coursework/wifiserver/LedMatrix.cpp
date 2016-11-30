@@ -313,3 +313,49 @@ void LedMatrix::SendCmd(uint8_t _command, uint8_t _argument)
 }
 
 //**************************************************************************************************
+
+void LedMatrix::SendLine(uint8_t _line)
+{
+  uint8_t offset, command, modnum = mod_cnt, mask = (0x80 >> _line);
+  uint16_t index = 0;
+
+  digitalWrite(pin_cs, LOW);
+
+  _line += LEDMATRIX_CMD_DIGIT0;
+
+  while(modnum--)
+  {
+    offset = 8;
+    command = _line;
+
+    while(offset--)
+    {
+      digitalWrite(pin_din, (command & 0x80 ? HIGH : LOW));
+      digitalWrite(pin_clk, HIGH);
+
+      command <<= 1;
+
+      digitalWrite(pin_clk, LOW);
+    }
+  }
+
+  digitalWrite(pin_cs, HIGH);
+}
+
+//**************************************************************************************************
+
+//**************************************************************************************************
+
+uint16_t LedMatrix::Width(void)
+{
+  return (((uint16_t) mod_cnt) << 3);
+}
+
+//**************************************************************************************************
+
+uint16_t LedMatrix::Height(void)
+{
+  return 8;
+}
+
+//**************************************************************************************************
