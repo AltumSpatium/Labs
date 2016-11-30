@@ -267,6 +267,8 @@ const uint8_t PROGMEM LedMatrix::font[] =
 LedMatrix::LedMatrix(uint8_t _cs, uint8_t _din, uint8_t _clk, uint8_t _cnt) : 
   pin_cs(_cs), pin_din(_din), pin_clk(_clk), mod_cnt(_cnt), uselock(0)
 {
+  bitmap = (uint8_t*) malloc(_cnt << 3);
+
   pinMode(pin_cs, OUTPUT);
   pinMode(pin_clk, OUTPUT);
   pinMode(pin_din, OUTPUT);
@@ -279,6 +281,8 @@ LedMatrix::LedMatrix(uint8_t _cs, uint8_t _din, uint8_t _clk, uint8_t _cnt) :
   SendCmd(LEDMATRIX_CMD_DECODEMODE, 0x00);
   SendCmd(LEDMATRIX_CMD_SCANLIMIT, 0x07);
   SendCmd(LEDMATRIX_CMD_DISPLAYTEST, 0x00);
+
+  Fill(0x00);
 
   SendCmd(LEDMATRIX_CMD_SHUTDOWN, 0x01);
 }
@@ -377,13 +381,39 @@ uint16_t LedMatrix::Height(void)
 
 void LedMatrix::UpdateLock(uint8_t _uselock)
 {
+  if (!_uselock && uselock)
+    SendBitmap();
+
   uselock = _uselock;
+}
+
+//**************************************************************************************************
+
+void LedMatrix::Fill(uint8_t _color)
+{
+  _color = (_color ? 0xFF : 0x00);
+  memset(bitmap, _color, mod_cnt << 3);
+
+  if (uselock)
+    return;
+
+  for (byte line = 0; line < 8; line++)
+    SendCmd(LEDMATRIX_CMD_DIGIT0 + line, _color);
 }
 
 //**************************************************************************************************
 
 //**************************************************************************************************
 
-//**************************************************************************************************
+void DrawPixel(uint16_t _left, uint16_t _top, uint8_t _color)
+{
+  if (_left < 0 || _left >= (((uint16_t) mod_cnt) << 3) || _top < 0 || _top >= 8)
+    return;
+
+  if (_color) bitmap[_left] |= (0x80 >> _top);
+  else bitmap[_left] &= ~(0x80 >> _top);
+
+  if (!uselock) SendLine(uint8_t _top);
+}
 
 //**************************************************************************************************

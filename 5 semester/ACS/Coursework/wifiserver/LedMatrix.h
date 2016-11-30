@@ -61,6 +61,9 @@ public:
   uint16_t Height(void);
   void UpdateLock(uint8_t _uselock);
   void Fill(uint8_t _color);
+  void Scroll();
+  void DrawPixel(uint16_t _left, uint16_t _top, uint8_t _color);
+  void DrawChar();
 
   //................................................................................................
 };
