@@ -403,17 +403,43 @@ void LedMatrix::Fill(uint8_t _color)
 
 //**************************************************************************************************
 
+void LedMatrix::Scroll(int8_t _direction, int16_t _size)
+{
+}
+
 //**************************************************************************************************
 
-void DrawPixel(uint16_t _left, uint16_t _top, uint8_t _color)
+void LedMatrix::DrawPixel(int16_t _left, int16_t _top, uint8_t _color)
 {
-  if (_left < 0 || _left >= (((uint16_t) mod_cnt) << 3) || _top < 0 || _top >= 8)
+  if (_left < 0 || _left >= (((int16_t) mod_cnt) << 3) || _top < 0 || _top >= 8)
     return;
 
   if (_color) bitmap[_left] |= (0x80 >> _top);
   else bitmap[_left] &= ~(0x80 >> _top);
 
-  if (!uselock) SendLine(uint8_t _top);
+  if (!uselock) SendLine((uint8_t) _top);
+}
+
+//**************************************************************************************************
+
+void LedMatrix::DrawChar(int16_t _left, int16_t _top, uint8_t _chr)
+{
+  uint16_t offset = ((uint16_t) _chr) * LEDMATRIX_FONT_WIDTH;
+
+  uselock++;
+
+  for (uint8_t col, x = 0; x < LEDMATRIX_FONT_WIDTH; x++)
+  {
+    col = pgm_read_byte(font + offset + x);
+
+    for (uint8_t y = 0; y < LEDMATRIX_FONT_HEIGHT; y++, col >>= 1)
+      DrawPixel(x + _left, y + _top, (col & 0x01 ? 1 : 0));
+  }
+
+  uselock--;
+
+  if (!uselock)
+    SendBitmap();
 }
 
 //**************************************************************************************************
