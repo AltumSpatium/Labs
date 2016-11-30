@@ -41,6 +41,8 @@ private:
   uint8_t pin_din;
   uint8_t pin_clk;
   uint8_t mod_cnt;
+  uint8_t uselock;
+  uint8_t* bitmap;
 
   //................................................................................................
 
@@ -48,6 +50,7 @@ protected:
 
   void SendCmd(uint8_t _command, uint8_t _argument);
   void SendLine(uint8_t _line);
+  void SendBitmap(void);
 
   //................................................................................................
 
@@ -56,6 +59,8 @@ public:
   LedMatrix(uint8_t _cs, uint8_t, _din, uint8_t _clk, uint8_t _cnt);
   uint16_t Width(void);
   uint16_t Height(void);
+  void UpdateLock(uint8_t _uselock);
+  void Fill(uint8_t _color);
 
   //................................................................................................
 };
