@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>wifiserver</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>it.baeyens.arduino.core.inoToCpp</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>it.baeyens.arduinonature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>core/core</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/cores/esp8266</location>
+		</link>
+		<link>
+			<name>core/variant</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/variants/d1_mini</location>
+		</link>
+		<link>
+			<name>libraries/DNSServer</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/DNSServer</location>
+		</link>
+		<link>
+			<name>libraries/ESP8266WebServer</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266WebServer</location>
+		</link>
+		<link>
+			<name>libraries/ESP8266WiFi</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266WiFi</location>
+		</link>
+		<link>
+			<name>libraries/ESP8266mDNS</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/ESP8266mDNS</location>
+		</link>
+		<link>
+			<name>libraries/SD</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/SD</location>
+		</link>
+		<link>
+			<name>libraries/SPI</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/SPI</location>
+		</link>
+		<link>
+			<name>libraries/Ticker</name>
+			<type>2</type>
+			<location>C:/Program Files (x86)/Arduino/eclipse/arduinoPlugin/packages/esp8266/hardware/esp8266/2.3.0/libraries/Ticker</location>
+		</link>
+	</linkedResources>
+</projectDescription>
