@@ -162,6 +162,54 @@ void deleteRecursive(String path)
     SD.remove((char*) path.c_str());
     return;
   }
+
+  file.rewindDirectory();
+  while(true)
+  {
+    File entry = file.openNextFile();
+    if (!entry) break;
+
+    String entryPath = path + "/" + entry.name();
+    if (entry.isDirectory())
+    {
+      entry.close();
+      deleteRecursive(entry);
+    }
+    else
+    {
+      entry.close();
+      SD.remove((char*) entryPath.c_str());
+    }
+    yield();
+  }
+
+  SD.rmdir((char*) path.c_str());
+  file.close();
+}
+
+void handleFileUpload()
+{
+  if (server.uri() != "/edit") return;
+
+  HTTPUpload& upload = server.upload();
+  if (upload.status == UPLOAD_FILE_START)
+  {
+    if (SD.exists((char*) upload.filename.c_str()))
+      SD.remove((char*) upload.filename.c_str());
+
+    uploadFile = SD.open(upload.filename.c_str(), FILE_WRITE);
+    DBG_OUTPUT_PORT.println("Upload: START, filename: " + upload.filename);
+  }
+  else if (upload.status == UPLOAD_FILE_WRITE)
+  {
+    if (uploadFile) uploadFile.write(upload.buf, upload.currentSize);
+    DBG_OUTPUT_PORT.println("Upload: WRITE, bytes: " + upload.currentSize);
+  }
+  else if (upload.status = UPLOAD_FILE_END)
+  {
+    if (uploadFile) uploadFile.close();
+    DBG_OUTPUT_PORT.println("Upload: END, size: " + upload.totalSize);
+  }
 }
 
 //**************************************************************************************************
@@ -192,6 +240,7 @@ void setup()
 
   server.on("/edit", HTTP_DELETE, handleDelete);
   server.on("/edit", HTTP_PUT, handleCreate);
+  server.on("/edit", HTTP_POST, []() { returnOK(); }, handleFileUpload);
   server.onNotFound(handleNotFound);
 
   server.begin();

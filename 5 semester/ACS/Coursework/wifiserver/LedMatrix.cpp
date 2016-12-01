@@ -405,6 +405,62 @@ void LedMatrix::Fill(uint8_t _color)
 
 void LedMatrix::Scroll(int8_t _direction, int16_t _size)
 {
+  if (!_size) return;
+
+  uint16_t count = (_size > 0 ? _size : -_size);
+
+  if (_direction == 0)
+  {
+    if (count < (((uint16_t) mod_cnt) << 3))
+    {
+      uint16_t findex, tindex;
+
+      if (_size < 0)
+      {
+        tindex = 0, findex = count;
+        count = (((uint16_t) mod_cnt) << 3) - count;
+
+        while(tindex < count)
+          bitmap[tindex++] = bitmap[findex++];
+
+        count = (((uint16_t) mod_cnt) << 3);
+
+        while(tindex < count)
+          bitmap[tindex++] = 0x00;
+      }
+      else
+      {
+        tindex = (((uint16_t) mod_cnt) << 3), findex = tindex - count;
+
+        while(tindex < count)
+          bitmap[--tindex] = bitmap[--findex]
+
+        while(count--)
+          bitmap[--tindex] = 0x00;
+      }
+
+      if (!uselock)
+        SendBitmap();
+    }
+    else Fill(0x00);
+  }
+  else if (_direction == 1)
+  {
+    if (count < 8)
+    {
+      uint16_t findex = 0, tindex = (((uint16_t) mod_cnt) << 3);
+
+      while(findex < tindex)
+      {
+        if (_size < 0) bitmap[findex++] <<= count;
+        else bitmap[findex++] >>= count;
+      }
+
+      if (!uselock)
+        SendBitmap();
+    }
+    else Fill(0x00);
+  }
 }
 
 //**************************************************************************************************
