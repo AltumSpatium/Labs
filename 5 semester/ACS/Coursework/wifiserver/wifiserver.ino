@@ -103,6 +103,67 @@ bool loadFromSdCard(String path)
   return true;
 }
 
+void handleNotFound()
+{
+  if (hasSD && loadFromSdCard(server.uri())) return;
+
+  String message = "SD card not detected\n\n";
+  message += "URI: " + server.uri();
+  message += "\nMethod: " + (server.method() == HTTP_GET ? "GET" : "POST");
+  message += "\nArguments: " + server.args();
+  for (uint8_t i = 0; i < server.args(); i++)
+    message += "\n\n NAME: " + server.argName(i) + "\n VALUE: " + server.arg(i);
+
+  DBG_OUTPUT_PORT.println(message);
+  server.send(404, "text/plain", message);
+}
+
+void handleCreate()
+{
+  if (server.args() == 0) return returnFail("BAD ARGS");
+
+  String path = server.arg(0);
+  if (path == "/" || SD.exists((char*) path.c_str()))
+    return returnFail("BAD PATH");
+
+  if (path.indexOf('.') > 0)
+  {
+    File file = SD.open((char*) path.c_str(), FILE_WRITE);
+    if (file)
+    {
+      file.write((const char*) 0);
+      file.close();
+    }
+    else SD.mkdir((char*) path.c_str());
+  }
+
+  returnOK();
+}
+
+void handleDelete()
+{
+  if (server.args() == 0) return returnFail("BAD ARGS");
+
+  String path = server.arg(0);
+  if (path == "/" || SD.exists((char*) path.c_str()))
+    return returnFail("BAD PATH");
+
+  deleteRecursive(path);
+
+  returnOK();
+}
+
+void deleteRecursive(String path)
+{
+  File file = SD.open((char*) path.c_str());
+  if (!file.isDirectory())
+  {
+    file.close();
+    SD.remove((char*) path.c_str());
+    return;
+  }
+}
+
 //**************************************************************************************************
 
 void setup()
@@ -129,8 +190,18 @@ void setup()
   DBG_OUTPUT_PORT.print("AP IP host: ");
   DBG_OUTPUT_PORT.println(host);
 
+  server.on("/edit", HTTP_DELETE, handleDelete);
+  server.on("/edit", HTTP_PUT, handleCreate);
+  server.onNotFound(handleNotFound);
+
   server.begin();
   DBG_OUTPUT_PORT.println("HTTP server started");
+
+  if (SD.begin(SS))
+  {
+    DBG_OUTPUT_PORT.println("SD card initialized.");
+    hasSD = true;
+  }
 }
 
 void loop()
