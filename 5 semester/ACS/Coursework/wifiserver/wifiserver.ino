@@ -113,7 +113,8 @@ void handleNotFound()
 
   String message = "SD card not detected\n\n";
   message += "URI: " + server.uri();
-  message += "\nMethod: " + (server.method() == HTTP_GET ? "GET" : "POST");
+  message += "\nMethod: ";
+  message += (server.method() == HTTP_GET ? "GET" : "POST");
   message += "\nArguments: " + server.args();
   for (uint8_t i = 0; i < server.args(); i++)
     message += "\n\n NAME: " + server.argName(i) + "\n VALUE: " + server.arg(i);
@@ -177,7 +178,7 @@ void deleteRecursive(String path)
     if (entry.isDirectory())
     {
       entry.close();
-      deleteRecursive(entry);
+      deleteRecursive(entryPath);
     }
     else
     {
@@ -209,7 +210,7 @@ void handleFileUpload()
     if (uploadFile) uploadFile.write(upload.buf, upload.currentSize);
     DBG_OUTPUT_PORT.println("Upload: WRITE, bytes: " + upload.currentSize);
   }
-  else if (upload.status = UPLOAD_FILE_END)
+  else if (upload.status == UPLOAD_FILE_END)
   {
     if (uploadFile) uploadFile.close();
     DBG_OUTPUT_PORT.println("Upload: END, size: " + upload.totalSize);
@@ -284,7 +285,7 @@ void printString()
     canPrint = false;
 
     while(isPrinting) {}
-    str = server.agr("str");
+    str = server.arg("str");
     curr_pos = offset = 0;
     needClear = true;
 
