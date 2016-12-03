@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>String printer</title>
+	<meta charset="windows-1251">
+	<link rel="stylesheet" type="text/css" href="../stylesheets/btn.css">
+	<style type="text/css">
+		body {
+			background-color: #F7F7F7;
+		}
+		.container {
+			display: block;
+			border: 1px solid grey;
+			padding: 5px;
+			width: 400px;
+			margin: 10px auto;
+			background-color: #F2F5FD;
+		}
+		.container p {
+			clear: both;
+		}
+		#text {
+			font-family: 'Consolas', sans-serif;
+			text-align: center;
+			font-size: 25px;
+		}
+		#textInput {
+			display: block;
+			margin: 0 auto;
+			width: 350px;
+			height: 150px;
+			font-size: 20px;
+			font-family: 'Consolas', sans-serif;
+			background-color: #F7F8FD;
+			border: 2px solid #D4DCF2;
+			transition: 0.1s ease-in-out;
+		}
+		#textInput:hover{
+			background-color: #EFF2FB;
+			transition: 0.2s ease-in-out;
+		}
+		#sendString {
+			display: block;
+			margin: 10px auto;
+			width: 100px;
+			height: 30px;
+			font-size: 17px;
+			color: #fff;
+			font-family: 'Consolas', sans-serif;
+			background-color: #D4DCF2;
+			border: 1px solid #D4DCF2;
+			transition: 0.1s ease-in-out;
+		}
+		#sendString:hover {
+			background-color: #9EB7FF;
+			border: 1px solid #9EB7FF;
+			cursor: pointer;
+			transition: 0.2s ease-in-out;
+		}
+		.btn {
+			font-family: "Consolas";
+			font-size: 16px;
+			position: fixed;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	<a class="btn blue" href="../index.htm">Back</a>
+	<div class="container">
+		<p id="text">Enter a string:</p>
+		<form action="/msg" method="post">
+			<textarea name="str"  id="textInput" type="text" autofocus></textarea>
+			<input id="sendString" type="submit" value="Print"/>
+		</form>
+		<p></p>
+	</div>
+</body>

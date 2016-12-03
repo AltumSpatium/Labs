@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <title>SD Editor</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/btn.css">
     <style type="text/css" media="screen">
       .contextMenu {
         z-index: 300;
@@ -157,6 +158,14 @@
       #preview {
         background-color: #EEE;
         padding:5px;
+      }
+      .btn {
+        position: relative;
+        margin: -5px;
+        font-family: "Consolas";
+        font-size: 12px;
+        padding: 2px;
+        float: right;
       }
     </style>
     <script>
@@ -670,5 +679,6 @@
     <div id="editor"></div>
     <div id="preview" style="display:none;"></div>
     <iframe id=download-frame style='display:none;'></iframe>
+    <div id="btn-container"><a class="btn blue" href="../index.htm">Back</a></div>
   </body>
 </html>

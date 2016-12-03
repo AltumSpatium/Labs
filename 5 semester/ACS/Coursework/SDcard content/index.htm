@@ -2,13 +2,49 @@
 <html>
 <head>
 	<title>Start Page</title>
+	<link rel="stylesheet" type="text/css" href="stylesheets/btn.css">
 	<style type="text/css">
 		body {
 			background-color: #F7F7F7;
-			padding: 10%;
+			font-family: "Consolas", sans-serif;
+		}
+		h2 {
+  			color: #55acee;
+  			text-align: center;
+		}
+		#author {
+			height: 25px;
+			font-family: "Consolas", sans-serif;
+			font-size: 20px;
+		}
+		#author p {
+			margin: 1px;
+			padding: 0 5px;
+		}
+		#left-p {
+			float: left;
+		}
+		#center-p {
+			float: left;
+		}
+		#right-p {
+			float: right;
+		}
+		#clear {
+			clear: both;
 		}
 	</style>
 </head>
 <body>
+	<div id="author">
+		<p id="left-p">Coursework on Architecture of Computer Systems: </p>
+		<p id="center-p">"Arduino platform. Review and Use"</p>
+		<p id="right-p">by A. Martynov, BSUIR, FCSaN, CSaSE, gr. 453503</p>
+		<p id="clear"></p>
+	</div>
 	<h2>Start page</h2>
+	<div class="buttons">
+		<a class="btn green" href="edit/index.htm">Edit SD card</a>
+    	<a class="btn blue" href="text/index.htm">Print message</a>
+  	</div>
 </body>
