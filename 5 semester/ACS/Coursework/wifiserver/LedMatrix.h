@@ -64,6 +64,7 @@ public:
   void Scroll(int8_t _direction, int16_t _size);
   void DrawPixel(int16_t _left, int16_t _top, uint8_t _color);
   void DrawChar(int16_t _left, int16_t _top, uint8_t _chr);
+  void DrawString(int16_t _left, int16_t _top, uint8_t* _string);
 
   //................................................................................................
 };

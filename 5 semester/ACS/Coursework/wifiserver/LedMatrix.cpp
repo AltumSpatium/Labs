@@ -499,3 +499,21 @@ void LedMatrix::DrawChar(int16_t _left, int16_t _top, uint8_t _chr)
 }
 
 //**************************************************************************************************
+
+void LedMatrix::DrawString(int16_t _left, int16_t _top, uint8_t* _string)
+{
+  uselock++;
+
+  while(*_string)
+  {
+    DrawChar(_left, _top, *_string++);
+    _left += LEDMATRIX_FONT_WIDTH + 1;
+  }
+
+  uselock--;
+
+  if (!uselock)
+    SendBitmap();
+}
+
+//**************************************************************************************************

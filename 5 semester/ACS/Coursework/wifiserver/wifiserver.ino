@@ -34,6 +34,10 @@ String str = "";
 uint16_t offset, curr_pos = 0, lastpos = matrix.Width() - 1;
 uint8_t chr;
 
+bool needClear = true;
+bool canPrint = false;
+bool isPrinting = false;
+
 //**************************************************************************************************
 
 // Server settings
@@ -212,6 +216,85 @@ void handleFileUpload()
   }
 }
 
+void showString()
+{
+  if (needClear)
+  {
+    matrix.Fill(0x00);
+    needClear = false;
+  }
+
+  if ((chr = str[curr_pos]) != 0)
+  {
+    if (chr != '\n')
+    {
+      if (offset < (LEDMATRIX_FONT_WIDTH + 1) && chr != '\r')
+      {
+        matrix.UpdateLock(1);
+        matrix.Scroll(0, -1);
+        matrix.DrawChar(lastpos - offset, 0, chr);
+        matrix.UpdateLock(0);
+        offset++;
+      }
+      else
+      {
+        offset = 0;
+        curr_pos++;
+      }
+    }
+    else
+    {
+      if (offset < matrix.Height())
+      {
+        matrix.Scroll(1, -1);
+        offset++;
+      }
+      else
+      {
+        offset = 0;
+        curr_pos++;
+      }
+    }
+  }
+  else
+  {
+    needClear = true;
+    curr_pos = 0;
+  }
+}
+
+void tickProcedure()
+{
+  flipper.detach();
+
+  if (canPrint)
+  {
+    isPrinting = true;
+    showString();
+    isPrinting = false;
+  }
+
+  flipper.attach(0.05, tickProcedure);
+}
+
+void printString()
+{
+  if (server.hasArg("str"))
+  {
+    canPrint = false;
+
+    while(isPrinting) {}
+    str = server.agr("str");
+    curr_pos = offset = 0;
+    needClear = true;
+
+    canPrint = true;
+
+    server.sendHeader("Location", "/text");
+    server.send(301, "text/html", "");
+  }
+}
+
 //**************************************************************************************************
 
 void setup()
@@ -238,6 +321,7 @@ void setup()
   DBG_OUTPUT_PORT.print("AP IP host: ");
   DBG_OUTPUT_PORT.println(host);
 
+  server.on("/msg", HTTP_POST, printString);
   server.on("/edit", HTTP_DELETE, handleDelete);
   server.on("/edit", HTTP_PUT, handleCreate);
   server.on("/edit", HTTP_POST, []() { returnOK(); }, handleFileUpload);
@@ -251,6 +335,8 @@ void setup()
     DBG_OUTPUT_PORT.println("SD card initialized.");
     hasSD = true;
   }
+
+  flipper.attach(1, tickProcedure);
 }
 
 void loop()
