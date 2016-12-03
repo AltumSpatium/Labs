@@ -29,13 +29,13 @@ Ticker flipper;
 
 //..................................................................................................
 
-String str = "";
+String str = "BSUIR is top university in the world (no)         ";
 
 uint16_t offset, curr_pos = 0, lastpos = matrix.Width() - 1;
 uint8_t chr;
 
 bool needClear = true;
-bool canPrint = false;
+bool canPrint = true;
 bool isPrinting = false;
 
 //**************************************************************************************************
@@ -275,7 +275,7 @@ void tickProcedure()
     isPrinting = false;
   }
 
-  flipper.attach(0.05, tickProcedure);
+  flipper.attach(0.03, tickProcedure);
 }
 
 void printString()
@@ -285,7 +285,7 @@ void printString()
     canPrint = false;
 
     while(isPrinting) {}
-    str = server.arg("str");
+    str = server.arg("str") + "         ";
     curr_pos = offset = 0;
     needClear = true;
 
