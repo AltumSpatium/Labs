@@ -190,3 +190,34 @@ BEGIN
   END LOOP;
 END;
 /
+
+/* Task 7 */
+CREATE OR REPLACE TRIGGER UpdateGroup
+  AFTER INSERT OR DELETE ON Students
+  FOR EACH ROW
+DECLARE
+  PRAGMA AUTONOMOUS_TRANSACTION;
+  v_StCount NUMBER;
+  v_Delta NUMBER;
+  v_Id NUMBER;
+BEGIN  
+  IF INSERTING THEN
+    v_Delta := 1;
+    v_Id := :NEW.group_id;
+  ELSIF DELETING THEN
+    v_Delta := -1;
+    v_Id := :OLD.group_id;
+  END IF;
+  
+  SELECT c_val
+  INTO v_StCount
+  FROM Groups
+  WHERE id = v_Id;
+  
+  UPDATE Groups
+    SET c_val = v_StCount + v_Delta
+    WHERE id = v_Id;
+    
+  COMMIT;
+END;
+/
