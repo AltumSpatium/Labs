@@ -124,3 +124,69 @@ BEGIN
   END LOOP;
 END;
 /
+
+/* Task 5 */
+CREATE TABLE Journal (
+  id NUMBER PRIMARY KEY,
+  action VARCHAR2(6),
+  student_id_old NUMBER,
+  student_id_new NUMBER,
+  student_name_old VARCHAR2(20),
+  student_name_new VARCHAR2(20),
+  student_group_old NUMBER,
+  student_group_new NUMBER,
+  action_date TIMESTAMP);
+  
+CREATE SEQUENCE Journal_Sequence
+  START WITH 1;
+  
+CREATE OR REPLACE TRIGGER Journal_Trigger
+  AFTER INSERT OR UPDATE OR DELETE ON Students
+  FOR EACH ROW
+BEGIN
+  IF INSERTING THEN
+    INSERT INTO Journal
+      VALUES (Journal_Sequence.NEXTVAL, 'INSERT', NULL, :NEW.id, NULL,
+              :NEW.name, NULL, :NEW.group_id, SYSDATE);
+  ELSIF UPDATING THEN
+    INSERT INTO Journal
+      VALUES (Journal_Sequence.NEXTVAL, 'UPDATE', :OLD.id, :NEW.id, :OLD.name,
+              :NEW.name, :OLD.group_id, :NEW.group_id, SYSDATE);
+  ELSIF DELETING THEN
+    INSERT INTO Journal
+      VALUES (Journal_Sequence.NEXTVAL, 'DELETE', :OLD.id, NULL, :OLD.name,
+              NULL, :OLD.group_id, NULL, SYSDATE);
+  END IF;
+END;
+/
+
+/* Task 6 */
+CREATE OR REPLACE PROCEDURE Restore_Info
+  (moment IN TIMESTAMP)
+IS
+CURSOR c IS
+  SELECT *
+  FROM Journal
+  WHERE action_date < moment
+  ORDER BY action_date;
+BEGIN
+  FOR rec IN c LOOP
+    IF rec.action = 'INSERT' THEN
+      DELETE
+      FROM Students
+      WHERE id = rec.student_id_new;
+    ELSIF rec.action = 'UPDATE' THEN
+      UPDATE Students
+        SET name = rec.student_name_old, group_id = rec.student_group_old
+        WHERE id = rec.student_id_old;
+    ELSIF rec.action = 'DELETE' THEN
+      INSERT INTO Students
+        VALUES (rec.student_id_old, rec.student_name_old, rec.student_group_old);
+    END IF;
+    
+    DELETE
+    FROM Journal
+    WHERE id = rec.id;
+  END LOOP;
+END;
+/
