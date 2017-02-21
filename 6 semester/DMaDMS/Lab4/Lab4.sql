@@ -124,5 +124,3 @@ BEGIN
     SYS.AQ$_reg_info('my_queue:s3', DBMS_AQ.namespace_aq, 'subscriber', hextoraw('FF'))), 1);
 END;
 /
-
-select * from resulttable;
