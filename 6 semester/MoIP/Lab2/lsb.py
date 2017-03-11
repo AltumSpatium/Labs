@@ -36,7 +36,7 @@ class LSB(object):
 		if len(bytesText) > (self.imageWidth * self.imageHeight):
 			raise LSBException("Image is too small for the text")
 
-		bytesText = textLen.to_bytes(BYTESFORLENGTH, byteorder='little') + bytesText
+		bytesText = str.encode("/") + textLen.to_bytes(BYTESFORLENGTH, byteorder='little') + bytesText
 		with open(self.outImage, 'rb+') as img:
 			img.seek(self.headerSize)
 			for byte in bytesText:
@@ -58,6 +58,9 @@ class LSB(object):
 		self.get_image_bytes()
 		if self.imageBytes is None:
 			raise LSBException("The image is not converted to bytes")
+
+		if self.read_bytes(1)[0].to_bytes(1, byteorder='big').decode() != "/":
+			raise LSBException("There is no message hidden in this container")
 
 		textLen = self.get_msg_length()
 		bytesText = self.read_bytes(textLen)

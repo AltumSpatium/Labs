@@ -52,11 +52,11 @@ class Patchwork(object):
 			a_i, b_i = self.get_pixel_coords(), self.get_pixel_coords()
 			pix_a, pix_b = img.getpixel(a_i), img.getpixel(b_i)
 			S += pix_a[2] - pix_b[2]
-			
+
 		if S > self.delta * self.n:
-			print('Digital watermark is present')
+			return True
 		else:
-			print('Digital watermark is absent')
+			return False
 
 
 	def get_pixel_coords(self):
