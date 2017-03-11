@@ -22,8 +22,8 @@ class LSB(object):
 
 
 	def hide(self, text):
-		self.create_output()
 		self.get_image_bytes()
+		self.create_output()
 		if self.imageBytes is None:
 			raise LSBException("The image is not converted to bytes")
 
