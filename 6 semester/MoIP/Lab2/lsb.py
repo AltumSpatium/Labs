@@ -1,3 +1,6 @@
+import shutil
+
+
 class LSBException(Exception):
 	pass
 
@@ -5,11 +8,13 @@ class LSBException(Exception):
 MAXTEXTSIZE = 65535
 BMPFILEHEADERSIZE = 14
 INFOFIELDSIZE = 4
+BYTESFORLENGTH = 2
 
 
 class LSB(object):
-	def __init__(self, image):
+	def __init__(self, image, outImage=None):
 		self.image = image
+		self.outImage = self.image if outImage is None else outImage
 		self.imageBytes = None
 		self.headerSize = 0
 		self.imageWidth = 0
@@ -17,20 +22,22 @@ class LSB(object):
 
 
 	def hide(self, text):
+		self.create_output()
 		self.get_image_bytes()
 		if self.imageBytes is None:
 			raise LSBException("The image is not converted to bytes")
 
 		bytesText = str.encode(text)
 		textLen = len(bytesText)
-		if textLen <= 0:
+		if textLen == 0:
 			raise LSBException("No text provided")
 		if textLen > MAXTEXTSIZE:
 			raise LSBException("Text is too long")
 		if len(bytesText) > (self.imageWidth * self.imageHeight):
-			raise LSBException("image is too small for the text")
-		bytesText = textLen.to_bytes(2, byteorder='little') + bytesText
-		with open(self.image, 'rb+') as img:
+			raise LSBException("Image is too small for the text")
+
+		bytesText = textLen.to_bytes(BYTESFORLENGTH, byteorder='little') + bytesText
+		with open(self.outImage, 'rb+') as img:
 			img.seek(self.headerSize)
 			for byte in bytesText:
 				for i in range(0, 4):
@@ -86,6 +93,10 @@ class LSB(object):
 
 
 	def get_msg_length(self):
-		bytesForLen = 2
-		lenBytes = self.read_bytes(bytesForLen)
+		lenBytes = self.read_bytes(BYTESFORLENGTH)
 		return int.from_bytes(lenBytes, byteorder='little')
+
+
+	def create_output(self):
+		if self.image != self.outImage:
+			shutil.copy(self.image, self.outImage)
