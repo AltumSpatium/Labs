@@ -59,6 +59,8 @@ def dual_simplex_method():
             x = get_optimal_plan(x, kappa, J_b)
             print('Оптимальный план:')
             print(x)
+            print('Двойственный оптимальный план:')
+            print(y)
             print('Прибыль: ', sum(map(lambda a, b: a*b, c, x)))
             break
         else:
@@ -77,23 +79,25 @@ def dual_simplex_method():
                 J_b = calc_new_basis_indexes(J_b, k, j_s)
                 J_n = nonbasis_indexes(J, J_b)   
 
-n = 8
+n = 9
 m = 3
 J = [i for i in range(n)]
-c = np.array([-5, -2, 3, -4, -6, 0, -1, -5], dtype=float)
-b = np.array([6, 10, -2], dtype = float)
-A = np.array([[0, 1, 4, 1, 0, -3, 5, 0], 
-              [1, -1, 0, 1, 0, 0, 1, 0],
-              [0, 7, -1, 0, -1, 3, 8, 0]], dtype=float)
+c = np.array([1, 4, -9, 6, -5, 8, 3, -7, 1], dtype=float)
+b = np.array([14, 23, 6], dtype = float)
+A = np.array([[0, 1, -4, 5, 0, -3, -5, 0, 1], 
+              [1, -1, 0, 1, 0, 8, 1, -2, 1],
+              [0, 6, -1, 0, -2, 3, 8, 1, 1]], dtype=float)
 x = np.zeros(n, dtype=float)
 
-J_b = [0, 2, 4]
+J_b = [0, 3, 5]
 J_n = nonbasis_indexes(J, J_b)
 
-y = np.array([2.25, -5, 6], dtype=float)
+y = np.array([1, 1, 1], dtype=float)
 
 limitations = [
-    ([1, 1, 1, 1, 0, 3, -3, 1, 1], 9)
+    ([1, -2, -1, 2, 0, 3, 3, 1, 0, 1], 9),
+    ([1, 0, 1, 0, 1, 1, 1, -1, 0, 0, 1], 20),
+    ([-2, 1, 1, -1, 0, 3, 3, 1, 0, 0, 0, 1], 14)
 ]
 
 def format_limitation(limitation):
@@ -125,6 +129,10 @@ def add_limitation(limitation):
     A_list.append(limitation[0])
     A = np.array(A_list, dtype=float)
 
+def replace_condition_vector(b_):
+    global b
+    b = b_
+
 def main():
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group()
@@ -133,14 +141,16 @@ def main():
     args = parser.parse_args()
 
     if args.s:
-        print(y)
         for limitation in limitations:
-            print('+ ограничение:', format_limitation(limitation))
+            print('\n+ ограничение:', format_limitation(limitation), '\n')
             add_limitation(limitation)
             dual_simplex_method()
-        print(y)
     elif args.c:
-        pass
+        b_ = np.array([14, 22, 7], dtype=float)
+        print('\nСтарый вектор условий:', b)
+        replace_condition_vector(b_)
+        print('Новый вектор условий:', b, '\n')
+        dual_simplex_method()
 
 if __name__ == '__main__':
     main()
