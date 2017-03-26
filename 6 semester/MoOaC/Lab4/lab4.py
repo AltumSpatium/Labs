@@ -9,8 +9,11 @@ b = np.array([[10, 10, 10, 10, 10]], dtype=float)
 c = np.array([[2, 8, -5, 7, 10],
 			  [11, 5, 8, -8, -4],
 			  [1, 3, 7, 4, 2]], dtype=float)
+x = None
 
-U = [(i, j) for i in range(m) for j in range(n)]
+U = []
+U_b = []
+U_n = []
 
 def check_balance():
 	global n, m, a, b, c
@@ -27,3 +30,75 @@ def check_balance():
 		m += 1
 		a = np.append(a, [[sum_b - sum_a]], axis=1)
 		c = np.append(c, [[0 for _ in range(n)]], axis=0)
+
+def basis_transportation_plan():
+	global x
+	x = np.zeros((m, n))
+	a_help = a.tolist()[0]
+	b_help = b.tolist()[0]
+	i = 0
+	j = 0
+	while i < m and j < n:
+		a_i = a_help[i]
+		b_j = b_help[j]
+		x_ij = min(a_i, b_j)
+
+		a_help[i] -= x_ij
+		b_help[j] -= x_ij
+
+		x[(i, j)] = x_ij
+		U_b.append((i, j))
+		if a_i == b_j:
+			i += 1
+			j += 1
+		elif x_ij == a_i:
+			i += 1
+		else:
+			j += 1
+
+def calc_nonbasis_cells():
+	for cell in U:
+		if cell not in U_b:
+			U_n.append(cell)
+
+def correct_basis_plan():
+	N = n + m - 1
+	if len(U_b) == N:
+		return
+	
+	count = 0
+	U_b_ = U_b[:]
+	for _ in range(N - len(U_b)):
+		U_n_ = U_n[count:]
+		for cell in U_n_:
+			count += 1
+			if (cell[0] + 1, cell[1]) in U_b_ and (cell[0], cell[1] - 1) in U_b_:
+				U_b.append(cell)
+				break
+	U_b.sort()
+
+def test():
+	global U_b
+	del U_b[-2]
+	U_b.append((0, 5))
+	U_b.sort()
+
+def calc_potentials():
+	pass
+
+def potentials_method():
+	pass
+		
+def main():
+	global U
+	check_balance()
+	U = [(i, j) for i in range(m) for j in range(n)]
+	basis_transportation_plan()
+	calc_nonbasis_cells()
+	correct_basis_plan()
+	test()
+	print(U_b)
+
+
+if __name__ == '__main__':
+	main()
