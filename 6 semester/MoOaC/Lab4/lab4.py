@@ -169,6 +169,7 @@ def potentials_method():
 		if delta[ij_0] >= 0:
 			print('Оптимальный план:')
 			print(x)
+			print('Затраты: ', np.sum(c * x))
 			break
 		else:
 			cycle = create_cycle(ij_0)
