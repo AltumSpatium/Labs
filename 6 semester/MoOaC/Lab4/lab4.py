@@ -61,9 +61,8 @@ def basis_transportation_plan():
 
 
 def calc_nonbasis_cells():
-	for cell in U:
-		if cell not in U_b:
-			U_n.append(cell)
+	global U_n
+	U_n = [cell for cell in U if not cell in U_b]
 
 
 def correct_basis_plan():
@@ -86,21 +85,11 @@ def correct_basis_plan():
 	U_b.sort()
 
 
-def test():
-	global U_b
-	del U_b[-2]
-	U_b.append((0, 5))
-	U_b.sort()
-	U_n.append((1, 5))
-	U_n.remove((0, 5))
-	U_n.sort()
-
-
 def calc_potentials():
 	u = [None for _ in range(m)]
 	v = [None for _ in range(n)]
 	u[0] = 0
-	while None in u and None in v:
+	while True:
 		for cell in U_b:
 			i, j = cell
 			if u[i] is not None:
@@ -109,7 +98,8 @@ def calc_potentials():
 			elif v[j] is not None:
 				if u[i] is None:
 					u[i] = c[cell] - v[j]
-			
+		if (not None in u) and (not None in v):
+			break
 	return (u, v)
 
 
@@ -122,18 +112,19 @@ def calc_estimates(u, v):
 
 
 def append_cell(U_b, cell):
-	U_b.append(cell)
-	return U_b
+	U_b_copy = U_b[:]
+	U_b_copy.append(cell)
+	return U_b_copy
 
 
-def find_cycle(new_cell):
+def create_cycle(new_cell):
 	def _find_cycle(prev_cell, cycle, U_b_ex, vertical):
 		cycle.append(prev_cell)
 		direction = 1 if vertical else 0
 		result = None
 
-		cells_to_visit = [cell for cell in U_b_ex if cell not in cycle
-							and cell[direction] == prev_cell[direction]]
+		cells_to_visit = [cell for cell in U_b_ex if cell not in cycle \
+			and cell[direction] == prev_cell[direction]]
 		for cell in cells_to_visit:
 			result = _find_cycle(cell, cycle[:], U_b_ex, not vertical)
 			if result:
@@ -146,17 +137,45 @@ def find_cycle(new_cell):
 	return _find_cycle(new_cell, [], append_cell(U_b, new_cell), True)
 
 
+def get_step(cycle):
+	global x
+	U_b_minus = cycle[1::2]
+	theta = min([x[cell] for cell in U_b_minus])
+	for cell in U_b_minus:
+		if x[cell] == theta:
+			return (theta, cell)
+
+
+def new_transportation_plan(theta, cycle):
+	for i in range(len(cycle)):
+		if i % 2 == 0:
+			x[cycle[i]] += theta
+		else:
+			x[cycle[i]] -= theta
+
+
+def new_basis_plan(ij_0, ij_s):
+	U_b.remove(ij_s)
+	U_b.append(ij_0)
+	U_b.sort()
+
+
 def potentials_method():
-	u, v = calc_potentials()
-	delta = calc_estimates(u, v)
-	ij_0 = (delta.argmin() // n, delta.argmin() - n)
-	if delta[ij_0] >= 0:
-		print('Оптимальный план:')
-		print(x)
-		print('Расходы: ', sum(map(lambda a, b: a*b, c, x)))
-	else:
-		cycle = find_cycle(ij_0)
-		print(cycle)
+	while True:
+		u, v = calc_potentials()
+		delta = calc_estimates(u, v)
+		i_0 = delta.argmin() // n
+		ij_0 = (i_0, delta.argmin() - n * i_0)
+		if delta[ij_0] >= 0:
+			print('Оптимальный план:')
+			print(x)
+			break
+		else:
+			cycle = create_cycle(ij_0)
+			theta, ij_s = get_step(cycle)
+			new_transportation_plan(theta, cycle)
+			new_basis_plan(ij_0, ij_s)
+			calc_nonbasis_cells()
 
 		
 def main():
@@ -166,7 +185,6 @@ def main():
 	basis_transportation_plan()
 	calc_nonbasis_cells()
 	correct_basis_plan()
-	test()
 	potentials_method()
 
 
