@@ -1,5 +1,6 @@
 import numpy as np
 
+
 n = 5
 m = 3
 
@@ -14,6 +15,7 @@ x = None
 U = []
 U_b = []
 U_n = []
+
 
 def check_balance():
 	global n, m, a, b, c
@@ -30,6 +32,7 @@ def check_balance():
 		m += 1
 		a = np.append(a, [[sum_b - sum_a]], axis=1)
 		c = np.append(c, [[0 for _ in range(n)]], axis=0)
+
 
 def basis_transportation_plan():
 	global x
@@ -56,15 +59,19 @@ def basis_transportation_plan():
 		else:
 			j += 1
 
+
 def calc_nonbasis_cells():
 	for cell in U:
 		if cell not in U_b:
 			U_n.append(cell)
 
+
 def correct_basis_plan():
 	N = n + m - 1
 	if len(U_b) == N:
 		return
+	elif (len(U_b) > N):
+		raise ValueError()
 	
 	count = 0
 	U_b_ = U_b[:]
@@ -74,20 +81,83 @@ def correct_basis_plan():
 			count += 1
 			if (cell[0] + 1, cell[1]) in U_b_ and (cell[0], cell[1] - 1) in U_b_:
 				U_b.append(cell)
+				U_n.remove(cell)
 				break
 	U_b.sort()
+
 
 def test():
 	global U_b
 	del U_b[-2]
 	U_b.append((0, 5))
 	U_b.sort()
+	U_n.append((1, 5))
+	U_n.remove((0, 5))
+	U_n.sort()
+
 
 def calc_potentials():
-	pass
+	u = [None for _ in range(m)]
+	v = [None for _ in range(n)]
+	u[0] = 0
+	while None in u and None in v:
+		for cell in U_b:
+			i, j = cell
+			if u[i] is not None:
+				if v[j] is None:
+					v[j] = c[cell] - u[i]
+			elif v[j] is not None:
+				if u[i] is None:
+					u[i] = c[cell] - v[j]
+			
+	return (u, v)
+
+
+def calc_estimates(u, v):
+	delta = np.ndarray((m, n))
+	delta.fill(float('inf'))
+	for cell in U_n:
+		delta[cell] = c[cell] - u[cell[0]] - v[cell[1]]
+	return delta
+
+
+def append_cell(U_b, cell):
+	U_b.append(cell)
+	return U_b
+
+
+def find_cycle(new_cell):
+	def _find_cycle(prev_cell, cycle, U_b_ex, vertical):
+		cycle.append(prev_cell)
+		direction = 1 if vertical else 0
+		result = None
+
+		cells_to_visit = [cell for cell in U_b_ex if cell not in cycle
+							and cell[direction] == prev_cell[direction]]
+		for cell in cells_to_visit:
+			result = _find_cycle(cell, cycle[:], U_b_ex, not vertical)
+			if result:
+				return result
+
+		if (prev_cell[0] == new_cell[0] or prev_cell[1] == new_cell[1]) \
+			and len(cycle) >= 4 and len(cycle) % 2 == 0:
+			return cycle
+
+	return _find_cycle(new_cell, [], append_cell(U_b, new_cell), True)
+
 
 def potentials_method():
-	pass
+	u, v = calc_potentials()
+	delta = calc_estimates(u, v)
+	ij_0 = (delta.argmin() // n, delta.argmin() - n)
+	if delta[ij_0] >= 0:
+		print('Оптимальный план:')
+		print(x)
+		print('Расходы: ', sum(map(lambda a, b: a*b, c, x)))
+	else:
+		cycle = find_cycle(ij_0)
+		print(cycle)
+
 		
 def main():
 	global U
@@ -97,7 +167,7 @@ def main():
 	calc_nonbasis_cells()
 	correct_basis_plan()
 	test()
-	print(U_b)
+	potentials_method()
 
 
 if __name__ == '__main__':
