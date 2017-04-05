@@ -1,15 +1,16 @@
 import numpy as np
 
 
-n = 5
-m = 3
+n = 8
+m = 4
 
-a = np.array([[20, 30, 25]], dtype=float)
-b = np.array([[10, 10, 10, 10, 10]], dtype=float)
+a = np.array([[20, 11, 18, 27]], dtype=float)
+b = np.array([[11, 4, 10, 12, 8, 9, 10, 4]], dtype=float)
 
-c = np.array([[2, 8, -5, 7, 10],
-			  [11, 5, 8, -8, -4],
-			  [1, 3, 7, 4, 2]], dtype=float)
+c = np.array([[-3, 6, 7, 12, 6, -3, 2, 16],
+			  [4, 3, 7, 10, 0, 1, -3, 7],
+			  [19, 3, 2, 7, 3, 7, 8, 15],
+			  [1, 4, -7, -3, 9, 13, 17, 22]], dtype=float)
 x = None
 
 U = []
@@ -27,7 +28,7 @@ def check_balance():
 	if sum_a > sum_b:
 		n += 1
 		b = np.append(b, [[sum_a - sum_b]], axis=1)
-		c = np.append(c, [[0], [0], [0]], axis=1)
+		c = np.append(c, [[0]] * m, axis=1)
 	else:
 		m += 1
 		a = np.append(a, [[sum_b - sum_a]], axis=1)
