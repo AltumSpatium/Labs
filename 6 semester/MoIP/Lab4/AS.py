@@ -7,6 +7,11 @@ HOST = ''
 PORT = 9091
 
 tgs_key = 'tgssecretkey'
+working = True
+
+
+def stop():
+	working = False
 
 
 def create_sub_table(db_conn):
@@ -52,10 +57,10 @@ def start_AS():
 			break
 		
 		password = client[2]
-		session_key = kt.generate_session_key() #session key
+		session_key = kt.generate_key()
 		client_addr = addr[0] + ':' + str(addr[1])
 		exp_date = time.time() + 48 * 60 * 60
-		session_ticket = kt.create_session_ticket(tgs_name, client_name, client_addr, exp_date, session_key, tgs_key)
+		session_ticket = kt.create_ticket(tgs_name, client_name, client_addr, exp_date, session_key, tgs_key)
 
 		conn.send(kt.encrypt(session_key.encode(), password))
 		conn.send(session_ticket)
@@ -64,4 +69,5 @@ def start_AS():
 
 
 if __name__ == '__main__':
-	start_AS()
+	while working:
+		start_AS()
