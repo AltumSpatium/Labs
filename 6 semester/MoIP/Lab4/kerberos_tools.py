@@ -54,13 +54,14 @@ def authentication(password, as_addr, client_name, tgs_name):
 	socket_as.connect(as_addr)
 
 	message = client_name + ',' + tgs_name
-	print('\nSending message to AS: "' + message + '"')
+	print('\nSending message to AS:', '\n-- client name -', client_name,
+		'\n-- TGS name -', tgs_name)
 	socket_as.send(message.encode())
 
 	session_key = decrypt(socket_as.recv(1024), password).decode()
 	session_ticket = socket_as.recv(1024)
-	print('\nReceived from AS: \nsession key -', session_key,
-		', \nsession ticket -', decode_ticket(session_ticket, 'tgssecretkey'))
+	print('\nReceived from AS: \n-- session key -', session_key,
+		', \n-- session ticket -', decode_ticket(session_ticket, 'tgssecretkey'))
 
 	socket_as.close()
 
@@ -77,24 +78,26 @@ def decode_authenticator(authenticator, session_key):
 	return decrypt(authenticator, session_key).decode().split(',')
 
 
-def parse_request(client_request, server_name_included=True):
-	if server_name_included:
-		server_name_len = client_request[0]
-		server_name = ''.join([chr(client_request[i]) for i in range(1 ,server_name_len + 1)])
-		client_request = client_request[server_name_len + 1:]
+def parse_request(client_request, data_included=True):
+	if data_included:
+		data_len = client_request[0]
+		data = ''.join([chr(client_request[i]) for i in range(1, data_len + 1)])
+		client_request = client_request[data_len + 1:]
 	else:
-		server_name = ''
+		data = ''
 	authenticator_len = client_request[0]
 	authenticator = client_request[1: authenticator_len + 1]
-	session_ticket = client_request[authenticator_len + 1:]
-	return (server_name, authenticator, session_ticket)
+	ticket = client_request[authenticator_len + 1:]
+	return (data, authenticator, ticket)
 
 
 def check_request(server_name, server_name_rec, client_name, client_addr, exp_date, authenticator, addr):
-	received_addr = addr[0] + ':' + str(addr[1] - 1)
+	check_server_name = server_name_rec == server_name
+	check_client_name = client_name == authenticator[0]
+	received_addr = addr[0] + ':' + client_addr.split(':')[1]
+	check_client_addr = client_addr == received_addr
 	is_expired = (float(exp_date) - float(authenticator[1])) <= 0
-	return server_name_rec == server_name and client_name == authenticator[0] and \
-		client_addr == received_addr and not is_expired
+	return check_server_name and check_client_name and check_client_addr and not is_expired
 
 
 def accessing(tgs_addr, client_name, server_name, session_key, session_ticket):
@@ -105,17 +108,45 @@ def accessing(tgs_addr, client_name, server_name, session_key, session_ticket):
 	message = bytes([len(server_name)]) + server_name.encode()
 	message += bytes([len(authenticator)]) + authenticator
 	message += session_ticket
-	print('\nSending message to TGS: \nserver name -', server_name,
-		', \nauthenticator -', decode_authenticator(authenticator, session_key),
-		', \nsession ticket -', decode_ticket(session_ticket, 'tgssecretkey'))
+	print('\nSending message to TGS: \n-- server name -', server_name,
+		', \n-- authenticator -', decode_authenticator(authenticator, session_key),
+		', \n-- session ticket -', decode_ticket(session_ticket, 'tgssecretkey'))
 
 	socket_tgs.send(message)
 
 	server_key = decrypt(socket_tgs.recv(1024), session_key).decode()
 	server_ticket = socket_tgs.recv(1024)
-	print('\nReceived from TGS: \nserver key -', server_key,
-		', \nserver ticket -', decode_ticket(server_ticket, 'serversecretkey'))
+	print('\nReceived from TGS: \n-- server key -', server_key,
+		', \n-- server ticket -', decode_ticket(server_ticket, 'serversecretkey'))
 
 	socket_tgs.close()
 
 	return (server_key, server_ticket)
+
+
+def requesting(command, server_addr, client_name, server_key, server_ticket):
+	socket_server = socket.socket()
+	socket_server.connect(server_addr)
+
+	authenticator = create_authenticator(client_name, server_key)
+	message = bytes([len(command)]) + command.encode()
+	message += bytes([len(authenticator)]) + authenticator
+	message += server_ticket
+	print('\nSending message to Server: ', '\n-- message -', command,
+		', \n-- authenticator -', decode_authenticator(authenticator, server_key),
+		', \n-- session ticket -', decode_ticket(server_ticket, 'serversecretkey'))
+
+	socket_server.send(message)
+
+	time_mark = float(decrypt(socket_server.recv(1024), server_key))
+	response = socket_server.recv(1024).decode()
+	print('\nReceived from Server: \n-- time mark -', time_mark,
+		', \n-- response -', response)
+
+	socket_server.close()
+
+	if time_mark != (float(decode_authenticator(authenticator, server_key)[1]) + 1):
+		time_mark = ''
+		response = ''
+
+	return (time_mark, response)

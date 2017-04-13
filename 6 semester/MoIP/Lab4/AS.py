@@ -6,6 +6,7 @@ import sqlite3 as db
 HOST = ''
 PORT = 9091
 
+ticket_expire_time = 48 * 60 * 60
 tgs_key = 'tgssecretkey'
 working = True
 
@@ -59,7 +60,7 @@ def start_AS():
 		password = client[2]
 		session_key = kt.generate_key()
 		client_addr = addr[0] + ':' + str(addr[1])
-		exp_date = time.time() + 48 * 60 * 60
+		exp_date = time.time() + ticket_expire_time
 		session_ticket = kt.create_ticket(tgs_name, client_name, client_addr, exp_date, session_key, tgs_key)
 
 		conn.send(kt.encrypt(session_key.encode(), password))
