@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ISsoft: Практика в компании</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<table align="center" width="100%" cellspacing="20">
+		<tr>
+			<td align="center" colspan="2">
+				<a href="#"><img src="IsSoft.png" alt=""></a>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td align="center" colspan="2">
+				<video width="640" height="360" controls>
+					<source src="https://youtu.be/gn4j81vhTS4">
+				</video>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" width="50%">
+				<form action="#" method="POST" id="practiceform">
+					<label for="surname">Фамилия</label><br>
+					<input id="surname" type="text"><br><br>
+					<label for="name">Имя</label><br>
+					<input id="name" type="text"><br><br>
+					<label for="patronym">Отчество</label><br>
+					<input id="patronym" type="text"><br><br>
+					<label for="university">ВУЗ</label><br>
+					<input id="university" type="text"><br><br>
+					<label for="faculty">Факультет</label><br>
+					<input id="faculty" type="text"><br><br>
+					<label for="practice">Вид практики</label><br>
+					<input type="radio" name="practice" value="Преддипломная">Преддипломная<br>
+					<input type="radio" name="practice" value="Производственная">Производственная<br>
+					<p>Даты практики: с <input id="startdate" type="date"> по <input id="enddate" type="date"></p>
+					<p>Время присутствия: с <input id="starttime" type="time"> по <input id="endtime" type="time"></p>
+				</form>
+			</td>
+			<td valign="top" align="center">
+				<p>Выберите три "скилла"</p>
+				<div><select name="skillist[]" id="skills" multiple form="practiceform" size="10">
+					<option value="cs">C#</option>
+					<option value="c">C</option>
+					<option value="cpp">C++</option>
+					<option value="java">Java</option>
+					<option value="js">Javascript</option>
+					<option value="python">Python</option>
+					<option value="ruby">Ruby</option>
+					<option value="sql">SQL</option>
+					<option value="mysql">MySql</option>
+					<option value="oracle">Oracle PL/SQL</option>
+				</select></div>
+				<div><select name="skillmark" id="firstmark">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+				<select name="skillmark" id="secondmark">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+				<select name="skillmark" id="thirdmark">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select></div>
+				<p>Выберите фотографию для пропуска: <input id="photo" form="practiceform" type="file"></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div>
+					<p>&copy; 2003-2017 ISsoft</p>
+				</div>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
