@@ -1,0 +1,60 @@
+body {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background-color: #ededed;
+}
+
+label, p {
+	font-variant: small-caps;
+}
+
+label {
+	cursor: pointer;
+}
+
+.header {
+	height: 50px;
+	text-align: center;
+}
+
+.video {
+	text-align: center;
+}
+
+.info-block {
+	padding: 5px;
+	max-width: 45%;
+	font-family: serif;
+	font-size: 1.1em;
+	text-align: left;
+}
+
+.left {
+	float: left;
+	clear: left;
+	width: 50%;
+}
+
+.right {
+	float: right;
+	clear: right;
+	width: 50%;
+}
+
+.clear {
+	clear: both;
+}
+
+footer {
+	font-weight: bold;
+}
+
+#skills {
+	width: 200px;
+	font-size: 20px;
+}
+
+#skills option:hover {
+	background-color: #ededed;
+}
