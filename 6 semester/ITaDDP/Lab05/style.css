@@ -1,0 +1,61 @@
+.showbox {
+    float: left;
+    margin: 4em 4em;
+    width: 100px;
+    height: 60px;
+    border: 2px solid;
+    background-color: #fff;
+    line-height: 60px;
+    text-align: center;
+    transition: 1s ease-in-out;
+}
+
+.slidelefttop:hover { 
+    transform: translate(-1.3em,-1em);
+    cursor:pointer;
+ }
+
+.rotate:hover {
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.slideright:hover {
+    transform: translate(2em,0);
+    cursor: pointer;
+}
+
+.enhance:hover {
+    transform: scale(2);
+    cursor: pointer;
+}
+
+@keyframes spinner {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(-360deg);
+    }
+}
+
+.spinner {
+    float: left;
+    width: 100px;
+    height: 60px;
+    margin: 4em 4em;
+    background-color: #fff;
+    text-align: center;
+    border: 2px solid gold;
+    line-height: 60px;
+
+    animation-name: spinner;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+    transform-style: preserve-3d;
+}
+
+.spinner:hover {
+    animation-play-state: paused;
+}
