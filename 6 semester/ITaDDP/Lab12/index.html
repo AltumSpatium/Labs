@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Laboratory work #10</title>
+	<style type="text/css">
+    body {
+        text-align: center;
+    }
+		.ph-button {	
+    		border-style: solid;
+    		border-width: 0px 0px 3px;
+    		box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+    		color: #FFFFFF;	   
+    		border-radius: 6px;
+    		cursor: pointer;
+    		display: inline-block;
+    		font-style: normal;
+    		overflow: hidden;
+    		text-align: center;
+    		text-decoration: none;
+    		text-overflow: ellipsis;
+    		transition: all 200ms ease-in-out 0s;
+    		white-space: nowrap;	
+    		font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
+    		font-weight: 700;	
+    		padding: 13px 33px 13px;
+    		font-size: 15px;
+		}
+		.ph-btn-green {
+    		border-color: #3AC162;
+			  background-color: #5FCF80;
+		}
+		.ph-btn-green:hover, .ph-btn-green:focus, .ph-btn-green:active {
+    		background-color: #4BC970;
+    		border-color: #3AC162;    
+		}
+    #form {
+      border-style: solid;
+      border-width: 0 0 3px;
+      border-radius: 6px;
+      text-align: center;
+      border-color: #BBBCBD;
+      background-color: #DEE2E3;
+      width: 50%;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+    #form p {
+      font-family: consolas;
+      font-size: 20px;
+      margin: 2px;
+    }
+    .text-input {
+      width: 30%;
+      margin: 5px;
+      border-radius: 5px;
+    }
+
+    #content {
+      margin: 20px auto;
+    }
+	</style>
+</head>
+<body>
+  <form id="form" ondblclick="delInput()">
+    <p>Form</p>
+  </form>
+  <input type="button" name="btn" class="ph-button ph-btn-green" value="Add" onclick="addInput()">
+  <div id="content"></div>
+  <a href="#" class="ph-button ph-btn-green" onclick="sendAjax()">Send</a>
+</body>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="task.js"></script>
+</html>
