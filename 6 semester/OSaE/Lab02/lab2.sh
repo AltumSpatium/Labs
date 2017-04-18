@@ -1,4 +1,5 @@
 #!/bin/bash
+
 K=3
 M=100
 X=`date +%s`
@@ -9,4 +10,3 @@ do
 	echo $X >> rnd
 	sleep 10
 done &
-
