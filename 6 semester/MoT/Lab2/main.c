@@ -25,10 +25,10 @@ int IsPointInsidepolygon(Point p, int Number, int x, int y) {
 				break;
 			}
 
-			//S = abs(p[i1].x * (p[i2].y - p[n].y) + p[i2].x * (p[n].y - p[i1].y) + p[n].x  * (p[i1].y - p[i2].y));
-			//S1 = abs(p[i1].x * (p[i2].y - y) + p[i2].x * (y - p[i1].y) + x * (p[i1].y - p[i2].y));
-			//S2 = abs(p[n].x * (p[i2].y - y) + p[i2].x * (y - p[n].y) + x * (p[n].y - p[i2].y));
-			//S3 = abs(p[i1].x * (p[n].y - y) + p[n].x * (y - p[i1].y) + x * (p[i1].y - p[n].y));
+			S = abs(p[i1].x * (p[i2].y - p[n].y) + p[i2].x * (p[n].y - p[i1].y) + p[n].x  * (p[i1].y - p[i2].y));
+			S1 = abs(p[i1].x * (p[i2].y - y) + p[i2].x * (y - p[i1].y) + x * (p[i1].y - p[i2].y));
+			S2 = abs(p[n].x * (p[i2].y - y) + p[i2].x * (y - p[n].y) + x * (p[n].y - p[i2].y));
+			S3 = abs(p[i1].x * (p[n].y - y) + p[n].x * (y - p[i1].y) + x * (p[i1].y - p[n].y));
 
 			if (S == S1 + S2 + S3) {
 				flag = 1;
@@ -47,7 +47,7 @@ int IsPointInsidepolygon(Point p, int Number, int x, int y) {
 }
 
 int main(int argc) {
-/*	Point p1 = { 0, 0 };
+	Point p1 = { 0, 0 };
 	Point p2 = { 2, 0 };
 	Point p3 = { 2, 2 };
 	Point p4 = { 0, 2 };
@@ -59,5 +59,5 @@ int main(int argc) {
 	} else {
 		printf("Outside\n");
 	}
-	return 0;*/
+	return 0;
 }

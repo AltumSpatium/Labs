@@ -48,8 +48,6 @@ reserved = {
     'struct': 'STRUCT',
     'union': 'UNION',
     'char': 'CHAR',
-    'printf': 'PRINTF',
-    'scanf': 'SCANF',
     'typedef': 'TYPEDEF',
     'Point': 'POINT'
 }
@@ -60,9 +58,7 @@ t_CASE = r'case'
 t_ELSE = r'else'
 t_BREAK = r'break'
 t_INT = r'int'
-t_SCANF = r'scanf'
 t_UNION = r'union'
-t_PRINTF = r'printf'
 t_CHAR = r'char'
 t_ASSIGN = r'='
 t_EQUAL = r'=='
@@ -90,7 +86,7 @@ t_FLOAT = r'float'
 t_DOUBLE = r'double'
 t_STRING_TYPE = r'string'
 t_TERNARY = r'\?[\s\S]*[:]'
-t_STRING = r'\".*\"'
+t_STRING = r'\"[^\n]*\"'
 t_GT = r'>'
 t_LT = r'<'
 t_GOE = r'>='

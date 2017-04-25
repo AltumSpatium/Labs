@@ -95,21 +95,38 @@ def p_declaration_comma(p):
 
 
 def p_declaration_with_assignment(p):
-    """declaration_with_assignment : type ID ASSIGN arithmetic_expression SEMICOLON"""
-    p[0] = Node('decl_with_assign', [p[1], p[2], p[3], p[4]])
+    """declaration_with_assignment : type ID ASSIGN arithmetic_expression SEMICOLON
+        | type ID ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON
+        | type ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN arithmetic_expression SEMICOLON
+        | type ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON"""
+    if len(p) == 6:
+        p[0] = Node('decl_with_assign', [p[1], p[2], p[3], p[4]])
+    elif len(p) == 9:
+        p[0] = Node('decl_with_assign_on_index', [p[1], p[2], p[4], p[6], p[7]])
+    elif len(p) == 11:
+        p[0] = Node('decl_with_assign_on_index', [p[1], p[2], p[4], p[6], p[8]])
+    else:
+        p[0] = Node('decl_with_assign', [p[1], p[2], p[3], p[5]])
 
 
 def p_assignment(p):
     """assignment : ID ASSIGN arithmetic_expression SEMICOLON
         | ID ASSIGN arithmetic_expression
-        | ID ASSIGN LEFTBRACE declaration_comma RIGHTBRACE SEMICOLON"""
-    p[0] = Node('assignment', [p[1], p[2]]).add_parts(p[3])
+        | ID ASSIGN LEFTBRACE declaration_comma RIGHTBRACE SEMICOLON
+        | ID ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON
+        | ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN arithmetic_expression SEMICOLON
+        | ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON"""
+    if len(p) == 7:
+        p[0] = Node('assignment', [p[1], p[2], p[4]])
+    else:
+        p[0] = Node('assignment', [p[1], p[2]]).add_parts(p[3])
 
 
 def p_type(p):
     """type : INT
         | FLOAT
         | DOUBLE
+        | STRING_TYPE
         | POINT"""
     p[0] = Node('type', [p[1]])
 
@@ -117,34 +134,6 @@ def p_type(p):
 def p_empty(p):
     """empty :"""
     p[0] = Node('', [])
-
-
-def p_arithmetic_expression(p):
-    """arithmetic_expression : empty
-        | ID PLUS arithmetic_expression
-        | ID MINUS arithmetic_expression
-        | ID MULT arithmetic_expression
-        | ID DIVIDE arithmetic_expression
-        | ID MOD arithmetic_expression
-        | ID PLUS PLUS arithmetic_expression
-        | ID LPAREN func_params RPAREN
-        | ID INC arithmetic_expression
-        | NUMBER PLUS arithmetic_expression
-        | NUMBER MINUS arithmetic_expression
-        | NUMBER MULT arithmetic_expression
-        | NUMBER DIVIDE arithmetic_expression
-        | NUMBER MOD arithmetic_expression
-        | NUMBER
-        | MINUS NUMBER
-        | ID
-        | MINUS ID
-        | STRING"""
-    if len(p) == 2:
-        p[0] = Node('expression', [p[1]])
-    elif len(p) == 5:
-        p[0] = Node('call', [p[1], p[3]])
-    else:
-        p[0] = Node('expression', [p[1], p[2], p[3]])
 
 
 def p_func_params(p):
@@ -161,6 +150,43 @@ def p_func_params(p):
         p[0] = Node('params', [p[1]]).add_parts(p[3])
     else:
         p[0] = Node('params', [p[1]])
+
+
+def p_arithmetic_expression(p):
+    """arithmetic_expression : empty
+        | ID PLUS arithmetic_expression
+        | ID MINUS arithmetic_expression
+        | ID MULT arithmetic_expression
+        | ID DIVIDE arithmetic_expression
+        | ID MOD arithmetic_expression
+        | ID PLUS PLUS arithmetic_expression
+        | ID LPAREN func_params RPAREN
+        | ID INC arithmetic_expression
+        | ID DOT ID
+        | arithmetic_expression DOT ID
+        | arithmetic_expression PLUS arithmetic_expression
+        | arithmetic_expression MINUS arithmetic_expression
+        | arithmetic_expression MULT arithmetic_expression
+        | arithmetic_expression DIVIDE arithmetic_expression
+        | ID LSQBRACE arithmetic_expression RSQBRACE
+        | LPAREN arithmetic_expression RPAREN
+        | NUMBER PLUS arithmetic_expression
+        | NUMBER MINUS arithmetic_expression
+        | NUMBER MULT arithmetic_expression
+        | NUMBER DIVIDE arithmetic_expression
+        | NUMBER MOD arithmetic_expression
+        | NUMBER
+        | MINUS NUMBER
+        | ID
+        | MINUS ID
+        | STRING"""
+    if len(p) == 2:
+        p[0] = Node('expression', [p[1]])
+    elif len(p) == 5:
+        type = 'call' if p[2] == '(' else 'take_on_index'
+        p[0] = Node(type, [p[1], p[3]])
+    else:
+        p[0] = Node('expression', [p[1], p[2], p[3]])
 
 
 def p_if(p):
@@ -214,7 +240,7 @@ def p_return(p):
 def p_function(p):
     """function : ID LPAREN arithmetic_expression RPAREN SEMICOLON
         | ID LPAREN arithmetic_expression RPAREN block"""
-    p[0] = Node('function', [p[3]])
+    p[0] = Node('function', [p[1], p[3]])
 
 
 def p_error(p):
