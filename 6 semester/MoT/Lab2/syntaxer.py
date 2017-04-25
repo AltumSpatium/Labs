@@ -1,7 +1,11 @@
 from lexer import tokens
+from lexer import find_column
 import ply.yacc as yacc
 
+
 class Node:
+    errors = []
+
     def __init__(self, type, parts):
         self.type = type
         self.parts = parts
@@ -244,9 +248,16 @@ def p_function(p):
 
 
 def p_error(p):
-    print('Unexpected token:', p)
+    if p:
+        token = "{0}, line: {1}, col: {2}".format(p.value, p.lineno, find_column(p.lexer.lexdata, p))
+    else:
+        token = p
+    error_str = 'Unexpected token: {0}'.format(token)
+    Node.errors.append(error_str)
+
 
 parser = yacc.yacc()
 
+
 def build_tree(code):
-    return parser.parse(code, tracking=True)
+    return parser.parse(code)

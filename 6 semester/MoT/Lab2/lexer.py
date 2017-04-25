@@ -123,7 +123,8 @@ t_ignore = ' \t'
 
 
 def t_error(t):
-    print("Illegal character '%s'", t.value[0])
+    token = '{0}, line: {1}, col: {2}'.format(t.value, t.lineno, find_column(t.lexer.lexdata, t) - 1)
+    print("Illegal character:", token)
     t.lexer.skip(1)
 
 
