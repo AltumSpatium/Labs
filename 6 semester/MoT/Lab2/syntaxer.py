@@ -26,7 +26,7 @@ class Node:
 
 
     def __repr__(self):
-        return self.type + ":\n|   " + self.parts_str().replace("\n", "\n|   ")
+        return self.type + ":\n|  " + self.parts_str().replace("\n", "\n|  ")
 
 
 def p_start(p):
@@ -157,15 +157,14 @@ def p_func_params(p):
 
 
 def p_arithmetic_expression(p):
-    """arithmetic_expression : empty
-        | ID PLUS arithmetic_expression
+    """arithmetic_expression : ID PLUS arithmetic_expression
         | ID MINUS arithmetic_expression
         | ID MULT arithmetic_expression
         | ID DIVIDE arithmetic_expression
         | ID MOD arithmetic_expression
         | ID PLUS PLUS arithmetic_expression
         | ID LPAREN func_params RPAREN
-        | ID INC arithmetic_expression
+        | ID INC
         | ID DOT ID
         | arithmetic_expression DOT ID
         | arithmetic_expression PLUS arithmetic_expression
@@ -189,6 +188,8 @@ def p_arithmetic_expression(p):
     elif len(p) == 5:
         type = 'call' if p[2] == '(' else 'take_on_index'
         p[0] = Node(type, [p[1], p[3]])
+    elif len(p) == 3:
+        p[0] = Node('expression', [p[1], p[2]])
     else:
         p[0] = Node('expression', [p[1], p[2], p[3]])
 
