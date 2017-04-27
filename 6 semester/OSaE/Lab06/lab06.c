@@ -6,8 +6,8 @@
 #include <string.h>
 
 const int SIG_COUNT = 28;
-const char* CONFIG_PATH = "./lab06.conf";
-const char* LOG_FILE = "./lab06.log";
+const char* CONFIG_PATH = "/home/smart/Labs/Lab06/lab06.conf";
+const char* LOG_FILE = "/home/smart/Labs/Lab06/lab06.log";
 
 typedef struct signal_t {
 	const char* name;
