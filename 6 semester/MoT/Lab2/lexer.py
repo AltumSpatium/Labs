@@ -1,6 +1,8 @@
 import re
 import ply.lex as lex
 
+id_table = []
+
 tokens = [
     'NUMBER',
     'PLUS',
@@ -142,3 +144,25 @@ def find_column(input, token):
 
 
 lexer = lex.lex(reflags=re.UNICODE | re.DOTALL | re.IGNORECASE)
+
+
+def create_id_table():
+    global id_table
+    data = open('main.c').read()
+    lines = data.split('\n')
+    
+    lexer.input(data)
+
+    while True:
+        tok = lexer.token()
+        if not tok: break
+
+        if tok.type == 'ID':
+            tok_line = tok.lineno - 1
+            try:
+                if lines[tok_line].index('int') != -1:
+                    id_table.append(tok.value)
+            except Exception:
+                pass
+
+    return set(id_table)

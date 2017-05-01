@@ -1,6 +1,30 @@
+import re
 from lexer import tokens
 from lexer import find_column
+from lexer import create_id_table
 import ply.yacc as yacc
+
+id_table = []
+
+
+def isID(token):
+    token = str(token)
+    if re.match(r'[a-zA-Z_][a-zA-Z0-9_]*$', token) and not re.match(r'abs', token):
+        return True
+    return False
+
+
+def get_line_col(lines, token):
+    line = 1
+    col = 1
+    for i in range(len(lines)):
+        try:
+            col = lines[i].index(token)
+            if col != -1:
+                line = i + 1
+        except:
+            pass
+    return (line, col)
 
 
 class Node:
@@ -120,6 +144,13 @@ def p_assignment(p):
         | ID ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON
         | ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN arithmetic_expression SEMICOLON
         | ID LSQBRACE arithmetic_expression RSQBRACE ASSIGN LEFTBRACE func_params RIGHTBRACE SEMICOLON"""
+    if isID(p[1]):
+        if p[1] not in id_table:
+            lines = p.lexer.lexdata.split('\n')
+            p_line, p_col = get_line_col(lines, p[1])
+            error_str = "Undeclared identifier: {0}, line : {1}, col: {2}"\
+                .format(p[1], p_line, p_col)
+            Node.errors.append(error_str)
     if len(p) == 7:
         p[0] = Node('assignment', [p[1], p[2], p[4]])
     else:
@@ -183,6 +214,13 @@ def p_arithmetic_expression(p):
         | ID
         | MINUS ID
         | STRING"""
+    if isID(p[1]):
+        if p[1] not in id_table:
+            lines = p.lexer.lexdata.split('\n')
+            p_line, p_col = get_line_col(lines, p[1])
+            error_str = "Undeclared identifier: {0}, line : {1}, col: {2}"\
+                .format(p[1], p_line, p_col)
+            Node.errors.append(error_str)
     if len(p) == 2:
         p[0] = Node('expression', [p[1]])
     elif len(p) == 5:
@@ -221,6 +259,13 @@ def p_predicate(p):
         | NUMBER
         | STRING
         | predicate AND predicate"""
+    if len(p) < 10 and isID(p[1]):
+        if p[1] not in id_table:
+            lines = p.lexer.lexdata.split('\n')
+            p_line, p_col = get_line_col(lines, p[1])
+            error_str = "Undeclared identifier: {0}, line : {1}, col: {2}"\
+                .format(p[1], p_line, p_col)
+            Node.errors.append(error_str)
     if len(p) == 2:
         p[0] = Node('condition', [p[1]])
     else:
@@ -245,15 +290,19 @@ def p_return(p):
 def p_function(p):
     """function : ID LPAREN arithmetic_expression RPAREN SEMICOLON
         | ID LPAREN arithmetic_expression RPAREN block"""
+    if isID(p[1]):
+        if p[1] not in id_table:
+            Node.errors.append("Undeclared identifier: " + str(p[1]) + ", line: " + \
+                str(p.lineno(1) - 14))
     p[0] = Node('function', [p[1], p[3]])
 
 
 def p_error(p):
     if p:
         token = "{0}, line: {1}, col: {2}".format(p.value, p.lineno, find_column(p.lexer.lexdata, p))
+        error_str = 'Unexpected token: {0}'.format(token)
     else:
-        token = p
-    error_str = 'Unexpected token: {0}'.format(token)
+        error_str = "Unexpected end of input"
     Node.errors.append(error_str)
 
 
@@ -261,4 +310,6 @@ parser = yacc.yacc()
 
 
 def build_tree(code):
+    global id_table
+    id_table = create_id_table()
     return parser.parse(code)

@@ -17,7 +17,7 @@ int IsPointInsidepolygon(Point p, int Number, int x, int y) {
 			if (i2 >= N) {
 				i2 = 0;
 			}
-			ni2 = 0;
+			int ni2 = 0;
 			if (n < N - 1) {
 				ni2 = n + 1;
 			}
