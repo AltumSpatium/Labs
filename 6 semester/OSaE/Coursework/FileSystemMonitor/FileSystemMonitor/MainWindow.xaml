@@ -107,9 +107,8 @@
                         <CheckBox x:Name="cbDirname" Content="Изменение имени папки" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" IsChecked="True"/>
                         <CheckBox x:Name="cbFilename" Content="Изменение имени файла" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" IsChecked="True"/>
                         <CheckBox x:Name="cbSecurity" Content="Изменение параметров безопасности" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top" IsChecked="True"/>
-                        <CheckBox x:Name="cbOpen" Content="Открытие файла или папки" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" IsChecked="True"/>
-                        <CheckBox x:Name="cbWrite" Content="Запись в файл или папку" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" IsChecked="True"/>
-                        <CheckBox x:Name="cbNested" Content="Контролировать вложенные папки" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                        <CheckBox x:Name="cbWrite" Content="Запись в файл или папку" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" IsChecked="True"/>
+                        <CheckBox x:Name="cbNested" Content="Контролировать вложенные папки" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" IsChecked="True"/>
                     </Grid>
                 </GroupBox>
                 <Button x:Name="btnClearLogs" Content="Очистить логи" HorizontalAlignment="Left" Margin="592,101,0,0" VerticalAlignment="Top" Width="96" Click="btnClearLogs_Click"/>

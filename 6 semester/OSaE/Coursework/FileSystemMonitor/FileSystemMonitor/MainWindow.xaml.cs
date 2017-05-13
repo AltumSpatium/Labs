@@ -1,9 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Data.Entity;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Forms;
-
 using System.IO;
 
 namespace FileSystemMonitor
@@ -25,22 +24,74 @@ namespace FileSystemMonitor
 			db = new LogContext();
 			db.Logs.Load();
 			dgLog.ItemsSource = db.Logs.Local.ToBindingList();
+
+			watcher.Changed += new FileSystemEventHandler(OnChanged);
+			watcher.Created += new FileSystemEventHandler(OnChanged);
+			watcher.Deleted += new FileSystemEventHandler(OnChanged);
+			watcher.Renamed += new RenamedEventHandler(OnRenamed);
+		}	
+
+		private void OnChanged(object source, FileSystemEventArgs e)
+		{
+			string name = e.FullPath;
+			string changeType;
+
+			switch (e.ChangeType.ToString())
+			{
+				case "Created":
+					changeType = "Создан";
+					break;
+				case "Changed":
+					changeType = "Изменён";
+					break;
+				case "Deleted":
+					changeType = "Удалён";
+					break;
+				default:
+					changeType = "";
+					break;
+			}
+
+			long size = getSize(name);
+
+			App.Current.Dispatcher.Invoke(delegate
+			{
+				LogItem log = new LogItem(name, changeType, DateTime.Now, size, 1);
+				db.Logs.Add(log);
+				db.SaveChanges();
+			});
 		}
 
-		private void checkDirectory(object sender, RoutedEventArgs e)
+		private void OnRenamed(object source, RenamedEventArgs e)
 		{
-			db.Logs.Add(new LogItem());
-			db.SaveChanges();
-		}		
-
-		private static void OnChanged(object source, FileSystemEventArgs e)
-		{
-
+			App.Current.Dispatcher.Invoke(delegate
+			{
+				LogItem log = new LogItem(e.FullPath, e.ChangeType.ToString(), DateTime.Now, 1, 1);
+				db.Logs.Add(log);
+				db.SaveChanges();
+			});
 		}
 
-		private static void OnRenamed(object source, RenamedEventArgs e)
+		private long getSize(string path)
 		{
+			if (File.Exists(path))
+			{
+				FileInfo file = new FileInfo(path);
+				return file.Length / 1024;
+			}
+			else if (Directory.Exists(path))
+			{
+				DirectoryInfo directory = new DirectoryInfo(path);
+				long size = 0;
+				foreach (FileInfo file in directory.GetFiles())
+				{
+					size += file.Length;
+				}
 
+				return size / 1024;
+			}
+
+			return 0;
 		}
 
 		private void btnClearLogs_Click(object sender, RoutedEventArgs e)
@@ -57,13 +108,40 @@ namespace FileSystemMonitor
 			{
 				btnStartMonitoring.Content = "Остановить мониторинг";
 				enableInterface(false);
+
+				watcher.Path = tbDir.Text;
+				watcher.Filter = tbFilter.Text;
+
+				watcher.IncludeSubdirectories = (bool)cbNested.IsChecked;
+
+				NotifyFilters filters = new NotifyFilters();
+
+				if ((bool)cbAttrs.IsChecked)
+					filters |= NotifyFilters.Attributes;
+
+				if ((bool)cbDirname.IsChecked)
+					filters |= NotifyFilters.DirectoryName;
+
+				if ((bool)cbFilename.IsChecked)
+					filters |= NotifyFilters.FileName;
+
+				if ((bool)cbSecurity.IsChecked)
+					filters |= NotifyFilters.Security;
+
+				if ((bool)cbWrite.IsChecked)
+					filters |= NotifyFilters.LastWrite;
+
+				watcher.NotifyFilter = filters;
+
+				watcher.EnableRaisingEvents = true;
 			}
 			else
 			{
 				btnStartMonitoring.Content = "Начать мониторинг";
 				enableInterface(true);
-			}
 
+				watcher.EnableRaisingEvents = false;
+			}
 		}
 
 		private void enableInterface(bool enabled)
@@ -71,6 +149,7 @@ namespace FileSystemMonitor
 			tbDir.IsEnabled = enabled;
 			tbFilter.IsEnabled = enabled;
 			btnOpenDir.IsEnabled = enabled;
+			gbEvents.IsEnabled = enabled;
 		}
 
 		private bool checkDirectory()

@@ -8,7 +8,7 @@ namespace FileSystemMonitor
 		public string Name { get; set; }
 		public string ChangeType { get; set; }
 		public DateTime ChangeTime { get; set; }
-		public int Size { get; set; }
+		public long Size { get; set; }
 		public int CheckSum { get; set; }
 
 		public LogItem()
@@ -16,9 +16,8 @@ namespace FileSystemMonitor
 			ChangeTime = DateTime.Now;
 		}
 
-		public LogItem(int id, string name, string changeType, DateTime changeTime, int size, int checkSum)
+		public LogItem(string name, string changeType, DateTime changeTime, long size, int checkSum)
 		{
-			Id = id;
 			Name = name;
 			ChangeType = changeType;
 			ChangeTime = changeTime;
