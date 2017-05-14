@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace FileSystemMonitor
 {
@@ -53,10 +54,11 @@ namespace FileSystemMonitor
 			}
 
 			long size = getSize(name);
+			string checksum = ComputeMD5Checksum(name);
 
 			App.Current.Dispatcher.Invoke(delegate
 			{
-				LogItem log = new LogItem(name, changeType, DateTime.Now, size, 1);
+				LogItem log = new LogItem(name, changeType, DateTime.Now, size, checksum);
 				db.Logs.Add(log);
 				db.SaveChanges();
 			});
@@ -64,9 +66,13 @@ namespace FileSystemMonitor
 
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
+			string name = string.Format("{0} -> {1}", e.OldFullPath, e.FullPath);
+			long size = getSize(e.FullPath);
+			string checksum = ComputeMD5Checksum(e.FullPath);
+
 			App.Current.Dispatcher.Invoke(delegate
 			{
-				LogItem log = new LogItem(e.FullPath, e.ChangeType.ToString(), DateTime.Now, 1, 1);
+				LogItem log = new LogItem(name, "Переименован", DateTime.Now, size, checksum);
 				db.Logs.Add(log);
 				db.SaveChanges();
 			});
@@ -92,6 +98,24 @@ namespace FileSystemMonitor
 			}
 
 			return 0;
+		}
+
+		private string ComputeMD5Checksum(string path)
+		{
+			if (File.Exists(path))
+			{
+				using (FileStream fs = File.OpenRead(path))
+				{
+					MD5 md5 = new MD5CryptoServiceProvider();
+					byte[] fileData = new byte[fs.Length];
+					fs.Read(fileData, 0, (int)fs.Length);
+					byte[] checksum = md5.ComputeHash(fileData);
+					string result = BitConverter.ToString(checksum).Replace("-", "");
+					return result;
+				}
+			}
+
+			return "";
 		}
 
 		private void btnClearLogs_Click(object sender, RoutedEventArgs e)

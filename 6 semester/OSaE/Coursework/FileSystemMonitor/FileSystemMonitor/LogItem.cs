@@ -9,14 +9,14 @@ namespace FileSystemMonitor
 		public string ChangeType { get; set; }
 		public DateTime ChangeTime { get; set; }
 		public long Size { get; set; }
-		public int CheckSum { get; set; }
+		public string CheckSum { get; set; }
 
 		public LogItem()
 		{
 			ChangeTime = DateTime.Now;
 		}
 
-		public LogItem(string name, string changeType, DateTime changeTime, long size, int checkSum)
+		public LogItem(string name, string changeType, DateTime changeTime, long size, string checkSum)
 		{
 			Name = name;
 			ChangeType = changeType;

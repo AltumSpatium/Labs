@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FileSystemMonitor"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Filesystem Monitor" Height="700" Width="1050">
+        Title="Filesystem Monitor" Height="700" Width="1250">
     <Window.Resources>
         <Style x:Key="gbMainStyle" TargetType="GroupBox">
             <Setter Property="HeaderTemplate">
@@ -83,25 +83,25 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <GroupBox x:Name="gbMonitor" Style="{StaticResource gbMainStyle}" Header="Настройки мониторинга" HorizontalAlignment="Left" Margin="13,4,0,0" VerticalAlignment="Top" Height="650" Width="1008">
+        <GroupBox x:Name="gbMonitor" Style="{StaticResource gbMainStyle}" Header="Настройки мониторинга" HorizontalAlignment="Left" Margin="13,4,0,0" VerticalAlignment="Top" Height="650" Width="1208">
             <Grid>
                 <Label x:Name="labelDir" Content="Директория мониторинга" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="161"/>
                 <TextBox x:Name="tbDir" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="343" ToolTip="Введите путь, или нажмите кнопку &quot;Открыть&quot;" TextChanged="tbDir_TextChanged"/>
                 <Label x:Name="labelFilter" Content="Фильтр файлов" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" Width="107"/>
                 <TextBox x:Name="tbFilter" HorizontalAlignment="Left" Height="23" Margin="10,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" ToolTip="Введите путь, или нажмите кнопку &quot;Открыть&quot;" Text="*.*"/>
                 <Button x:Name="btnOpenDir" Content="Открыть" HorizontalAlignment="Left" Margin="358,41,0,0" VerticalAlignment="Top" Width="99" Height="23" Click="btnOpenDir_Click"/>
-                <DataGrid x:Name="dgLog" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Height="486" Width="678" AutoGenerateColumns="False" CanUserAddRows="False"
-                          CanUserDeleteRows="False" CanUserResizeColumns="False" CanUserReorderColumns="False">
+                <DataGrid x:Name="dgLog" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Height="486" Width="878" MaxWidth="878" AutoGenerateColumns="False" CanUserAddRows="False"
+                          CanUserDeleteRows="False" IsReadOnly="True" CanUserReorderColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Id" Width="10" Binding="{Binding Id}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Имя файла" Width="240" Binding="{Binding Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Id" Width="15" Binding="{Binding Id}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Имя файла" Width="300" Binding="{Binding Name}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Тип изменения" Width="100" Binding="{Binding ChangeType}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Дата" Width="130" Binding="{Binding ChangeTime}"></DataGridTextColumn>
                         <DataGridTextColumn Header="Размер" Width="90" Binding="{Binding Size}"></DataGridTextColumn>
-                        <DataGridTextColumn Header="Контр. сумма" Width="90" Binding="{Binding CheckSum}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Контр. сумма" Width="232" Binding="{Binding CheckSum}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <GroupBox x:Name="gbEvents" Style="{StaticResource gbMainStyle}" Header="События" HorizontalAlignment="Left" Margin="693,128,0,0" VerticalAlignment="Top" Height="486" Width="293">
+                <GroupBox x:Name="gbEvents" Style="{StaticResource gbMainStyle}" Header="События" HorizontalAlignment="Left" Margin="893,128,0,0" VerticalAlignment="Top" Height="486" Width="293">
                     <Grid>
                         <CheckBox x:Name="cbAttrs" Content="Изменение атрибутов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True"/>
                         <CheckBox x:Name="cbDirname" Content="Изменение имени папки" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" IsChecked="True"/>
