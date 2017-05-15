@@ -111,7 +111,7 @@
                         <CheckBox x:Name="cbNested" Content="Контролировать вложенные папки" HorizontalAlignment="Left" Margin="10,115,0,0" VerticalAlignment="Top" IsChecked="True"/>
                     </Grid>
                 </GroupBox>
-                <Button x:Name="btnClearLogs" Content="Очистить логи" HorizontalAlignment="Left" Margin="592,101,0,0" VerticalAlignment="Top" Width="96" Click="btnClearLogs_Click"/>
+                <Button x:Name="btnClearLogs" Content="Очистить логи" HorizontalAlignment="Left" Margin="790,101,0,0" VerticalAlignment="Top" Width="96" Click="btnClearLogs_Click"/>
                 <Button x:Name="btnStartMonitoring" Content="Начать мониторинг" HorizontalAlignment="Left" Margin="149,101,0,0" VerticalAlignment="Top" Width="148" Click="btnStartMonitoring_Click" IsEnabled="False"/>
                 <Label x:Name="labelError" Content="" HorizontalAlignment="Left" Margin="302,100,0,0" VerticalAlignment="Top" Height="23" FontSize="11"/>
             </Grid>

@@ -53,7 +53,7 @@ namespace FileSystemMonitor
 					break;
 			}
 
-			long size = getSize(name);
+			long size = GetSize(name);
 			string checksum = ComputeMD5Checksum(name);
 
 			App.Current.Dispatcher.Invoke(delegate
@@ -67,7 +67,7 @@ namespace FileSystemMonitor
 		private void OnRenamed(object source, RenamedEventArgs e)
 		{
 			string name = string.Format("{0} -> {1}", e.OldFullPath, e.FullPath);
-			long size = getSize(e.FullPath);
+			long size = GetSize(e.FullPath);
 			string checksum = ComputeMD5Checksum(e.FullPath);
 
 			App.Current.Dispatcher.Invoke(delegate
@@ -78,7 +78,7 @@ namespace FileSystemMonitor
 			});
 		}
 
-		private long getSize(string path)
+		private long GetSize(string path)
 		{
 			if (File.Exists(path))
 			{
