@@ -3,6 +3,10 @@ import numpy as np
 
 def potentials_method(I, a, U_s, U_e, U_b, c, x):
     U = list(zip(U_s, U_e))
+
+    if not check_balance(I, U, a, x):
+        return None
+
     U_b = [tuple(U[i]) for i in U_b]
 
     while True:
@@ -23,6 +27,21 @@ def potentials_method(I, a, U_s, U_e, U_b, c, x):
         x = calc_new_flow(x, theta, U, U_cp)
         x = calc_new_flow(x, -theta, U, U_cm)
         U_b = calc_new_basis(U_b, ij_0, ij_s)
+
+
+def check_balance(I, U, a, x):
+    for i in I:
+        I_p = []
+        I_m = []
+        for arc in [arc for arc in U if i in arc]:
+            if i == arc[0]:
+                I_p.append(arc)
+            elif i == arc[1]:
+                I_m.append(arc)
+        res = sum([x[U.index(arc)] for arc in I_p]) - sum([x[U.index(arc)] for arc in I_m])
+        if a[i-1] != res:
+            return False
+    return True
 
 
 def calc_potentials(n, U, U_b, c):
