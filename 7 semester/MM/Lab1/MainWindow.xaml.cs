@@ -11,22 +11,20 @@ namespace MM_Lab1
 	{
 		private Sensor currentSensor;
 		private int numbersCount;
-		private int sectionsCount;
 		private double iv;
 
 		public MainWindow()
 		{
 			InitializeComponent();
-			setParams(new SquareMeanSensor(), 100, 10, 12341234);
+			setParams(new SquareMeanSensor(), 100, 12341234);
 		}
 
 		private double[] Generate(Sensor sensor, int count, double iv) => sensor.Generate(count, iv);
 
-		private void setParams(Sensor newSensor, int newNumbersCount, int newSectionsCount, double newIV)
+		private void setParams(Sensor newSensor, int newNumbersCount, double newIV)
 		{
 			currentSensor = newSensor;
 			numbersCount = newNumbersCount;
-			sectionsCount = newSectionsCount;
 			iv = newIV;
 		}
 
@@ -47,14 +45,13 @@ namespace MM_Lab1
 				currentSensor = new MultiplicativeCongruentSensor(m, k);
 			}
 
-			if (tbNumsCount.Text == "" || tbSectionsCount.Text == "" || tbIV.Text == "")
+			if (tbNumsCount.Text == "" || tbIV.Text == "")
 				return;
 
 			int numbersCount = Convert.ToInt32(tbNumsCount.Text);
-			int sectionsCount = Convert.ToInt32(tbSectionsCount.Text);
 			double iv = Convert.ToDouble(tbIV.Text);
 
-			setParams(currentSensor, numbersCount, sectionsCount, iv);
+			setParams(currentSensor, numbersCount, iv);
 		}
 
 		private void Preview_TextInput(object sender, TextCompositionEventArgs e)
@@ -81,6 +78,10 @@ namespace MM_Lab1
 
 		private Dictionary<string, double> buildFrequencies(double[] sequence)
 		{
+			int sectionsCount;
+			if (sequence.Length > 100) sectionsCount = (int)Math.Log(sequence.Length);
+			else sectionsCount = (int)Math.Sqrt(sequence.Length);
+
 			Dictionary<string, double> frequencies = new Dictionary<string, double>();
 			double stepSize = 1.0 / sectionsCount;
 			double currentStep = stepSize;
@@ -90,8 +91,9 @@ namespace MM_Lab1
 			{
 				double count = sequence.Select(x => 
 					(currentStep - stepSize) <= x && x < currentStep).Count(x => x == true);
-				frequencies.Add((++i).ToString(), count / numbersCount);
+				frequencies.Add((new String(' ', i)).ToString(), count / numbersCount);
 				currentStep += stepSize;
+				i++;
 			}
 
 			return frequencies;
@@ -100,7 +102,7 @@ namespace MM_Lab1
 		private double calcMathExpectation(double[] sequence) => sequence.Sum() / sequence.Length;
 
 		private double calcDispersion(double[] sequence, double mathExpectation) =>
-			sequence.Select(x => x * x).Sum() / sequence.Length - mathExpectation * mathExpectation;
+			sequence.Select(x => x * x - mathExpectation * mathExpectation).Sum() / sequence.Length;
 
 		private double calcCorrelationCoeff(double[] sequence, int s)
 		{
@@ -123,6 +125,20 @@ namespace MM_Lab1
 			return Rxy;
 		}
 
+		private void drawBarChart(List<KeyValuePair<string, double>> freqsList)
+		{
+			LinearAxis xAxis = new LinearAxis();
+			xAxis.Orientation = AxisOrientation.X;
+			xAxis.Location = AxisLocation.Bottom;
+			xAxis.Minimum = -2;
+			xAxis.Maximum = 2;
+			xAxis.Interval = 4.0 / freqsList.Count;
+
+			if (chart.Axes.Count > 1) chart.Axes.RemoveAt(1);
+			chart.Axes.Add(xAxis);
+			((ColumnSeries)chart.Series[0]).ItemsSource = freqsList;
+		}
+
 		private void btnStartUniformityTest_Click(object sender, RoutedEventArgs e)
 		{
 			double[] sequence = Generate(currentSensor, numbersCount, iv);
@@ -131,7 +147,7 @@ namespace MM_Lab1
 			List<KeyValuePair<string, double>> freqsList = new List<KeyValuePair<string, double>>();
 			foreach (var freq in frequencies)
 				freqsList.Add(new KeyValuePair<string, double>(freq.Key, freq.Value));
-			((ColumnSeries) chart.Series[0]).ItemsSource = freqsList;
+			drawBarChart(freqsList);
 
 			var mathExpectation = calcMathExpectation(sequence);
 			labelMathExpectation.Content = "M: " + Math.Round(mathExpectation, 5);

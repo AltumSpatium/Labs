@@ -12,7 +12,7 @@
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="504" VerticalAlignment="Top" Width="820">
             <TabItem Header="Настройки">
                 <Grid Background="#FFE5E5E5" Margin="0,-21,0,2">
-                    <Button x:Name="btnApplySettings" Content="Применить" HorizontalAlignment="Left" Margin="86,236,0,0" VerticalAlignment="Top" Width="92" Click="btnApplySettings_Click" Height="32" FontSize="14"/>
+                    <Button x:Name="btnApplySettings" Content="Применить" HorizontalAlignment="Left" Margin="86,186,0,0" VerticalAlignment="Top" Width="92" Click="btnApplySettings_Click" Height="32" FontSize="14"/>
                     <RadioButton x:Name="rbSMM" Content="Метод Середины Квадрата" HorizontalAlignment="Left" Margin="30,41,0,0" VerticalAlignment="Top" IsChecked="True" GroupName="sensor" Click="rbSMM_Click"/>
                     <Label x:Name="label" Content="Датчик:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rbMCM" Content="Мульт. Конгр. Метод" HorizontalAlignment="Left" Margin="30,62,0,0" VerticalAlignment="Top" GroupName="sensor" Click="rbMCM_Click"/>
@@ -22,10 +22,8 @@
                     <TextBox x:Name="tbK" HorizontalAlignment="Left" Height="23" Margin="408,59,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="Preview_TextInput" Visibility="Hidden" Text="12344321"/>
                     <Label x:Name="label1" Content="Количество чисел:" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="tbNumsCount" HorizontalAlignment="Left" Height="23" Margin="127,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="51" PreviewTextInput="Preview_TextInput" Text="100"/>
-                    <Label x:Name="label2" Content="Количество отрезков:" HorizontalAlignment="Left" Margin="10,143,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="tbSectionsCount" HorizontalAlignment="Left" Height="23" Margin="145,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="49" PreviewTextInput="Preview_TextInput" Text="10"/>
-                    <Label x:Name="label3" Content="Начальное значение:" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="tbIV" HorizontalAlignment="Left" Height="23" Margin="145,190,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="Preview_TextInput" Text="12341234"/>
+                    <Label x:Name="label3" Content="Начальное значение:" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="tbIV" HorizontalAlignment="Left" Height="23" Margin="145,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" PreviewTextInput="Preview_TextInput" Text="12341234"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Тестирование датчика">
