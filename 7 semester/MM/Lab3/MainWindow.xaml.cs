@@ -146,13 +146,12 @@ namespace MM_Lab3
 			double[,] B = GetMatrixData(dgB);
 			double[,] PM = GetMatrixData(dgPM);
 
-			CheckPM(PM);
-			//if (!CheckPM(PM))
-			//{
-			//	labelCheckPM.Content = "Сумма вероятностей не равна 1!";
-			//	return;
-			//}
-			//labelCheckPM.Content = "";
+			if (!CheckPM(PM))
+			{
+				labelCheckPM.Content = "Сумма вероятностей не равна 1!";
+				return;
+			}
+			labelCheckPM.Content = "";
 
 			SetParams(currentSensor, numbersCount, iv, pmN, pmM, A, B, PM);
 		}
@@ -395,7 +394,6 @@ namespace MM_Lab3
 				for (int j = 0; j < pmM; j++)
 					sum += matrix[j, i];
 
-			labelCheckPM.Content = "Сумма вероятностей не равна 1! " + sum;
 			return sum == 1;
 		}
 
