@@ -1,0 +1,10 @@
+.errorMsg {
+    /*color: #9f3a38;*/
+    color: #c43f3c;
+    font-weight: bold;
+    margin: 0 0 5px 0 !important;
+}
+
+.error {
+    margin-bottom: 2px !important;
+}

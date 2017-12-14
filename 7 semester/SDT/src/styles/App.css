@@ -1,0 +1,13 @@
+.App .menu .logout-button {
+    height: 30px;
+    width: 30px;
+    padding: 0;
+    margin: auto 5px;
+}
+
+.Register, .Login {
+    position: absolute;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+}

@@ -1,0 +1,18 @@
+.add-record-button {
+    margin: 0 2px 0 2px !important;
+    float: right;
+    right: 0;
+}
+
+.record-mw-fields > * {
+    margin-top: 5px;
+    margin-bottom: 5px; 
+}
+
+.btn-with-offset {
+    margin-left: 5px !important;
+}
+
+.date-input {
+    margin-bottom: 4px !important;
+}

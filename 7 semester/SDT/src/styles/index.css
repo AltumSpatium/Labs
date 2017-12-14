@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.cell {
+    font-size: 17px;
+    font-family: Lato, sans-serif;
+}
+
+.cell:hover {
+    cursor: pointer;
+}
+
+.cell-center {
+    text-align: center;
+}
+
+.cell-money-green {
+    color: green;
+    font-weight: bold;
+}
+
+.cell-money-red {
+    color: red;
+    font-weight: bold;
+}
